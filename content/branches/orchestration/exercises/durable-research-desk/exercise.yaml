@@ -1,0 +1,47 @@
+version: 5
+title: The durable research desk
+tier: capstone
+xp: 350
+isolation: process  # learner code runs in a child process (ADR 0009)
+prerequisites:
+  - orchestration.orchestrator-workers
+  - orchestration.handoffs
+  - orchestration.checkpoint-and-resume
+  - orchestration.context-compaction
+  - orchestration.evaluator-optimiser
+skills: [orchestration, multi-agent, durability, budgets, approval]
+editable: [contracts.py, journal.py, planning.py, specialist.py, workflow.py]
+limits: { timeout_s: 60, memory_mb: 256 }
+checks:
+  - id: route-and-plan
+    title: The router picks the desk, and a plan is tidied or refused before any worker runs
+    test: test_desk.py::test_route_and_plan
+    kind: behavioural
+  - id: fan-out
+    title: Workers run at the same time, isolated, and one failing worker does not stop the rest
+    test: test_desk.py::test_fan_out
+    kind: behavioural
+  - id: handoff
+    title: The specialist is handed the request and a briefing, and nothing the workers kept private
+    test: test_desk.py::test_handoff_context
+    kind: behavioural
+  - id: specialist
+    title: The specialist's tools return results and errors, and a long run compacts without losing the briefing
+    test: test_desk.py::test_specialist_tools_and_compaction
+    kind: behavioural
+  - id: approval
+    title: The run pauses before a side effect, and a person's decision resumes it in a new process
+    test: test_desk.py::test_human_approval
+    kind: behavioural
+  - id: budgets
+    title: One step and token budget covers the whole run, and loops are caught
+    test: test_desk.py::test_budgets_span_the_run
+    kind: behavioural
+  - id: resume
+    title: After a crash or a failure, a new process finishes the run without repeating anything
+    test: test_desk.py::test_resume_in_a_new_process
+    kind: behavioural
+  - id: whole-run
+    title: A run killed, paused and resumed in six processes ends as an uninterrupted one does
+    test: test_desk.py::test_the_whole_run
+    kind: behavioural

@@ -1,0 +1,20 @@
+version: 2
+title: Resources and prompts
+tier: intermediate
+xp: 150
+prerequisites: [protocols.tools-call]
+skills: [mcp, resources, prompts, templating]
+editable: [primitives.py]
+checks:
+  - id: resource-list
+    title: Resources are listed without their contents
+    test: test_primitives.py::test_listing_resources
+  - id: resource-read
+    title: A resource is read by uri, and a missing one is -32002
+    test: test_primitives.py::test_reading_resources
+  - id: prompt-list
+    title: Prompts are listed with their arguments but not their templates
+    test: test_primitives.py::test_listing_prompts
+  - id: prompt-get
+    title: A prompt is rendered from its arguments, once, safely
+    test: test_primitives.py::test_getting_prompts

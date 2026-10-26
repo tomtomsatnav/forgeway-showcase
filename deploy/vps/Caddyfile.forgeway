@@ -1,0 +1,49 @@
+# Forgeway's site block for the system Caddy (2.6.2) on the shared VPS.
+#
+# Paste it into /etc/caddy/Caddyfile next to the other sites, following "Changing Caddy safely"
+# in deploy/vps/README.md (back up, validate, reload, check every site). Caddy 2.6 spells the
+# auth directive `basicauth`; `basic_auth` is the 2.8+ spelling and fails to parse here.
+#
+# Traffic: Cloudflare (proxied, SSL Full (strict)) -> Caddy :443 (UFW allows only Cloudflare's
+# ranges) -> nginx on 127.0.0.1:8090 -> the API. Cloudflare sets CF-Connecting-IP to the real
+# client; Caddy forwards it and replaces X-Forwarded-For with it, so nothing a client sends
+# can pose as its address. The API believes those headers only from LATTICE_TRUSTED_PROXIES.
+
+forgeway.dev, www.forgeway.dev {
+	tls /etc/caddy/forgeway-origin.pem /etc/caddy/forgeway-origin.key
+
+	@www host www.forgeway.dev
+	redir @www https://forgeway.dev{uri} permanent
+
+	header {
+		# .dev is HSTS-preloaded in browsers already; this keeps the policy explicit.
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		# The SPA and its one inline script (the theme bootstrap in frontend/index.html, by hash),
+		# Google Fonts, and Cloudflare Turnstile's script and iframe. Inline styles are allowed
+		# for CodeMirror and the server-rendered certificate pages.
+		Content-Security-Policy "default-src 'self'; script-src 'self' 'sha256-b85rnnfD6auwYYW032ffipZskOq4Kv6y4BdOQuH2kHE=' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+		Cross-Origin-Opener-Policy "same-origin"
+		-Server
+	}
+
+	# The ops status is for the host's health check, which calls 127.0.0.1:8090 directly.
+	@ops path /api/ops /api/ops/*
+	respond @ops 404
+
+	# TEMPORARY launch gate: everything but /healthz (for an outside uptime monitor) needs a
+	# password until the sign-up safeguards are live. To remove it, delete these four lines and
+	# reload. The hash comes from `caddy hash-password`; never put the password itself here.
+	@gated not path /healthz
+	basicauth @gated {
+		tom REPLACE_WITH_BCRYPT_HASH
+	}
+
+	reverse_proxy 127.0.0.1:8090 {
+		header_up X-Forwarded-For {http.request.header.CF-Connecting-IP}
+		header_up X-Real-IP {http.request.header.CF-Connecting-IP}
+	}
+}

@@ -1,0 +1,20 @@
+version: 3
+title: A router
+tier: beginner
+xp: 75
+prerequisites: [starter.structured-output]
+skills: [routing, classification, prompting]
+editable: [router.py]
+checks:
+  - id: classifier-prompt
+    title: The classifier is shown every route and the customer's message
+    test: test_router.py::test_classifier_prompt
+    kind: behavioural
+  - id: parse-label
+    title: Messy labels are matched as whole words, and unknown ones fall back to the default
+    test: test_router.py::test_parse_label
+    kind: behavioural
+  - id: specialist
+    title: The chosen specialist answers with its own prompt and the original message
+    test: test_router.py::test_specialist_call
+    kind: behavioural

@@ -1,0 +1,27 @@
+# The end-to-end stack: the normal one plus the test-only guided project that
+# frontend/e2e/carry.spec.ts needs, mounted at content/branches/e2e-project, and the test-only
+# outbox endpoint (LATTICE_E2E=1, honoured only with the console email provider) that lets tests
+# follow verification links. Every browser request reaches the API from nginx's one address, so
+# the per-IP limits are raised for a parallel suite. CI's stack job uses it; locally:
+#
+#   docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d --build --wait api worker web
+#
+# The fixture is never copied into an image, so a stack started without this file does not have
+# it, and content sync retires its exercises on the next start against the same database.
+x-e2e-project: &e2e-project ./frontend/e2e/fixtures/e2e-project:/app/content/branches/e2e-project:ro
+
+x-e2e-env: &e2e-env
+  LATTICE_E2E: "1"
+  LATTICE_EMAIL_PROVIDER: console
+  LATTICE_REGISTER_PER_IP_PER_HOUR: "100000"
+  LATTICE_LOGIN_PER_IP_PER_HOUR: "100000"
+  LATTICE_PASSWORD_RESET_PER_IP_PER_HOUR: "100000"
+
+services:
+  migrate:
+    volumes: [*e2e-project]
+  api:
+    volumes: [*e2e-project]
+    environment: *e2e-env
+  worker:
+    volumes: [*e2e-project]

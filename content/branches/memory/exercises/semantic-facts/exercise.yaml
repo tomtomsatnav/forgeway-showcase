@@ -1,0 +1,23 @@
+version: 2
+title: Semantic facts and contradictions
+tier: beginner
+xp: 100
+prerequisites: [memory.rolling-summary]
+skills: [memory, semantic-memory, conflict-resolution, normalisation]
+editable: [facts.py]
+checks:
+  - id: add-and-confirm
+    title: New facts are added and repeats confirm the stored one
+    test: test_facts.py::test_adding_and_confirming
+  - id: updates
+    title: A newer claim replaces the value and the old one goes to history
+    test: test_facts.py::test_updates_keep_history
+  - id: contradictions
+    title: Stale, less trusted and tied claims are refused, by the stated rule
+    test: test_facts.py::test_contradiction_rules
+  - id: normalisation
+    title: Subjects and attributes ignore case and surrounding space
+    test: test_facts.py::test_keys_are_normalised
+  - id: retract
+    title: Retracting removes the fact and its history
+    test: test_facts.py::test_retract_removes_everything

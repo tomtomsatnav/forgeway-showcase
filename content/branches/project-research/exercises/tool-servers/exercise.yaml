@@ -1,0 +1,33 @@
+version: 3
+title: "Milestone 1: tool servers for the team"
+tier: advanced
+xp: 250
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [mcp, stdio, tools, resources, pagination, confirmation, persistence]
+editable: [mcp_server.py, search_server.py, notes_server.py]
+limits: { timeout_s: 60, memory_mb: 256 }
+checks:
+  - id: lifecycle
+    title: Both servers frame messages, complete the handshake and refuse what comes too early
+    test: test_servers.py::test_lifecycle
+    kind: behavioural
+  - id: search
+    title: Search ranks documents exactly as specified, with structured results
+    test: test_servers.py::test_search
+    kind: behavioural
+  - id: documents
+    title: Documents can be fetched and are listed as resources in pages of four
+    test: test_servers.py::test_documents_and_resources
+    kind: behavioural
+  - id: arguments
+    title: Arguments are checked against each tool's schema before the tool runs
+    test: test_servers.py::test_arguments_are_checked
+    kind: behavioural
+  - id: notes
+    title: Notes survive a restart, keys file a note once, and ids are never reused
+    test: test_servers.py::test_notes_survive_restarts
+    kind: behavioural
+  - id: confirmation
+    title: Deleting a note needs a fresh token that unlocks one exact call, once
+    test: test_servers.py::test_destructive_calls_need_confirmation
+    kind: behavioural

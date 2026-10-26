@@ -1,0 +1,35 @@
+version: 4
+title: Guard the copilot
+tier: advanced
+xp: 300
+isolation: process  # learner code runs in a child process (ADR 0009)
+carry_from: project-copilot.turn-context
+prerequisites:
+  - project-copilot.turn-context
+  - evals.pii-redaction
+  - evals.injection-detection
+  - evals.output-guardrails
+skills: [guardrails, pii-redaction, prompt-injection, output-validation, integration]
+editable: [chunking.py, kb.py, memory.py, copilot.py, guardrails.py]
+limits: { timeout_s: 30, memory_mb: 256 }
+checks:
+  - id: redaction-in
+    title: No personal data reaches the model, the shield, the search or the memory
+    test: test_guardrails.py::test_personal_data_never_reaches_a_model_or_a_search
+    kind: behavioural
+  - id: screening
+    title: Every retrieved text is screened, and only what the shield calls safe is shown
+    test: test_guardrails.py::test_the_shield_screens_every_retrieved_text
+    kind: behavioural
+  - id: schema
+    title: Replies are checked, retried in the same conversation, then refused
+    test: test_guardrails.py::test_replies_are_checked_retried_in_the_conversation_then_refused
+    kind: behavioural
+  - id: redaction-out
+    title: The shown answer is redacted and still cited
+    test: test_guardrails.py::test_the_shown_answer_is_redacted_and_cited
+    kind: behavioural
+  - id: earlier
+    title: The knowledge base, memory and turn context from earlier milestones still work
+    test: test_earlier.py::test_earlier_milestones_still_work
+    kind: behavioural

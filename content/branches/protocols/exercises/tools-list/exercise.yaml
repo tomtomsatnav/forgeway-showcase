@@ -1,0 +1,17 @@
+version: 2
+title: Listing tools with input schemas
+tier: beginner
+xp: 100
+prerequisites: [protocols.initialize-handshake]
+skills: [mcp, tools, json-schema]
+editable: [tools.py]
+checks:
+  - id: types
+    title: Python annotations become JSON Schema types
+    test: test_tools.py::test_annotations_become_schema_types
+  - id: required
+    title: Only parameters without defaults are required, and defaults are recorded
+    test: test_tools.py::test_required_and_defaults
+  - id: listing
+    title: The listing keeps order, takes descriptions from docstrings and rejects bad names
+    test: test_tools.py::test_listing

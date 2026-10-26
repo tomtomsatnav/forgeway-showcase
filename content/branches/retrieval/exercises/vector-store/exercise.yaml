@@ -1,0 +1,18 @@
+version: 2
+title: An in-memory vector store
+tier: beginner
+xp: 100
+prerequisites: [retrieval.fixed-size-chunking]
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [embeddings, vector-search]
+editable: [store.py]
+checks:
+  - id: ranking
+    title: Search returns the most similar texts first
+    test: test_store.py::test_ranks_by_similarity
+  - id: cosine
+    title: Similarity is cosine, not a raw dot product
+    test: test_store.py::test_uses_cosine_not_dot_product
+  - id: edge-cases
+    title: Handles k, ties, replacement and an empty store
+    test: test_store.py::test_edge_cases

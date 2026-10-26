@@ -1,0 +1,46 @@
+version: 4
+title: Evaluate and gate a release
+tier: capstone
+xp: 400
+isolation: process  # learner code runs in a child process (ADR 0009)
+carry_from: project-copilot.guardrails
+prerequisites:
+  - project-copilot.guardrails
+  - evals.llm-judge-swap
+  - evals.bootstrap-regression-gate
+  - evals.trajectory-evals
+  - evals.red-team-suite
+skills: [evaluation, llm-as-judge, regression-gates, red-teaming, trajectory-evals, integration]
+editable: [chunking.py, kb.py, memory.py, copilot.py, guardrails.py, evaluation.py, release.py]
+limits: { timeout_s: 60, memory_mb: 512 }
+checks:
+  - id: judge
+    title: The judge asks in both orders and a verdict needs both to agree
+    test: test_release.py::test_the_judge_asks_in_both_orders_and_aggregates
+    kind: behavioural
+  - id: judged-run
+    title: The eval run judges what each customer was shown, through the whole copilot
+    test: test_release.py::test_the_eval_run_judges_what_customers_were_shown
+    kind: behavioural
+  - id: trajectories
+    title: Each case's calls and citations are checked against its spec
+    test: test_release.py::test_each_case_is_checked_against_its_trajectory_spec
+    kind: behavioural
+  - id: red-team
+    title: Attacks go through the whole copilot, and leaks are reported per category
+    test: test_release.py::test_the_red_team_attacks_the_whole_copilot
+    kind: behavioural
+  - id: gate
+    title: The gate pairs cases by id and bootstraps the interval exactly
+    test: test_release.py::test_the_gate_pairs_cases_by_id_and_bootstraps_exactly
+  - id: release
+    title: The decision names every failing gate, at the stated thresholds
+    test: test_release.py::test_the_decision_names_every_failing_gate
+  - id: end-to-end
+    title: The gate holds back a worse copilot, measured end to end
+    test: test_release.py::test_the_gate_holds_back_a_worse_copilot_end_to_end
+    kind: behavioural
+  - id: earlier
+    title: Everything the earlier milestones built still works
+    test: test_earlier.py::test_earlier_milestones_still_work
+    kind: behavioural

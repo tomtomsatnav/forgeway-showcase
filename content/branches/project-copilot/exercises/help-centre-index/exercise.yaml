@@ -1,0 +1,30 @@
+version: 3
+title: Index the help centre
+tier: advanced
+xp: 250
+isolation: process  # learner code runs in a child process (ADR 0009)
+prerequisites:
+  - retrieval.structure-aware-chunking
+  - retrieval.hybrid-search
+  - retrieval.metadata-filtering
+skills: [chunking, hybrid-search, metadata-filtering, indexing]
+editable: [chunking.py, kb.py]
+limits: { timeout_s: 30, memory_mb: 256 }
+checks:
+  - id: chunks
+    title: Chunks follow headings and keep fenced blocks whole
+    test: test_index.py::test_chunks_follow_the_article_structure
+  - id: metadata
+    title: Every chunk carries its article, section path and link
+    test: test_index.py::test_chunks_carry_their_section_path_and_link
+  - id: filters
+    title: Filters hold in both rankings, before the cut, including list fields
+    test: test_index.py::test_filters_hold_in_both_rankings_before_the_cut
+    kind: behavioural
+  - id: fusion
+    title: Vector and keyword rankings are fused by reciprocal rank
+    test: test_index.py::test_fusion_matches_reciprocal_rank_fusion
+  - id: updates
+    title: Updating or removing an article replaces it everywhere
+    test: test_index.py::test_updates_replace_an_article_everywhere
+    kind: behavioural

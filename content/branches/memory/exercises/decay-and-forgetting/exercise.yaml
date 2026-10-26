@@ -1,0 +1,24 @@
+version: 2
+title: Decay and forgetting
+tier: intermediate
+xp: 125
+prerequisites: [memory.episodic-recall]
+skills: [memory, forgetting, spaced-repetition, clocks]
+editable: [decay.py]
+checks:
+  - id: formula
+    title: Retention follows the stated formula, measured with the injected clock
+    test: test_decay.py::test_retention_formula
+    kind: behavioural
+  - id: boundary
+    title: A memory exactly at the threshold survives; just below it is forgotten
+    test: test_decay.py::test_threshold_boundary
+    kind: behavioural
+  - id: reinforcement
+    title: Recalling a memory slows its decay and resets its timer
+    test: test_decay.py::test_recall_reinforces
+    kind: behavioural
+  - id: pinned-and-sweep
+    title: Pinned memories never decay, and sweep removes exactly the forgotten ones
+    test: test_decay.py::test_pinned_and_sweep
+    kind: behavioural

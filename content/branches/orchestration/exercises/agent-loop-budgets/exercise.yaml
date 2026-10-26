@@ -1,0 +1,25 @@
+version: 3
+title: An agent loop with budgets
+tier: intermediate
+xp: 150
+prerequisites: [starter.tool-use, orchestration.router]
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [agents, budgets, loop-detection, safety]
+editable: [agent.py]
+checks:
+  - id: steps
+    title: Answers when the model does, and stops at max_steps without running the last batch
+    test: test_agent.py::test_step_cap_and_normal_finish
+    kind: behavioural
+  - id: token-budget
+    title: Stops once input and output tokens together exceed the budget
+    test: test_agent.py::test_token_budget
+    kind: behavioural
+  - id: loop-detection
+    title: Spots an identical call repeated, and nothing that merely looks similar
+    test: test_agent.py::test_loop_detection
+    kind: behavioural
+  - id: tool-results
+    title: Sends each tool's result back, and turns failures into error results
+    test: test_agent.py::test_tool_results_and_errors
+    kind: behavioural

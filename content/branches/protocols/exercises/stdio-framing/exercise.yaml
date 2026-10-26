@@ -1,0 +1,33 @@
+version: 1
+title: Serving MCP over stdio
+tier: intermediate
+xp: 150
+prerequisites: [protocols.json-rpc-dispatch]
+skills: [mcp, stdio, framing]
+editable: [server.py]
+limits: { timeout_s: 60, memory_mb: 256 }
+checks:
+  - id: protocol-only
+    title: Stdout carries only JSON-RPC messages, one reply per request
+    test: test_stdio.py::test_stdout_is_only_protocol
+    kind: behavioural
+  - id: one-line
+    title: Every message is a single line, whatever the content
+    test: test_stdio.py::test_each_message_is_one_line
+    kind: behavioural
+  - id: flush
+    title: Replies arrive straight away, while stdin is still open
+    test: test_stdio.py::test_replies_are_flushed
+    kind: behavioural
+  - id: stderr-logs
+    title: Logs go to stderr
+    test: test_stdio.py::test_logs_go_to_stderr
+    kind: behavioural
+  - id: bad-input
+    title: Malformed lines get a parse error and the server carries on
+    test: test_stdio.py::test_bad_input_does_not_stop_the_server
+    kind: behavioural
+  - id: clean-exit
+    title: Exits cleanly when the client closes stdin
+    test: test_stdio.py::test_exits_when_stdin_closes
+    kind: behavioural

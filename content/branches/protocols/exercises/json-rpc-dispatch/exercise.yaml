@@ -1,0 +1,20 @@
+version: 2
+title: JSON-RPC dispatch
+tier: beginner
+xp: 75
+prerequisites: [starter.tool-use]
+skills: [mcp, json-rpc]
+editable: [rpc.py]
+checks:
+  - id: results
+    title: A request gets a result that echoes its id, whatever type it is
+    test: test_rpc.py::test_requests_get_results
+  - id: notifications
+    title: A notification is never answered
+    test: test_rpc.py::test_notifications_get_no_reply
+  - id: errors
+    title: Unknown methods, bad params and crashes become the right error codes
+    test: test_rpc.py::test_error_codes
+  - id: invalid
+    title: A malformed message gets an invalid-request error without reaching a handler
+    test: test_rpc.py::test_invalid_messages

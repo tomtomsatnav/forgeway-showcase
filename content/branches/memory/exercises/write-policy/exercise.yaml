@@ -1,0 +1,28 @@
+version: 2
+title: A write policy
+tier: intermediate
+xp: 150
+prerequisites: [memory.semantic-facts, memory.episodic-recall, starter.structured-output]
+skills: [memory, write-policy, structured-output, validation]
+editable: [policy.py]
+checks:
+  - id: follows-classifier
+    title: Writes exactly what the classifier decided, one call per turn
+    test: test_policy.py::test_writes_follow_the_classifier
+    kind: behavioural
+  - id: importance
+    title: Importance defaults to 5, is clamped to 1 to 10, and must be a whole number
+    test: test_policy.py::test_importance_rules
+    kind: behavioural
+  - id: skips
+    title: Turns the classifier says not to remember, or marks sensitive, write nothing
+    test: test_policy.py::test_skipped_and_sensitive_turns_write_nothing
+    kind: behavioural
+  - id: invalid
+    title: Malformed or incomplete replies write nothing and never raise
+    test: test_policy.py::test_bad_replies_write_nothing
+    kind: behavioural
+  - id: model-errors
+    title: A classifier error propagates and nothing is written
+    test: test_policy.py::test_classifier_errors_propagate
+    kind: behavioural

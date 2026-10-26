@@ -1,0 +1,23 @@
+version: 4
+title: Ordering context against "lost in the middle"
+tier: intermediate
+xp: 125
+prerequisites: [context-engineering.token-budget]
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [context-engineering, ordering, long-context, retrieval]
+editable: [ordering.py]
+checks:
+  - id: placement
+    title: The best chunks sit at the two ends and the weakest in the middle
+    test: test_ordering.py::test_placement_rule
+  - id: ties
+    title: Equal scores keep their original order, and the input list is left alone
+    test: test_ordering.py::test_ties_and_input
+  - id: layout
+    title: The prompt that reaches the model lists the chunks in placed order, then the question
+    test: test_ordering.py::test_prompt_layout
+    kind: behavioural
+  - id: edges
+    title: A model that only attends to the ends of the prompt still sees the two best chunks
+    test: test_ordering.py::test_an_end_biased_model_sees_the_best_chunks
+    kind: behavioural

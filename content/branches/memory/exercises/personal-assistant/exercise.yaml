@@ -1,0 +1,42 @@
+version: 5
+title: A personal assistant that remembers
+tier: capstone
+xp: 350
+isolation: process  # learner code runs in a child process (ADR 0009)
+prerequisites: [memory.memory-tool, memory.user-isolation, memory.reflection]
+skills: [memory, integration, persistence, privacy, tool-use, reflection]
+editable: [memstore.py, policy.py, assistant.py]
+limits: { timeout_s: 60, memory_mb: 512 }
+checks:
+  - id: write-policy
+    title: The classifier decides what is stored, before the model answers
+    test: test_assistant.py::test_writes_follow_the_classifier
+    kind: behavioural
+  - id: persistence
+    title: Memory survives a restart as JSON text, one entry per user
+    test: test_assistant.py::test_memory_survives_a_restart
+    kind: behavioural
+  - id: fact-updates
+    title: Facts are confirmed and updated across sessions, keeping history
+    test: test_assistant.py::test_facts_update_across_sessions
+    kind: behavioural
+  - id: ranking
+    title: Recall ranks episodes by recency, importance and relevance, and lists matching facts
+    test: test_assistant.py::test_recall_ranks_with_the_injected_clock
+    kind: behavioural
+  - id: tool-access
+    title: Memory reaches the model only through the recall tool, and bad calls are errors
+    test: test_assistant.py::test_memory_is_reached_only_through_tools
+    kind: behavioural
+  - id: isolation
+    title: No prompt to any model ever contains another user's memory
+    test: test_assistant.py::test_users_never_leak_into_each_other
+    kind: behavioural
+  - id: deletion
+    title: Forgetting removes the topic, its history and what was derived from it, for good
+    test: test_assistant.py::test_forgetting_removes_everything_derived
+    kind: behavioural
+  - id: reflection
+    title: Reflection runs on unreflected importance, across restarts, and facts then reach recall
+    test: test_assistant.py::test_reflection_consolidates_across_sessions
+    kind: behavioural

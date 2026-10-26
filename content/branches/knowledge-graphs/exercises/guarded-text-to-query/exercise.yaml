@@ -1,0 +1,25 @@
+version: 4
+title: Guarded text-to-query
+tier: advanced
+xp: 175
+prerequisites: [knowledge-graphs.multi-hop-qa, starter.structured-output]
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [text-to-query, allow-lists, parsing, injection-safety]
+editable: [guard.py]
+checks:
+  - id: prompt
+    title: The allowed predicates and the question reach the model
+    test: test_guard.py::test_allowed_predicates_reach_the_prompt
+    kind: behavioural
+  - id: valid
+    title: Valid queries run and return sorted, distinct, limited rows
+    test: test_guard.py::test_valid_queries_run
+    kind: behavioural
+  - id: grammar
+    title: Anything that is not exactly one query in the grammar is refused unrun
+    test: test_guard.py::test_grammar_violations_never_execute
+    kind: behavioural
+  - id: allow-list
+    title: Unknown predicates and entities, and limits beyond the caps, are refused unrun
+    test: test_guard.py::test_allow_list_violations_never_execute
+    kind: behavioural

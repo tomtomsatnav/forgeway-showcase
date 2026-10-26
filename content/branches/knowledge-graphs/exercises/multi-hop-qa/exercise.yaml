@@ -1,0 +1,25 @@
+version: 4
+title: Multi-hop questions with provenance
+tier: intermediate
+xp: 150
+prerequisites: [knowledge-graphs.triple-store, retrieval.grounded-answers]
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [graph-traversal, multi-hop, provenance, citations]
+editable: [hops.py]
+checks:
+  - id: traversal
+    title: The model is shown the edges within reach, in both directions, in order
+    test: test_hops.py::test_facts_in_the_prompt
+    kind: behavioural
+  - id: hops
+    title: max_hops bounds the search and cycles do not loop
+    test: test_hops.py::test_hop_limits
+    kind: behavioural
+  - id: citations
+    title: Cited edges and their sources come back; ghost markers are ignored
+    test: test_hops.py::test_citations_and_provenance
+    kind: behavioural
+  - id: no-facts
+    title: Nothing in reach means no model call
+    test: test_hops.py::test_nothing_in_reach
+    kind: behavioural

@@ -1,0 +1,5 @@
+title: Research agent team
+summary: A guided project that builds one codebase in four milestones. MCP servers for search and notes, a knowledge graph built from what the team finds, a durable team of agents that researches and files a report, and an evaluation and red-team suite that decides whether the team may ship.
+order: 10
+requires: [protocols, orchestration, knowledge-graphs, evals]
+kind: project

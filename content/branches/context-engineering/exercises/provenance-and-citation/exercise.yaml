@@ -1,0 +1,25 @@
+version: 4
+title: Context provenance and citation
+tier: intermediate
+xp: 150
+prerequisites: [context-engineering.structured-sections, context-engineering.lost-in-the-middle]
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [context-engineering, provenance, citations, grounding]
+editable: [provenance.py]
+checks:
+  - id: labels
+    title: Every piece reaches the prompt on a numbered line, followed by the question
+    test: test_provenance.py::test_pieces_are_numbered_in_the_prompt
+    kind: behavioural
+  - id: dedupe
+    title: Identical pieces share one label, and pieces differing only in source do not
+    test: test_provenance.py::test_duplicates_are_merged_but_sources_are_kept
+    kind: behavioural
+  - id: citations
+    title: Cited labels resolve to the pieces that carried those facts, with their provenance
+    test: test_provenance.py::test_citations_resolve_to_the_right_pieces
+    kind: behavioural
+  - id: syntax
+    title: Only well-formed labels that exist count, and a reply without any is not grounded
+    test: test_provenance.py::test_only_valid_labels_count
+    kind: behavioural

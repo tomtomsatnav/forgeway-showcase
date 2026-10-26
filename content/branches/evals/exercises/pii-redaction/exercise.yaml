@@ -1,0 +1,25 @@
+version: 2
+title: Redacting personal data before the model
+tier: beginner
+xp: 100
+prerequisites: [starter.prompt-injection-basics]
+skills: [guardrails, pii, regex]
+editable: [redact.py]
+checks:
+  - id: patterns
+    title: Emails, cards, NI numbers and phone numbers are replaced by their placeholders
+    test: test_redact.py::test_each_pattern
+  - id: lookalikes
+    title: Text that only looks like personal data is left alone
+    test: test_redact.py::test_lookalikes_survive
+  - id: overlaps
+    title: Overlapping shapes go to the right placeholder
+    test: test_redact.py::test_overlapping_shapes
+  - id: reaches-model
+    title: The redacted text is what reaches the model
+    test: test_redact.py::test_redacted_text_is_what_is_sent
+    kind: behavioural
+  - id: history
+    title: Earlier turns are redacted too, and the system prompt is left alone
+    test: test_redact.py::test_history_is_redacted
+    kind: behavioural

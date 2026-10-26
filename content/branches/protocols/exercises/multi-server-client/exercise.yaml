@@ -1,0 +1,29 @@
+version: 2
+title: Many servers, structured output
+tier: advanced
+xp: 175
+prerequisites: [protocols.tool-bridge, protocols.tools-call]
+skills: [mcp, namespacing, structured-output, fault-isolation]
+editable: [hub.py]
+limits: { timeout_s: 60, memory_mb: 256 }
+checks:
+  - id: namespacing
+    title: Tools from different servers get unique, namespaced names
+    test: test_hub.py::test_namespacing
+    kind: behavioural
+  - id: routing
+    title: A call goes to the right server under the tool's original name
+    test: test_hub.py::test_routing
+    kind: behavioural
+  - id: structured
+    title: Structured output is validated against the tool's outputSchema
+    test: test_hub.py::test_structured_output
+    kind: behavioural
+  - id: isolation
+    title: A failing server only costs its own tools
+    test: test_hub.py::test_one_failure_does_not_spread
+    kind: behavioural
+  - id: list-once
+    title: Each server is listed once and remembered
+    test: test_hub.py::test_each_server_is_listed_once
+    kind: behavioural

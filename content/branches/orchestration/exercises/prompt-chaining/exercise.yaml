@@ -1,0 +1,20 @@
+version: 3
+title: Prompt chaining with gates
+tier: beginner
+xp: 100
+prerequisites: [orchestration.router]
+skills: [prompt-chaining, validation, pipelines]
+editable: [chain.py]
+checks:
+  - id: feeds-forward
+    title: Each step receives the previous step's output
+    test: test_chain.py::test_feeds_forward
+    kind: behavioural
+  - id: gate-timing
+    title: A gate checks each output before the next step starts
+    test: test_chain.py::test_gates_run_between_steps
+    kind: behavioural
+  - id: halts
+    title: A failed gate stops the chain and reports the step and reason
+    test: test_chain.py::test_failed_gate_halts_the_chain
+    kind: behavioural

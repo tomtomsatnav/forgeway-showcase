@@ -1,0 +1,481 @@
+# The talent tree. Talents recognise demonstrated skill and never change scoring.
+# `subtree` is `general` (open to every path) or a path id from classes.yaml. A parent must be in
+# the same subtree or in `general`. Effects come from a closed set:
+#   - title: <text>                        a title shown on the profile
+#   - reference_solutions: <branch id>     read reference solutions for passed exercises there
+nodes:
+  # General subtree
+  - id: steady-hands
+    title: Steady hands
+    summary: You can get a model to answer from code.
+    min_level: 2
+    required_exercises: [starter.first-completion]
+    effects:
+      - title: Prompt engineer
+
+  - id: prompt-craft
+    title: Prompt craft
+    summary: You steer behaviour with system prompts and examples.
+    parents: [steady-hands]
+    min_level: 2
+    required_exercises: [starter.system-prompts]
+    effects:
+      - title: Prompt crafter
+
+  - id: context-keeper
+    title: Context keeper
+    summary: You keep conversations coherent inside a finite context window.
+    parents: [steady-hands]
+    min_level: 3
+    required_exercises: [starter.tokens-and-context, starter.conversation-history]
+    effects:
+      - title: Context keeper
+
+  - id: resilient-caller
+    title: Resilient caller
+    summary: Your calls survive rate limits, failures and truncated replies.
+    parents: [context-keeper]
+    min_level: 4
+    required_exercises: [starter.retries-and-backoff, starter.handling-truncation]
+    effects:
+      - title: Resilient caller
+
+  - id: guarded-builder
+    title: Guarded builder
+    summary: You give models tools and defend them against hostile input.
+    parents: [prompt-craft]
+    min_level: 4
+    required_exercises: [starter.prompt-injection-basics, starter.tool-use]
+    effects:
+      - title: Guarded builder
+      - reference_solutions: starter
+
+  # Retrieval subtree
+  - id: index-builder
+    title: Index builder
+    summary: You split documents sensibly and store them for search.
+    subtree: retrieval
+    min_level: 3
+    required_exercises:
+      - retrieval.fixed-size-chunking
+      - retrieval.structure-aware-chunking
+      - retrieval.vector-store
+    effects:
+      - title: Index builder
+
+  - id: precision-search
+    title: Precision search
+    summary: You combine keyword scoring with filters to narrow results.
+    subtree: retrieval
+    parents: [index-builder]
+    min_level: 4
+    required_exercises: [retrieval.keyword-search-bm25, retrieval.metadata-filtering]
+    effects:
+      - title: Search specialist
+
+  - id: hybrid-ranking
+    title: Hybrid ranking
+    summary: You fuse and rerank several rankings into one that beats each of them.
+    subtree: retrieval
+    parents: [precision-search]
+    min_level: 5
+    required_exercises: [retrieval.hybrid-search, retrieval.reranking]
+    effects:
+      - title: Ranking specialist
+      - reference_solutions: retrieval
+
+  - id: retrieval-evaluator
+    title: Retrieval evaluator
+    summary: You measure retrieval quality instead of guessing at it.
+    subtree: retrieval
+    parents: [precision-search]
+    min_level: 5
+    required_exercises: [retrieval.retrieval-evaluation]
+    effects:
+      - title: Retrieval evaluator
+
+  - id: grounded-generation
+    title: Grounded generation
+    summary: You rewrite queries and make answers cite their evidence.
+    subtree: retrieval
+    parents: [index-builder]
+    min_level: 4
+    required_exercises: [retrieval.query-rewriting, retrieval.grounded-answers]
+    effects:
+      - title: Grounding specialist
+
+  - id: agentic-retrieval
+    title: Agentic retrieval
+    summary: You let a model search iteratively and check its own answers.
+    subtree: retrieval
+    parents: [hybrid-ranking, grounded-generation]
+    min_level: 6
+    required_exercises: [retrieval.agentic-search, retrieval.self-checking-rag]
+    effects:
+      - title: Retrieval specialist
+
+  # Protocols subtree
+  - id: wire-speaker
+    title: Wire speaker
+    summary: You speak JSON-RPC and complete the MCP handshake by the book.
+    subtree: protocols
+    min_level: 3
+    required_exercises: [protocols.json-rpc-dispatch, protocols.initialize-handshake]
+    effects:
+      - title: Protocol speaker
+
+  - id: toolsmith
+    title: Toolsmith
+    summary: You describe tools precisely and tell protocol errors from tool failures.
+    subtree: protocols
+    parents: [wire-speaker]
+    min_level: 4
+    required_exercises: [protocols.tools-list, protocols.tools-call]
+    effects:
+      - title: Toolsmith
+
+  - id: resource-keeper
+    title: Resource keeper
+    summary: You serve resources and prompts, a page at a time.
+    subtree: protocols
+    parents: [wire-speaker]
+    min_level: 4
+    required_exercises: [protocols.resources-and-prompts, protocols.cursor-pagination]
+    effects:
+      - title: Resource keeper
+
+  - id: line-discipline
+    title: Line discipline
+    summary: Your servers keep stdout for protocol messages and survive bad input.
+    subtree: protocols
+    parents: [toolsmith]
+    min_level: 5
+    required_exercises: [protocols.stdio-framing]
+    effects:
+      - title: Transport engineer
+      - reference_solutions: protocols
+
+  - id: bridge-builder
+    title: Bridge builder
+    summary: You put MCP tools in a model's hands, across several servers.
+    subtree: protocols
+    parents: [toolsmith, resource-keeper]
+    min_level: 5
+    required_exercises: [protocols.tool-bridge, protocols.multi-server-client]
+    effects:
+      - title: Integration architect
+
+  - id: sceptical-client
+    title: Sceptical client
+    summary: You treat tool descriptions and results as untrusted data, never as instructions.
+    subtree: protocols
+    parents: [bridge-builder]
+    min_level: 6
+    required_exercises: [protocols.untrusted-tool-output]
+    effects:
+      - title: Integration specialist
+
+  # Orchestration subtree
+  - id: dispatcher
+    title: Dispatcher
+    summary: You route each request to the right specialist and chain steps behind gates.
+    subtree: orchestration
+    min_level: 3
+    required_exercises: [orchestration.router, orchestration.prompt-chaining]
+    effects:
+      - title: Dispatcher
+
+  - id: many-hands
+    title: Many hands
+    summary: You fan work out in parallel and bring the results back together.
+    subtree: orchestration
+    parents: [dispatcher]
+    min_level: 4
+    required_exercises: [orchestration.parallel-fan-out, orchestration.orchestrator-workers]
+    effects:
+      - title: Foreman
+
+  - id: second-opinion
+    title: Second opinion
+    summary: You loop a generator against an evaluator until the work is good enough.
+    subtree: orchestration
+    parents: [dispatcher]
+    min_level: 4
+    required_exercises: [orchestration.evaluator-optimiser]
+    effects:
+      - title: Critic
+
+  - id: bounded-agent
+    title: Bounded agent
+    summary: Your agents stop on budget, notice loops and wait for a human when it matters.
+    subtree: orchestration
+    parents: [dispatcher]
+    min_level: 5
+    required_exercises: [orchestration.agent-loop-budgets, orchestration.human-in-the-loop]
+    effects:
+      - title: Safety warden
+      - reference_solutions: orchestration
+
+  - id: relay-runner
+    title: Relay runner
+    summary: You hand work between agents with exactly the context the next one needs.
+    subtree: orchestration
+    parents: [many-hands]
+    min_level: 5
+    required_exercises: [orchestration.handoffs]
+    effects:
+      - title: Relay runner
+
+  - id: durable-systems
+    title: Durable systems
+    summary: Your long runs survive crashes and overflowing context without repeating work.
+    subtree: orchestration
+    parents: [bounded-agent, relay-runner]
+    min_level: 6
+    required_exercises: [orchestration.checkpoint-and-resume, orchestration.context-compaction]
+    effects:
+      - title: Systems specialist
+
+  # Knowledge graphs subtree
+  - id: graph-keeper
+    title: Graph keeper
+    summary: You store facts as triples and resolve the entities they name.
+    subtree: knowledge-graphs
+    min_level: 3
+    required_exercises: [knowledge-graphs.triple-store, knowledge-graphs.entity-resolution]
+    effects:
+      - title: Graph keeper
+
+  - id: ontologist
+    title: Ontologist
+    summary: You extract only the facts your schema allows.
+    subtree: knowledge-graphs
+    parents: [graph-keeper]
+    min_level: 4
+    required_exercises: [knowledge-graphs.ontology-extraction]
+    effects:
+      - title: Ontologist
+
+  - id: timekeeper
+    title: Timekeeper
+    summary: Your graphs know when each fact was true.
+    subtree: knowledge-graphs
+    parents: [graph-keeper]
+    min_level: 4
+    required_exercises: [knowledge-graphs.temporal-edges]
+    effects:
+      - title: Timekeeper
+
+  - id: pathfinder
+    title: Pathfinder
+    summary: You answer questions several hops away and cite every edge.
+    subtree: knowledge-graphs
+    parents: [ontologist]
+    min_level: 5
+    required_exercises: [knowledge-graphs.multi-hop-qa, knowledge-graphs.hybrid-graph-retrieval]
+    effects:
+      - title: Pathfinder
+      - reference_solutions: knowledge-graphs
+
+  - id: query-warden
+    title: Query warden
+    summary: You let a model write queries without letting it run anything else.
+    subtree: knowledge-graphs
+    parents: [ontologist]
+    min_level: 5
+    required_exercises: [knowledge-graphs.guarded-text-to-query]
+    effects:
+      - title: Query warden
+
+  - id: graph-sage
+    title: Graph sage
+    summary: You summarise communities and serve a full GraphRAG pipeline.
+    subtree: knowledge-graphs
+    parents: [pathfinder, timekeeper]
+    min_level: 6
+    required_exercises: [knowledge-graphs.community-summaries, knowledge-graphs.graphrag-service]
+    effects:
+      - title: Knowledge engineer
+
+  # Memory subtree
+  - id: note-taker
+    title: Note taker
+    summary: You keep a rolling summary and a store of facts that resolves contradictions.
+    subtree: memory
+    min_level: 3
+    required_exercises: [memory.rolling-summary, memory.semantic-facts]
+    effects:
+      - title: Note taker
+
+  - id: recaller
+    title: Recaller
+    summary: You recall the right episode by recency, importance and relevance.
+    subtree: memory
+    parents: [note-taker]
+    min_level: 4
+    required_exercises: [memory.episodic-recall, memory.decay-and-forgetting]
+    effects:
+      - title: Recaller
+
+  - id: discreet
+    title: Discreet
+    summary: You remember only what is worth it and never mix up whose memory is whose.
+    subtree: memory
+    parents: [note-taker]
+    min_level: 4
+    required_exercises: [memory.write-policy, memory.user-isolation]
+    effects:
+      - title: Keeper of confidences
+
+  - id: self-librarian
+    title: Self-librarian
+    summary: Your agents manage their own memory through tools.
+    subtree: memory
+    parents: [recaller]
+    min_level: 5
+    required_exercises: [memory.memory-tool]
+    effects:
+      - title: Self-librarian
+      - reference_solutions: memory
+
+  - id: reflective
+    title: Reflective
+    summary: You consolidate experiences into lasting knowledge.
+    subtree: memory
+    parents: [recaller]
+    min_level: 5
+    required_exercises: [memory.reflection]
+    effects:
+      - title: Reflective
+
+  - id: total-recall
+    title: Total recall
+    summary: You built an assistant that remembers across sessions and forgets on request.
+    subtree: memory
+    parents: [self-librarian, discreet]
+    min_level: 6
+    required_exercises: [memory.personal-assistant]
+    effects:
+      - title: Memory engineer
+
+  # Context engineering subtree
+  - id: budgeteer
+    title: Budgeteer
+    summary: You assemble prompts under budget in sections nothing can break out of.
+    subtree: context-engineering
+    min_level: 3
+    required_exercises: [context-engineering.token-budget, context-engineering.structured-sections]
+    effects:
+      - title: Budgeteer
+
+  - id: arranger
+    title: Arranger
+    summary: You place the right context where the model will use it.
+    subtree: context-engineering
+    parents: [budgeteer]
+    min_level: 4
+    required_exercises: [context-engineering.lost-in-the-middle, context-engineering.few-shot-selection]
+    effects:
+      - title: Arranger
+
+  - id: cache-whisperer
+    title: Cache whisperer
+    summary: Your prompts keep a stable prefix the provider can cache.
+    subtree: context-engineering
+    parents: [budgeteer]
+    min_level: 4
+    required_exercises: [context-engineering.stable-prefix]
+    effects:
+      - title: Cache whisperer
+
+  - id: sourcer
+    title: Sourcer
+    summary: Every piece of context you add can be traced and cited.
+    subtree: context-engineering
+    parents: [budgeteer]
+    min_level: 4
+    required_exercises: [context-engineering.provenance-and-citation]
+    effects:
+      - title: Sourcer
+
+  - id: lean-context
+    title: Lean context
+    summary: You load context only when needed and prune what has gone stale.
+    subtree: context-engineering
+    parents: [arranger, cache-whisperer]
+    min_level: 5
+    required_exercises: [context-engineering.just-in-time-loading, context-engineering.pruning-stale-results]
+    effects:
+      - title: Lean operator
+      - reference_solutions: context-engineering
+
+  - id: master-weaver
+    title: Master weaver
+    summary: You built a context builder that holds up across a whole session.
+    subtree: context-engineering
+    parents: [lean-context, sourcer]
+    min_level: 6
+    required_exercises: [context-engineering.context-builder]
+    effects:
+      - title: Context engineer
+
+  # Evals subtree
+  - id: measurer
+    title: Measurer
+    summary: You score outputs with metrics you can state exactly.
+    subtree: evals
+    min_level: 3
+    required_exercises: [evals.eval-metrics, evals.pii-redaction]
+    effects:
+      - title: Measurer
+
+  - id: gatekeeper
+    title: Gatekeeper
+    summary: You stop bad inputs and outputs before they cause harm.
+    subtree: evals
+    parents: [measurer]
+    min_level: 4
+    required_exercises: [evals.output-guardrails, evals.injection-detection]
+    effects:
+      - title: Gatekeeper
+
+  - id: fair-judge
+    title: Fair judge
+    summary: Your LLM judges agree with people and cannot be swayed by order.
+    subtree: evals
+    parents: [measurer]
+    min_level: 4
+    required_exercises: [evals.judge-agreement, evals.llm-judge-swap]
+    effects:
+      - title: Fair judge
+
+  - id: statistician
+    title: Statistician
+    summary: You ship only when the interval says the change is real.
+    subtree: evals
+    parents: [fair-judge]
+    min_level: 5
+    required_exercises: [evals.bootstrap-regression-gate]
+    effects:
+      - title: Statistician
+      - reference_solutions: evals
+
+  - id: red-teamer
+    title: Red teamer
+    summary: You attack your own system and check its trajectories.
+    subtree: evals
+    parents: [gatekeeper]
+    min_level: 5
+    required_exercises: [evals.red-team-suite, evals.trajectory-evals]
+    effects:
+      - title: Red teamer
+
+  - id: arbiter
+    title: Arbiter
+    summary: You built a guarded, evaluated release pipeline for a real bot.
+    subtree: evals
+    parents: [statistician, red-teamer]
+    min_level: 6
+    required_exercises: [evals.support-bot-pipeline]
+    effects:
+      - title: Evaluation engineer

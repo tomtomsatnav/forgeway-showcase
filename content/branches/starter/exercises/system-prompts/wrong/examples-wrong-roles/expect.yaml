@@ -1,0 +1,2 @@
+fails: few-shot-order
+message_contains: followed by an assistant message

@@ -1,0 +1,96 @@
+# Production overrides for a single VPS behind Caddy and Cloudflare (see deploy/vps/README.md).
+#
+#   docker compose -p forgeway -f docker-compose.yml -f deploy/vps/docker-compose.prod.yml \
+#     --env-file .env.production up -d
+#
+# Deploy with deploy/vps/deploy.sh, which builds images tagged with the commit
+# (FORGEWAY_IMAGE_TAG) so the previous release can be started again without a rebuild, and tags
+# what is live as `live` so the plain command above runs the same images.
+#
+# Nothing is published publicly: the site listens on 127.0.0.1:8090 for Caddy, the API and
+# Postgres are reachable only inside the compose network, and Docker's daemon.json sets
+# "ip": "127.0.0.1" as a second guard (Docker publishes ports past UFW). Secrets come from
+# .env.production on the server, never from the repository.
+#
+# The worker never sees the Docker socket. It drives Docker through socket-proxy, which allows
+# only the calls the sandbox runner makes and only sandbox-shaped containers (docs/adr/0010).
+
+# The application's own settings (LATTICE_*: email, Turnstile, trusted proxies, limits) come from
+# .env.production through env_file below; the values here are fixed for this deployment and
+# win over it.
+x-backend-env-file: &backend-env-file
+  - .env.example
+  - ${FORGEWAY_ENV_FILE:-.env.production}
+
+x-backend-env: &backend-env
+  LATTICE_DATABASE_URL: postgresql+psycopg://lattice:${FORGEWAY_DB_PASSWORD:?set it in .env.production}@db:5432/lattice
+  LATTICE_CONTENT_DIR: /app/content
+  LATTICE_SECURE_COOKIES: "true"
+  LATTICE_PUBLIC_BASE_URL: ${FORGEWAY_PUBLIC_URL:-https://forgeway.dev}
+  LATTICE_ALLOWED_ORIGINS: ${FORGEWAY_PUBLIC_URL:-https://forgeway.dev}
+  LATTICE_SANDBOX_OCI_RUNTIME: ${FORGEWAY_SANDBOX_RUNTIME-runsc}
+  LATTICE_SANDBOX_IMAGE_PYTHON: forgeway-sandbox-python:${FORGEWAY_IMAGE_TAG:-live}
+  LATTICE_LOG_LEVEL: INFO
+
+services:
+  db:
+    environment:
+      POSTGRES_PASSWORD: ${FORGEWAY_DB_PASSWORD:?set it in .env.production}
+    ports: !reset []
+    restart: unless-stopped
+
+  sandbox-image:
+    image: forgeway-sandbox-python:${FORGEWAY_IMAGE_TAG:-live}
+
+  migrate:
+    image: forgeway-backend:${FORGEWAY_IMAGE_TAG:-live}
+    env_file: *backend-env-file
+    environment: *backend-env
+    # No demo learner in production: its password is public.
+    command: ["sh", "-c", "alembic -c backend/alembic.ini upgrade head && forgeway content sync"]
+
+  api:
+    image: forgeway-backend:${FORGEWAY_IMAGE_TAG:-live}
+    env_file: *backend-env-file
+    environment: *backend-env
+    ports: !reset []
+    restart: unless-stopped
+
+  worker:
+    image: forgeway-backend:${FORGEWAY_IMAGE_TAG:-live}
+    env_file: *backend-env-file
+    environment:
+      <<: *backend-env
+      DOCKER_HOST: tcp://socket-proxy:2375
+    # The image's unprivileged user; no socket is mounted, so no root is needed.
+    user: app
+    volumes: !reset []
+    networks: [default, docker-api]
+    depends_on:
+      socket-proxy: { condition: service_started }
+    restart: unless-stopped
+
+  socket-proxy:
+    image: tecnativa/docker-socket-proxy:v0.4.1@sha256:3400c429c5f9e1b21d62130fb93b16e2e772d4fb7695bd52fc2b743800b9fe9e
+    environment:
+      REQUIRE_RUNSC: ${FORGEWAY_REQUIRE_RUNSC:-1}
+      DISABLE_IPV6: "1"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./deploy/vps/socket-proxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg.template:ro
+    networks: [docker-api]
+    read_only: true
+    tmpfs: [/tmp, /run]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges]
+    restart: unless-stopped
+
+  web:
+    image: forgeway-web:${FORGEWAY_IMAGE_TAG:-live}
+    ports: !override ["${FORGEWAY_WEB_BIND:-127.0.0.1:8090}:80"]
+    restart: unless-stopped
+
+networks:
+  # Only the worker and the proxy are on it, and it has no route out.
+  docker-api:
+    internal: true

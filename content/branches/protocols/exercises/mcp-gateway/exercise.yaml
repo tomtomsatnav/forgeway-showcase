@@ -1,0 +1,56 @@
+version: 3
+title: The MCP gateway
+tier: capstone
+xp: 350
+isolation: process  # learner code runs in a child process (ADR 0009)
+prerequisites:
+  [
+    protocols.multi-server-client,
+    protocols.untrusted-tool-output,
+    protocols.resources-and-prompts,
+    protocols.stdio-framing,
+  ]
+skills: [mcp, gateway, aggregation, fault-isolation, human-in-the-loop, security]
+editable: [gateway.py, client.py, agent.py]
+limits: { timeout_s: 60, memory_mb: 512 }
+checks:
+  - id: startup
+    title: Runs as a stdio server that frames messages and completes the handshake
+    test: test_gateway.py::test_startup_and_framing
+    kind: behavioural
+  - id: catalogue
+    title: Lists both servers once, namespaced, paginated and untouched
+    test: test_gateway.py::test_catalogue_is_aggregated_namespaced_and_paged
+    kind: behavioural
+  - id: routing
+    title: Routes each call to the right server under its original name
+    test: test_gateway.py::test_calls_are_routed_by_namespace
+    kind: behavioural
+  - id: errors
+    title: Keeps bad arguments, tool errors and protocol errors distinct across both hops
+    test: test_gateway.py::test_tool_errors_protocol_errors_and_bad_arguments_stay_distinct
+    kind: behavioural
+  - id: primitives
+    title: Namespaces and relays resources and prompts, and never reads what it did not list
+    test: test_gateway.py::test_resources_and_prompts_pass_through
+    kind: behavioural
+  - id: faults
+    title: Survives servers that die, hang, loop their cursors or talk over it
+    test: test_gateway.py::test_a_failing_server_costs_only_its_own_tools
+    kind: behavioural
+  - id: confirmation
+    title: Challenges destructive calls with a fresh token that unlocks one exact call, once
+    test: test_gateway.py::test_destructive_tools_need_a_fresh_matching_token
+    kind: behavioural
+  - id: agent
+    title: The agent offers cleaned tools and fences every result
+    test: test_gateway.py::test_agent_offers_cleaned_tools_and_fences_results
+    kind: behavioural
+  - id: agent-confirmation
+    title: The agent asks the user before a destructive call and keeps the token from the model
+    test: test_gateway.py::test_agent_asks_before_destructive_calls_and_hides_the_token
+    kind: behavioural
+  - id: end-to-end
+    title: Agent, client, gateway and servers work together on what reaches the model
+    test: test_gateway.py::test_the_whole_gateway_with_an_agent
+    kind: behavioural

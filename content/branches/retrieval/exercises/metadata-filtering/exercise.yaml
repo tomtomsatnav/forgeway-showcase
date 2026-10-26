@@ -1,0 +1,18 @@
+version: 2
+title: Metadata filtering
+tier: beginner
+xp: 100
+prerequisites: [retrieval.vector-store]
+skills: [vector-search, metadata]
+editable: [store.py]
+checks:
+  - id: filters
+    title: Equality and "in" filters restrict results
+    test: test_store.py::test_equality_and_in_filters
+  - id: before-top-k
+    title: Filters apply before the top-k cut
+    test: test_store.py::test_filter_applies_before_top_k
+    kind: behavioural
+  - id: edge-cases
+    title: Combined filters, missing fields and no filter
+    test: test_store.py::test_combined_missing_and_unfiltered

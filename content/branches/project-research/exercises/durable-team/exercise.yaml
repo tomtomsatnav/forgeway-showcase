@@ -1,0 +1,43 @@
+version: 4
+title: "Milestone 3: a durable research team"
+tier: advanced
+xp: 300
+isolation: process  # learner code runs in a child process (ADR 0009)
+prerequisites: [project-research.research-graph]
+carry_from: project-research.research-graph
+skills: [orchestration, multi-agent, mcp, durability, budgets, approval]
+editable: [mcp_server.py, search_server.py, notes_server.py, knowledge.py, client.py, team.py]
+limits: { timeout_s: 60, memory_mb: 512 }
+checks:
+  - id: client
+    title: The client follows nextCursor and turns JSON-RPC errors into McpError
+    test: test_team.py::test_client
+    kind: behavioural
+  - id: route-and-plan
+    title: The router picks a source, and a plan is tidied or refused before any worker runs
+    test: test_team.py::test_route_and_plan
+    kind: behavioural
+  - id: workers
+    title: Workers run at the same time on the chosen server, with fenced results and failures kept apart
+    test: test_team.py::test_workers
+    kind: behavioural
+  - id: handoff
+    title: Fetched documents become the graph, and the writer gets findings and facts, never documents
+    test: test_team.py::test_graph_and_handoff
+    kind: behavioural
+  - id: approval
+    title: The run waits for a person before filing, and files once when approved
+    test: test_team.py::test_approval
+    kind: behavioural
+  - id: budgets
+    title: One step and token budget covers the whole run, even with workers in parallel
+    test: test_team.py::test_budgets
+    kind: behavioural
+  - id: resume
+    title: A run killed at any stage finishes in a new process without repeating or double-filing
+    test: test_team.py::test_resume_in_new_processes
+    kind: behavioural
+  - id: earlier
+    title: The servers and the graph still keep every promise of milestones 1 and 2
+    test: test_earlier.py::test_earlier_milestones_still_work
+    kind: behavioural

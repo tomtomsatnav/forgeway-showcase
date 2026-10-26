@@ -1,0 +1,18 @@
+version: 4
+title: Hybrid graph and vector retrieval
+tier: advanced
+xp: 200
+prerequisites: [knowledge-graphs.multi-hop-qa, retrieval.hybrid-search]
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [graph-rag, hybrid-retrieval, rank-fusion]
+editable: [hybrid.py]
+checks:
+  - id: graph-reach
+    title: A chunk with no words in common with the query is found through the graph
+    test: test_hybrid.py::test_graph_finds_what_vectors_miss
+  - id: fusion
+    title: The two lists are fused with reciprocal rank fusion
+    test: test_hybrid.py::test_reciprocal_rank_fusion
+  - id: edge-cases
+    title: Seeds, vector_k, k and missing data behave as the brief says
+    test: test_hybrid.py::test_edge_cases

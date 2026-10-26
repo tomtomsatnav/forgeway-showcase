@@ -1,0 +1,22 @@
+version: 3
+title: Evaluating retrieval
+tier: intermediate
+xp: 150
+prerequisites: [retrieval.vector-store, retrieval.keyword-search-bm25]
+skills: [evaluation, recall, mrr]
+editable: [evaluate.py]
+checks:
+  - id: recall
+    title: recall@k is computed correctly
+    test: test_evaluate.py::test_recall_at_k
+  - id: mrr
+    title: MRR averages over every query
+    test: test_evaluate.py::test_mrr
+  - id: compare
+    title: The better retriever wins on a labelled set
+    test: test_evaluate.py::test_best_retriever
+    kind: behavioural
+  - id: recall-first
+    title: Recall@k outranks MRR when the two disagree
+    test: test_evaluate.py::test_recall_beats_mrr
+    kind: behavioural

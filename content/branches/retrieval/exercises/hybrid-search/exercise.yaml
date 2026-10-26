@@ -1,0 +1,22 @@
+version: 3
+title: Hybrid search with reciprocal rank fusion
+tier: advanced
+xp: 175
+prerequisites: [retrieval.keyword-search-bm25, retrieval.retrieval-evaluation]
+skills: [hybrid-search, rank-fusion]
+editable: [hybrid.py]
+checks:
+  - id: rrf-scores
+    title: Reciprocal rank fusion scores are 1 / (k + rank)
+    test: test_hybrid.py::test_rrf_scores
+  - id: consensus
+    title: Agreement between rankings beats a single first place
+    test: test_hybrid.py::test_consensus_and_ties
+  - id: both-found
+    title: Fusion finds what vector search and keyword search each miss
+    test: test_hybrid.py::test_hybrid_finds_both
+    kind: behavioural
+  - id: hybrid-consensus
+    title: hybrid_search lets agreement between retrievers win
+    test: test_hybrid.py::test_hybrid_consensus_beats_single_first_place
+    kind: behavioural

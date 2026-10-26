@@ -1,0 +1,23 @@
+version: 3
+title: Grounded answers with citations
+tier: intermediate
+xp: 125
+prerequisites: [retrieval.retrieval-evaluation]
+skills: [rag, prompting, citations]
+editable: [rag.py]
+checks:
+  - id: prompt
+    title: Retrieved sources reach the prompt, numbered, with the question
+    test: test_rag.py::test_prompt_contains_numbered_sources
+    kind: behavioural
+  - id: instructions
+    title: The prompt tells the model to answer only from the sources and to cite them
+    test: test_rag.py::test_instructions_ask_for_grounding_and_citations
+    kind: behavioural
+  - id: citations
+    title: Citations are parsed and mapped to real source ids
+    test: test_rag.py::test_citations_map_to_ids
+    kind: behavioural
+  - id: no-sources
+    title: No retrieved sources means no model call
+    test: test_rag.py::test_no_sources

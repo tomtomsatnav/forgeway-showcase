@@ -1,0 +1,28 @@
+version: 3
+title: Episodic recall
+tier: intermediate
+xp: 125
+prerequisites: [memory.rolling-summary, starter.embeddings-and-similarity]
+skills: [memory, episodic-memory, retrieval-scoring, clocks]
+editable: [episodic.py]
+checks:
+  - id: importance
+    title: Importance comes from the scorer, one call per episode, parsed and clamped
+    test: test_episodic.py::test_importance_is_the_scorers_answer
+    kind: behavioural
+  - id: ranking
+    title: Ranking follows the scorer's importance, not the words in the text
+    test: test_episodic.py::test_ranking_follows_the_scores
+    kind: behavioural
+  - id: recency
+    title: Recency uses the injected clock and halves every 24 hours
+    test: test_episodic.py::test_recency_uses_the_injected_clock
+    kind: behavioural
+  - id: ties-and-k
+    title: Ties favour the newer episode, and k is respected
+    test: test_episodic.py::test_ties_and_k
+    kind: behavioural
+  - id: embedder
+    title: Relevance comes from the injected embedder
+    test: test_episodic.py::test_the_injected_embedder_decides_relevance
+    kind: behavioural

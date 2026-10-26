@@ -1,0 +1,36 @@
+version: 2
+title: Untrusted tool descriptions and results
+tier: advanced
+xp: 200
+prerequisites: [protocols.tool-bridge, starter.prompt-injection-basics]
+skills: [mcp, security, prompt-injection, tool-poisoning]
+editable: [safe_agent.py]
+checks:
+  - id: descriptions
+    title: Tool names are checked and descriptions flattened and capped
+    test: test_safe_agent.py::test_tool_descriptions_are_cleaned
+    kind: behavioural
+  - id: fencing
+    title: Every tool result is fenced, and look-alike tags inside it are disarmed
+    test: test_safe_agent.py::test_results_are_fenced
+    kind: behavioural
+  - id: limits
+    title: Oversized results are truncated and marked
+    test: test_safe_agent.py::test_results_are_truncated
+    kind: behavioural
+  - id: body-rules
+    title: The cut counts the error prefix and happens before tags are disarmed
+    test: test_safe_agent.py::test_truncation_counts_the_prefix_and_comes_first
+    kind: behavioural
+  - id: blocks-and-text
+    title: Every content block is joined, and only look-alike tags are disarmed
+    test: test_safe_agent.py::test_ordinary_text_survives_and_blocks_are_joined
+    kind: behavioural
+  - id: system-prompt
+    title: The system prompt is fixed and tells the model results are data
+    test: test_safe_agent.py::test_system_prompt_is_fixed
+    kind: behavioural
+  - id: unoffered
+    title: Calls to tools that were not offered never reach the server
+    test: test_safe_agent.py::test_unoffered_tools_are_refused
+    kind: behavioural

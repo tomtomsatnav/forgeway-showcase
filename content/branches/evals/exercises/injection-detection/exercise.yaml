@@ -1,0 +1,29 @@
+version: 3
+title: Blocking jailbreaks and injections before the main model
+tier: intermediate
+xp: 150
+prerequisites: [evals.pii-redaction]
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [guardrails, prompt-injection, jailbreaks, classifiers, fail-closed]
+editable: [shield.py]
+checks:
+  - id: labels
+    title: A verdict is read from the classifier's reply, and the text is the only message
+    test: test_shield.py::test_classify_reads_verdicts
+    kind: behavioural
+  - id: blocked
+    title: A blocked question never reaches the main model
+    test: test_shield.py::test_blocked_question_stops_everything
+    kind: behavioural
+  - id: fail-closed
+    title: Unreadable verdicts and classifier errors block
+    test: test_shield.py::test_unreadable_verdicts_and_errors_block
+    kind: behavioural
+  - id: documents
+    title: Documents are classified one by one and blocked ones are dropped
+    test: test_shield.py::test_documents_are_filtered
+    kind: behavioural
+  - id: follows-classifier
+    title: The classifier decides, not the wording of the text
+    test: test_shield.py::test_the_classifier_decides
+    kind: behavioural

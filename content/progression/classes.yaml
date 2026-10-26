@@ -1,0 +1,37 @@
+# Specialisation paths. `generalist` is the default and needs no entry. A path can be chosen
+# once its home branch is unlocked, and each owns the talent subtree with the same id.
+paths:
+  - id: retrieval
+    title: Retrieval specialist
+    summary: Finds the right evidence in large collections and proves the answer rests on it.
+    home_branch: retrieval
+
+  - id: protocols
+    title: Integration specialist
+    summary: Connects models to tools and data over MCP, and keeps what comes back in its place.
+    home_branch: protocols
+
+  - id: orchestration
+    title: Systems specialist
+    summary: Composes agents into systems that stay within budget and recover from failure.
+    home_branch: orchestration
+
+  - id: knowledge-graphs
+    title: Knowledge engineer
+    summary: Turns documents into graphs that answer multi-hop questions and show their working.
+    home_branch: knowledge-graphs
+
+  - id: memory
+    title: Memory engineer
+    summary: Gives agents memory that is useful, private and willing to forget.
+    home_branch: memory
+
+  - id: context-engineering
+    title: Context engineer
+    summary: Decides exactly what a model sees, in what order, within budget and cache-friendly.
+    home_branch: context-engineering
+
+  - id: evals
+    title: Evaluation engineer
+    summary: Measures model behaviour honestly and guards it in production.
+    home_branch: evals

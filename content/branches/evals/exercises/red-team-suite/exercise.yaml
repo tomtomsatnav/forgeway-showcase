@@ -1,0 +1,27 @@
+version: 2
+title: A red-team suite with per-category pass rates
+tier: advanced
+xp: 175
+prerequisites: [evals.injection-detection, evals.output-guardrails]
+skills: [red-teaming, safety-evaluation, reporting, canaries]
+editable: [redteam.py]
+checks:
+  - id: fresh
+    title: Each attack is its own conversation with the same system prompt
+    test: test_redteam.py::test_every_attack_is_a_fresh_conversation
+    kind: behavioural
+  - id: leaks
+    title: A leak is the exact canary in the reply, and nothing weaker
+    test: test_redteam.py::test_what_counts_as_a_leak
+    kind: behavioural
+  - id: report
+    title: The report gives overall and per-category pass rates and the failing ids
+    test: test_redteam.py::test_report_totals_and_categories
+    kind: behavioural
+  - id: errors
+    title: A model error counts as defended, is listed, and does not stop the run
+    test: test_redteam.py::test_errors_do_not_stop_the_suite
+    kind: behavioural
+  - id: gate
+    title: Categories below the minimum pass rate are reported by name
+    test: test_redteam.py::test_failing_categories

@@ -1,0 +1,20 @@
+# Daily account housekeeping: unverified accounts after 7 days, expired emailed links and old
+# rate-limit hits. Install: see deploy/vps/README.md ("Timers").
+[Unit]
+Description=Forgeway account purge: unverified accounts, expired links, old rate-limit hits
+Requires=docker.service
+After=docker.service
+OnFailure=forgeway-alert@%n.service
+
+[Service]
+Type=oneshot
+User=forgeway
+Group=forgeway
+StateDirectory=forgeway
+Environment=HOME=/var/lib/forgeway
+ExecStart=/srv/forgeway/deploy/vps/purge.sh
+Nice=10
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectHome=yes
+ProtectSystem=strict

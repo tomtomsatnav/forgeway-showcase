@@ -1,0 +1,18 @@
+version: 2
+title: Reranking
+tier: beginner
+xp: 100
+prerequisites: [retrieval.vector-store]
+skills: [reranking]
+editable: [rerank.py]
+checks:
+  - id: reorders
+    title: Candidates are reordered by the scorer
+    test: test_rerank.py::test_reorders_by_scorer
+  - id: wide-pool
+    title: The reranker sees the whole candidate pool, not just the top k
+    test: test_rerank.py::test_reranks_the_wide_pool
+    kind: behavioural
+  - id: stable-ties
+    title: Ties keep retrieval order and each candidate is scored once
+    test: test_rerank.py::test_ties_are_stable

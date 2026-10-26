@@ -1,0 +1,2 @@
+fails: says-goodbye
+message_contains: should be 'Goodbye, Ada'

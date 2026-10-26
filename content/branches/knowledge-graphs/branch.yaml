@@ -1,0 +1,4 @@
+title: Knowledge graphs
+summary: Typed triples, entity resolution, time, multi-hop questions, guarded queries and graph-plus-vector retrieval, through to a small GraphRAG service.
+order: 4
+requires: [retrieval]

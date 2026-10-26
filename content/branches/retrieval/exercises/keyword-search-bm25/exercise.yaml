@@ -1,0 +1,21 @@
+version: 4
+title: Keyword search with BM25
+tier: intermediate
+xp: 125
+prerequisites: [retrieval.vector-store]
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [keyword-search, bm25]
+editable: [bm25.py]
+checks:
+  - id: formula
+    title: Scores match the BM25 formula
+    test: test_bm25.py::test_scores_match_formula
+  - id: rare-terms
+    title: Rare terms outweigh common ones
+    test: test_bm25.py::test_rare_terms_dominate
+  - id: length
+    title: Shorter documents are not penalised against padded ones
+    test: test_bm25.py::test_length_normalisation
+  - id: edge-cases
+    title: Unknown terms, repeated query terms and k
+    test: test_bm25.py::test_edge_cases

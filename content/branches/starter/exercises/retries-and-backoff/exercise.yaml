@@ -1,0 +1,28 @@
+version: 3
+title: Retries and exponential backoff
+tier: intermediate
+xp: 125
+prerequisites: [starter.first-completion]
+skills: [retries, backoff, error-handling]
+editable: [retry.py]
+hints:
+  - "Retry only `RateLimitError` and `ServerError`. An `InvalidRequestError` will fail the same way every time, so let it propagate."
+  - "The delay before retry number n (counting from 1) is `base_delay * 2 ** (n - 1)` (before retry-after and jitter). Call the injected `sleep(delay)`, never `time.sleep` directly."
+  - "A `RateLimitError` carries `retry_after_s`: wait at least that long. Add `rand() * base_delay` of jitter on top, calling the injected `rand` once per wait."
+  - "With `max_attempts` attempts there are at most `max_attempts - 1` sleeps: do not sleep after the final failure, just re-raise it."
+checks:
+  - id: backoff
+    title: Retries transient errors with doubling delays
+    test: test_retry.py::test_backoff_delays_double
+  - id: gives-up
+    title: Gives up after max_attempts and re-raises the last error
+    test: test_retry.py::test_gives_up_after_max_attempts
+  - id: no-retry-invalid
+    title: Never retries an invalid request
+    test: test_retry.py::test_invalid_request_is_not_retried
+  - id: retry-after
+    title: Waits at least as long as the provider's retry-after
+    test: test_retry.py::test_honours_retry_after
+  - id: jitter
+    title: Adds jitter from the injected random source
+    test: test_retry.py::test_adds_jitter

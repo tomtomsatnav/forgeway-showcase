@@ -1,0 +1,5 @@
+title: Support copilot
+summary: A guided project that builds one support copilot across five milestones, from a searchable help centre and per-customer memory to budgeted, guarded turns and an eval suite that decides each release.
+order: 9
+requires: [retrieval, memory, context-engineering, evals]
+kind: project

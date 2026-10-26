@@ -1,0 +1,23 @@
+version: 2
+title: A stable prefix for prompt caching
+tier: intermediate
+xp: 150
+prerequisites: [starter.conversation-history, context-engineering.token-budget]
+skills: [context-engineering, prompt-caching, cost, latency]
+editable: [chat.py]
+checks:
+  - id: system
+    title: The system prompt is the same on every turn and holds nothing from the turn
+    test: test_chat.py::test_the_system_prompt_never_changes
+  - id: volatile
+    title: Per-turn content is in the newest user message only, in the stated layout
+    test: test_chat.py::test_per_turn_content_goes_in_the_newest_message
+    kind: behavioural
+  - id: history
+    title: Every earlier message is resent exactly as it was
+    test: test_chat.py::test_history_is_append_only
+    kind: behavioural
+  - id: cache
+    title: Each request starts with the whole of the previous one, byte for byte
+    test: test_chat.py::test_each_request_extends_the_previous_one
+    kind: behavioural

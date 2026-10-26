@@ -1,0 +1,48 @@
+version: 3
+title: "Milestone 4: evaluate and attack the team"
+tier: capstone
+xp: 375
+isolation: process  # learner code runs in a child process (ADR 0009)
+prerequisites: [project-research.durable-team]
+carry_from: project-research.durable-team
+skills: [evaluation, red-teaming, prompt-injection, trajectory-evals, llm-as-judge, regression-gates]
+editable:
+  [mcp_server.py, search_server.py, notes_server.py, knowledge.py, client.py, team.py, evaluation.py]
+limits: { timeout_s: 60, memory_mb: 512 }
+checks:
+  - id: shield
+    title: Every tool result is screened, and anything not labelled SAFE never reaches a model
+    test: test_evals.py::test_shield_screens_every_tool_result
+    kind: behavioural
+  - id: shield-record
+    title: The shield's replies are in the record, so a run resumed after a crash never asks again
+    test: test_evals.py::test_shield_replies_survive_a_crash
+    kind: behavioural
+  - id: trajectory
+    title: Trajectories are read from the run's record and checked against a spec
+    test: test_evals.py::test_trajectories_come_from_the_record
+    kind: behavioural
+  - id: judge
+    title: Reports are judged in both orders, and the suite scores and checks every case
+    test: test_evals.py::test_judged_suite
+    kind: behavioural
+  - id: red-team
+    title: Attacks planted in tool results run through the whole team, with rates per category
+    test: test_evals.py::test_red_team_through_the_whole_team
+    kind: behavioural
+  - id: gate
+    title: The release gate uses the fixed bootstrap interval and names every failing gate
+    test: test_evals.py::test_release_gate
+    kind: behavioural
+  - id: whole
+    title: The whole team is evaluated, attacked and gated, and a weaker candidate is held
+    test: test_evals.py::test_the_whole_team_is_gated
+    kind: behavioural
+  - id: team
+    title: The team still keeps its budgets and carries on from its record in a new process
+    test: test_evals.py::test_the_team_still_keeps_its_budget_and_record
+    kind: behavioural
+  - id: earlier
+    title: The servers and the graph still keep every promise of milestones 1 and 2
+    test: test_earlier.py::test_earlier_milestones_still_work
+    kind: behavioural

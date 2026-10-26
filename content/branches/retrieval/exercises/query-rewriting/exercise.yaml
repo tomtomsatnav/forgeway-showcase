@@ -1,0 +1,23 @@
+version: 5
+title: Query rewriting for follow-up questions
+tier: intermediate
+xp: 125
+prerequisites: [retrieval.grounded-answers]
+skills: [query-rewriting, conversation]
+editable: [rewrite.py]
+checks:
+  - id: sees-history
+    title: The rewrite prompt includes the conversation history
+    test: test_rewrite.py::test_rewrite_sees_history
+    kind: behavioural
+  - id: latest-topic
+    title: The most recent topic wins when the conversation has moved on
+    test: test_rewrite.py::test_rewrite_uses_latest_topic
+    kind: behavioural
+  - id: searches-rewrite
+    title: Retrieval uses the cleaned, rewritten query
+    test: test_rewrite.py::test_searches_with_rewritten_query
+    kind: behavioural
+  - id: no-history
+    title: A first question is searched as-is without a model call
+    test: test_rewrite.py::test_first_question_not_rewritten

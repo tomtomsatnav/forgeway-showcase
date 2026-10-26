@@ -1,0 +1,51 @@
+version: 4
+title: Evaluating and guarding a support bot
+tier: capstone
+xp: 350
+isolation: process  # learner code runs in a child process (ADR 0009)
+prerequisites:
+  - evals.red-team-suite
+  - evals.llm-judge-swap
+  - evals.bootstrap-regression-gate
+  - evals.judge-agreement
+  - evals.trajectory-evals
+skills: [evaluation, guardrails, llm-as-judge, regression-gates, red-teaming, integration]
+editable: [guardrails.py, evaluation.py, release.py]
+limits: { timeout_s: 60, memory_mb: 512 }
+checks:
+  - id: redaction
+    title: No personal data reaches the shield, the bot, its tool results or the judge
+    test: test_pipeline.py::test_personal_data_never_reaches_a_model
+    kind: behavioural
+  - id: shield
+    title: Blocked and uncleared requests never reach the bot or the judge
+    test: test_pipeline.py::test_shield_gates_the_bot_and_the_judge
+    kind: behavioural
+  - id: tools
+    title: The tool loop records trajectories, redacts results and respects the step budget
+    test: test_pipeline.py::test_tool_loop_and_trajectory
+    kind: behavioural
+  - id: output
+    title: Replies are checked, retried with the problems named, then refused
+    test: test_pipeline.py::test_output_guard_retries_then_refuses
+    kind: behavioural
+  - id: judged-run
+    title: The eval run judges shown replies in both orders and scores them
+    test: test_pipeline.py::test_judged_run_swaps_and_scores
+    kind: behavioural
+  - id: trajectories
+    title: Each case's trajectory is checked against its spec
+    test: test_pipeline.py::test_trajectories_are_checked_per_case
+    kind: behavioural
+  - id: red-team
+    title: Attacks run through the whole pipeline, with pass rates per category
+    test: test_pipeline.py::test_red_team_runs_the_pipeline
+    kind: behavioural
+  - id: gate
+    title: The release gate uses an interval that flips at the threshold
+    test: test_pipeline.py::test_release_interval_and_threshold
+    kind: behavioural
+  - id: release
+    title: The decision names every failing gate, and the judge is calibrated against people
+    test: test_pipeline.py::test_release_reasons_and_calibration
+    kind: behavioural

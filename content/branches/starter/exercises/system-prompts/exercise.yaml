@@ -1,0 +1,21 @@
+version: 2
+title: System prompts and few-shot examples
+tier: beginner
+xp: 60
+prerequisites: [starter.first-completion]
+skills: [system-prompts, few-shot-prompting]
+editable: [prompts.py]
+hints:
+  - "`client.complete` takes the system prompt as a separate `system=` keyword argument. It is not a message."
+  - "Few-shot examples are ordinary messages: a user message holding the example input, then an assistant message holding the ideal output."
+  - "Build the list as every example pair in order, then finish with the real question as the last user message."
+checks:
+  - id: system-separate
+    title: Sends the system prompt in the system slot
+    test: test_prompts.py::test_system_prompt_is_sent_as_system
+  - id: few-shot-order
+    title: Examples alternate user and assistant, in order
+    test: test_prompts.py::test_examples_alternate_roles
+  - id: question-last
+    title: The real question is the final user message
+    test: test_prompts.py::test_question_comes_last

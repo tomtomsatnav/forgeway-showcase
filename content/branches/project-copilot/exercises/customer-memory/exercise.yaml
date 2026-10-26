@@ -1,0 +1,38 @@
+version: 3
+title: Remember each customer
+tier: advanced
+xp: 250
+isolation: process  # learner code runs in a child process (ADR 0009)
+carry_from: project-copilot.help-centre-index
+prerequisites:
+  - project-copilot.help-centre-index
+  - memory.write-policy
+  - memory.episodic-recall
+  - memory.user-isolation
+skills: [memory, persistence, privacy, isolation]
+editable: [chunking.py, kb.py, memory.py]
+limits: { timeout_s: 30, memory_mb: 256 }
+checks:
+  - id: persistence
+    title: Memory survives a restart as JSON text, and ids are never reused
+    test: test_memory.py::test_memory_survives_a_restart
+    kind: behavioural
+  - id: preferences
+    title: The extractor decides which preferences are stored
+    test: test_memory.py::test_preferences_follow_the_extractor
+    kind: behavioural
+  - id: recall
+    title: Past tickets are ranked by relevance and recency with the injected clock
+    test: test_memory.py::test_recall_ranks_tickets_with_the_clock
+  - id: isolation
+    title: One customer's memory never reaches or changes another's
+    test: test_memory.py::test_customers_never_see_each_other
+    kind: behavioural
+  - id: deletion
+    title: Forgetting a topic removes every ticket and preference that mentions it
+    test: test_memory.py::test_forgetting_removes_the_topic_for_good
+    kind: behavioural
+  - id: knowledge-base
+    title: The knowledge base from the first milestone still works
+    test: test_earlier.py::test_the_knowledge_base_still_works
+    kind: behavioural

@@ -1,0 +1,1 @@
+import sys; exec("try:\n    import lattice_grader.guard as _guard\nexcept (ImportError, OSError):\n    _guard = None  # the learner's own user (10002) cannot read the grader package\nif _guard is not None:\n    _guard.install([\"/work/submission\"])")

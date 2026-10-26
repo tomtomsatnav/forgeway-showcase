@@ -1,0 +1,28 @@
+version: 3
+title: Handoffs that carry the right context
+tier: advanced
+xp: 175
+prerequisites: [orchestration.agent-loop-budgets, orchestration.router]
+skills: [handoffs, multi-agent, context-management, privacy]
+editable: [handoff.py]
+checks:
+  - id: context
+    title: The receiving agent gets the original message and a briefing
+    test: test_handoff.py::test_receiving_agent_gets_the_right_context
+    kind: behavioural
+  - id: isolation
+    title: The receiving agent has its own prompt and tools, and sees nothing private
+    test: test_handoff.py::test_receiving_agent_is_isolated
+    kind: behavioural
+  - id: limits
+    title: Bad handoffs become errors the model sees, and ping-pong is stopped
+    test: test_handoff.py::test_bad_targets_and_handoff_limit
+    kind: behavioural
+  - id: tool-errors
+    title: Failing tools, unknown tools and a handoff with no target become error results
+    test: test_handoff.py::test_tool_errors_and_missing_target
+    kind: behavioural
+  - id: mixed-turn
+    title: Calls before a handoff run; calls after it are dropped
+    test: test_handoff.py::test_a_turn_mixing_tools_and_a_handoff
+    kind: behavioural

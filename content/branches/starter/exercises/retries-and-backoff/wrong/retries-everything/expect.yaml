@@ -1,0 +1,2 @@
+fails: no-retry-invalid
+message_contains: must not be retried

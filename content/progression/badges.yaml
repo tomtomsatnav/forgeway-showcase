@@ -1,0 +1,124 @@
+# Badges. Criteria come from a closed set (see lattice.domain.progression.badges):
+#   branch_complete(branch), exercises_passed(n), first_try(n), no_hint_passes(n),
+#   streak_days(n), level_reached(n)
+# They are evaluated after every graded attempt and never revoked.
+badges:
+  - id: first-steps
+    title: First steps
+    description: Passed your first exercise.
+    criterion: { kind: exercises_passed, n: 1 }
+
+  - id: getting-going
+    title: Getting going
+    description: Passed five exercises.
+    criterion: { kind: exercises_passed, n: 5 }
+
+  - id: double-figures
+    title: Double figures
+    description: Passed ten exercises.
+    criterion: { kind: exercises_passed, n: 10 }
+
+  - id: foundations-complete
+    title: Foundations complete
+    description: Passed every foundations exercise.
+    criterion: { kind: branch_complete, branch: starter }
+
+  - id: retrieval-complete
+    title: Retrieval complete
+    description: Passed every retrieval exercise.
+    criterion: { kind: branch_complete, branch: retrieval }
+
+  - id: protocols-complete
+    title: Protocols complete
+    description: Passed every protocols and tools exercise.
+    criterion: { kind: branch_complete, branch: protocols }
+
+  - id: orchestration-complete
+    title: Orchestration complete
+    description: Passed every orchestration exercise.
+    criterion: { kind: branch_complete, branch: orchestration }
+
+  - id: right-first-time
+    title: Right first time
+    description: Passed an exercise on your first graded attempt.
+    criterion: { kind: first_try, n: 1 }
+
+  - id: sharpshooter
+    title: Sharpshooter
+    description: Passed five exercises on the first graded attempt.
+    criterion: { kind: first_try, n: 5 }
+
+  - id: unaided
+    title: Unaided
+    description: Passed an exercise without revealing a hint.
+    criterion: { kind: no_hint_passes, n: 1 }
+
+  - id: self-reliant
+    title: Self-reliant
+    description: Passed five exercises without revealing a hint.
+    criterion: { kind: no_hint_passes, n: 5 }
+
+  - id: three-in-a-row
+    title: Three in a row
+    description: Learned on three days in a row.
+    criterion: { kind: streak_days, n: 3 }
+
+  - id: full-week
+    title: A full week
+    description: Learned on seven days in a row.
+    criterion: { kind: streak_days, n: 7 }
+
+  - id: level-five
+    title: Level five
+    description: Reached level 5.
+    criterion: { kind: level_reached, n: 5 }
+
+  - id: level-ten
+    title: Level ten
+    description: Reached level 10.
+    criterion: { kind: level_reached, n: 10 }
+
+  - id: knowledge-graphs-complete
+    title: Knowledge graphs complete
+    description: Passed every knowledge graphs exercise.
+    criterion: { kind: branch_complete, branch: knowledge-graphs }
+
+  - id: memory-complete
+    title: Memory complete
+    description: Passed every memory exercise.
+    criterion: { kind: branch_complete, branch: memory }
+
+  - id: context-engineering-complete
+    title: Context engineering complete
+    description: Passed every context engineering exercise.
+    criterion: { kind: branch_complete, branch: context-engineering }
+
+  - id: evals-complete
+    title: Evals complete
+    description: Passed every evals and guardrails exercise.
+    criterion: { kind: branch_complete, branch: evals }
+
+  - id: first-boss
+    title: Giant slayer
+    description: Passed your first capstone.
+    criterion: { kind: capstones_passed, n: 1 }
+
+  - id: three-bosses
+    title: Three crowns
+    description: Passed three capstones.
+    criterion: { kind: capstones_passed, n: 3 }
+
+  - id: all-bosses
+    title: Master of the atlas
+    description: Passed all nine capstones, the two guided projects' included.
+    criterion: { kind: capstones_passed, n: 9 }
+
+  - id: project-copilot-complete
+    title: Copilot shipped
+    description: Completed the Support copilot guided project.
+    criterion: { kind: branch_complete, branch: project-copilot }
+
+  - id: project-research-complete
+    title: Team assembled
+    description: Completed the Research agent team guided project.
+    criterion: { kind: branch_complete, branch: project-research }

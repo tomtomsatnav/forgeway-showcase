@@ -1,0 +1,24 @@
+version: 2
+title: Structured sections that cannot be broken out of
+tier: beginner
+xp: 100
+prerequisites: [starter.prompt-injection-basics]
+skills: [context-engineering, delimiters, escaping, prompt-structure]
+editable: [sections.py]
+checks:
+  - id: format
+    title: The context has the exact layout, with the instructions unchanged
+    test: test_sections.py::test_exact_layout
+  - id: escape-forms
+    title: Text and attributes use exactly the stated escapes, with no CDATA or numeric references
+    test: test_sections.py::test_the_escapes_are_the_stated_ones
+  - id: escaping
+    title: Document text of any shape reads back exactly, and cannot add or close sections
+    test: test_sections.py::test_documents_cannot_break_out
+  - id: attributes
+    title: Ids and titles cannot break out of their attributes
+    test: test_sections.py::test_attributes_cannot_break_out
+  - id: ask
+    title: The structured context is the system prompt and the question is the user message
+    test: test_sections.py::test_ask_sends_the_context
+    kind: behavioural

@@ -1,0 +1,17 @@
+version: 2
+title: Structure-aware chunking
+tier: intermediate
+xp: 125
+prerequisites: [retrieval.fixed-size-chunking]
+skills: [chunking, metadata]
+editable: [chunker.py]
+checks:
+  - id: headings
+    title: Chunks carry their heading and never cross sections
+    test: test_chunker.py::test_headings_are_metadata
+  - id: packing
+    title: Small paragraphs are merged up to the limit
+    test: test_chunker.py::test_small_paragraphs_merge
+  - id: oversized
+    title: Oversized paragraphs are split on word boundaries
+    test: test_chunker.py::test_oversized_paragraph_split

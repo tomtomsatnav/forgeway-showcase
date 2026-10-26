@@ -1,0 +1,32 @@
+version: 3
+title: Reflection
+tier: advanced
+xp: 200
+prerequisites: [memory.write-policy, memory.decay-and-forgetting]
+skills: [memory, reflection, consolidation, validation]
+editable: [reflect.py]
+checks:
+  - id: threshold
+    title: Reflection runs only when the unreflected importance reaches the threshold
+    test: test_reflect.py::test_the_threshold_gates_reflection
+    kind: behavioural
+  - id: prompt
+    title: The reflector sees exactly the unreflected episodes, one line each
+    test: test_reflect.py::test_prompt_holds_only_unreflected_episodes
+    kind: behavioural
+  - id: facts
+    title: Facts follow the reply, and only well-evidenced ones are stored
+    test: test_reflect.py::test_facts_follow_the_reply_and_need_evidence
+    kind: behavioural
+  - id: evidence-ids
+    title: Evidence ids are JSON integers, never bools or floats
+    test: test_reflect.py::test_evidence_ids_are_json_integers
+    kind: behavioural
+  - id: marks
+    title: Reflected episodes are marked, and later rounds see only new ones
+    test: test_reflect.py::test_episodes_are_marked_and_later_rounds_are_fresh
+    kind: behavioural
+  - id: bad-replies
+    title: Unusable replies and model errors leave the episodes for another try
+    test: test_reflect.py::test_failures_leave_episodes_unreflected
+    kind: behavioural

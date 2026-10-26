@@ -1,0 +1,29 @@
+version: 4
+title: Loading context just in time
+tier: advanced
+xp: 175
+prerequisites: [starter.tool-use, context-engineering.token-budget]
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [context-engineering, just-in-time-loading, tool-use, token-budgets]
+editable: [jit.py]
+checks:
+  - id: on-demand
+    title: Only the documents the model asks for are read, and none sit in the system prompt
+    test: test_jit.py::test_only_requested_documents_are_loaded
+    kind: behavioural
+  - id: cheaper
+    title: The prompts cost far fewer tokens than a pre-loaded prompt holding every document
+    test: test_jit.py::test_it_beats_the_preloaded_baseline
+    kind: behavioural
+  - id: budget
+    title: The budget is cumulative, uses the catalogue's sizes and refuses without reading
+    test: test_jit.py::test_the_budget_is_enforced
+    kind: behavioural
+  - id: errors
+    title: Repeats, unknown ids and missing arguments get the stated results
+    test: test_jit.py::test_repeats_and_bad_calls
+    kind: behavioural
+  - id: step-cap
+    title: Stops at max_steps with a clear error
+    test: test_jit.py::test_step_cap
+    kind: behavioural

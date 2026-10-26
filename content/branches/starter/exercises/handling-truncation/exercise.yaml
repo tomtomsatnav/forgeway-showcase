@@ -1,0 +1,21 @@
+version: 2
+title: Handling truncated replies
+tier: beginner
+xp: 100
+prerequisites: [starter.tokens-and-context]
+skills: [max-tokens, stop-reasons]
+editable: [continuation.py]
+hints:
+  - "Check `completion.stop_reason`. `\"end_turn\"` means the model finished; `\"max_tokens\"` means it was cut off."
+  - "To continue, send the original question, then the partial reply as an assistant message, then a new user message such as \"Continue.\"."
+  - "Join the pieces with `\"\".join(...)` and do not strip them: the cut falls mid-sentence and the next piece carries its own leading space. Count continuations and stop at `max_continuations`."
+checks:
+  - id: single-call
+    title: A complete reply takes a single call
+    test: test_continuation.py::test_complete_reply_needs_one_call
+  - id: stitches
+    title: A truncated reply is continued and stitched together
+    test: test_continuation.py::test_truncated_reply_is_completed
+  - id: capped
+    title: Gives up after max_continuations
+    test: test_continuation.py::test_continuations_are_capped

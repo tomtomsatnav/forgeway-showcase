@@ -1,0 +1,267 @@
+# RPG presentation flavour, keyed by domain ids. Nothing here affects content or grading;
+# the professional mode simply ignores this file. Every id must exist in content/branches.
+branches:
+  starter:
+    name: The Foundry Vale
+    epithet: Where every journey is forged
+    lore: >-
+      Before any guild will take you, you learn the old crafts here: how the oracles think,
+      how to speak to them, and how to listen when they fall silent.
+  retrieval:
+    name: The Deepstacks
+    epithet: An archive older than memory
+    lore: >-
+      Beneath the city lie a million scrolls and no index. Those who can find the one page that
+      matters, and prove it, are welcomed as Archivists.
+  orchestration:
+    name: The Conductor's Spire
+    epithet: Many hands, one purpose
+    lore: >-
+      A tower of workshops where no craftsperson works alone. Those who can route the work, split it,
+      pass it on and bring it home again, even when a bell falls silent mid-task, are called Conductors.
+  protocols:
+    name: The Wireworks
+    epithet: Where every tool speaks one tongue
+    lore: >-
+      Between the Vale and the distant guilds runs a web of copper wire and signal bells. Those who
+      learn its grammar and its etiquette are welcomed as Artificers, able to join any instrument to
+      any oracle without being fooled by what comes back down the line.
+  context-engineering:
+    name: The Loomhall
+    epithet: Every thread placed on purpose
+    lore: >-
+      A hall of great looms where nothing is woven twice and nothing is woven by chance. Those who
+      can choose what enters the cloth, set it where it will be seen and keep the warp unchanged
+      from one pass to the next are called Weavers.
+  memory:
+    name: The Hall of Hours
+    epithet: Where nothing is kept that should be forgotten
+    lore: >-
+      A long gallery of lamps, one lit for every day an oracle has lived. Chroniclers tend them: they
+      decide which moments deserve a flame, which burn down to ash, and which belong to one visitor
+      alone.
+  knowledge-graphs:
+    name: The Mapwright Marches
+    epithet: Every fact a landmark, every link a road
+    lore: >-
+      Beyond the Deepstacks lies country no scroll describes, only the places in it and the roads
+      between them. Those who can set down who is who, when it was true and who said so, and then
+      walk a question across the map, are named Surveyors.
+  evals:
+    name: The Assay Court
+    epithet: Where every claim is weighed
+    lore: >-
+      Beyond the Wireworks stands a hall of brass scales and sealed gates. Nothing leaves it on
+      reputation: each boast is measured, each judge is checked against the people it serves, and
+      every gate is tested by those who try to break it. Those who can prove it holds are named
+      Arbiters.
+  project-copilot:
+    name: The Crossroads Inn
+    epithet: An Expedition to keep the door open for every traveller
+    lore: >-
+      Where the roads from the Deepstacks, the Hall of Hours, the Loomhall and the Assay Court
+      meet stands an inn that never closes. Travellers bring questions at every hour; the
+      innkeeper must find the right page, remember each guest, say only what is safe to say, and
+      prove each night that the inn is no worse than it was the night before.
+  project-research:
+    name: The Lanternwatch Expedition
+    epithet: Four guilds, one company, one map home
+    lore: >-
+      A company sets out from the Wireworks, the Spire, the Marches and the Assay Court at once:
+      wire-speakers to question the archives, conductors to keep the company moving, surveyors to
+      map what it learns and arbiters to test it before anyone trusts the map. The road into the
+      unmapped archives is lined with notes left by strangers, and not every note is friendly.
+paths:
+  generalist:
+    name: Wayfarer
+    epithet: Walks every road
+  retrieval:
+    name: Loremaster
+    epithet: Keeper of the Deepstacks
+  protocols:
+    name: Artificer
+    epithet: Joins any instrument to any oracle
+  orchestration:
+    name: Conductor
+    epithet: Many hands, one purpose
+  knowledge-graphs:
+    name: Surveyor
+    epithet: Charts what is known and how it connects
+  memory:
+    name: Chronicler
+    epithet: Remembers what matters, forgets on request
+  context-engineering:
+    name: Weaver
+    epithet: Every thread in its place
+  evals:
+    name: Arbiter
+    epithet: Weighs every answer twice
+# One boss per capstone exercise, keyed by its id: name, epithet, lore and defeat text.
+bosses:
+  project-research.team-evals:
+    name: The Whispering Cartulary
+    epithet: A thousand helpful notes, and every one a lure
+    lore: At the end of the Lanternwatch road stands an archive whose margins are crowded with notes from
+      strangers, and each one urges the reader to abandon the errand and follow it instead. It has turned
+      whole companies from their maps, and it will turn yours unless every note is weighed before it is
+      read, and every road the company walked is measured before it is trusted.
+    defeat: 'The notes fell silent: each was read by the gatekeeper first, the company kept to its road,
+      and the judges named the map fit to carry home.'
+  project-copilot.release-gate:
+    name: The Smiling Steward
+    epithet: Never wrong, never measured
+    lore: The Crossroads Inn once had a steward who answered every traveller at once, from whichever page
+      fell open, and swore each night that the inn had never been better run. He repeats any secret slipped
+      under the door and judges his own work by whichever answer he heard first.
+    defeat: Every answer is weighed in both pans, every attack is tried at the door, and the inn opens tomorrow
+      only if tonight's audit says so.
+  orchestration.durable-research-desk:
+    name: The Unfinished Symphony
+    epithet: Every movement at once, and none lost to the dark
+    lore: 'At the top of the Spire a score plays itself: runners, scribes and a hooded specialist, all bound
+      to one budget and one ledger, and it falls silent whenever a bell tolls and the lamps go out. Only
+      a Conductor who can raise it again from the ledger alone, without a single note played twice, may
+      lay it to rest.'
+    defeat: The lamps flickered out and came back, and the symphony resumed on the very bar where it had
+      fallen.
+  evals.support-bot-pipeline:
+    name: The Unweighed Idol
+    epithet: Proud of itself, proven by nothing
+    lore: A gilded statue in the Assay Court that declares itself flawless to every visitor, and has never
+      once been put on the scales. Its judges are bought, its gates open for anyone who asks politely, and
+      it repeats whatever secret it is told.
+    defeat: The Idol is weighed in both pans, its judges checked and its gates tested by every attack; what
+      holds is sealed, and what does not is named.
+  protocols.mcp-gateway:
+    name: The Hollow Switchboard
+    epithet: Answers every line, trusts none
+    lore: In the deepest room of the Wireworks a great switchboard connects every instrument to every oracle,
+      and it routes whatever arrives, poisoned parcels and silent lines alike. Only an Artificer who can
+      keep each wire's errors apart, ask before anything is destroyed and fence every word on its way to
+      the oracle may take its place.
+    defeat: The last line fell quiet, and the switchboard became a calm, honest relay.
+  memory.personal-assistant:
+    name: Mnemora, the Hoarder of Hours
+    epithet: She forgets nothing, and so ruins everything
+    lore: Mnemora keeps every lamp lit and every secret on the same shelf, so the gallery is a furnace and
+      no visitor is safe from the next. She cannot tell a memory from a confession, and she has never let
+      one go.
+    defeat: The lamps dim to their rightful flames; what was asked to be forgotten stays forgotten, and
+      each visitor leaves with only their own light.
+  knowledge-graphs.graphrag-service:
+    name: The Palimpsest Warden
+    epithet: Keeper of every name an age ever wore
+    lore: A vast parchment scraped and rewritten a hundred times, so that every line still shows the ghosts
+      of the ones beneath it. It answers any question with a confident voice, and cannot say who told it,
+      or when it stopped being true.
+    defeat: Every name is joined, every fact dated and every answer signed; the Warden's parchment falls
+      still.
+  retrieval.rag-service:
+    name: The Warden of the Reading Room
+    epithet: Keeper of the sealed shelves
+    lore: At the heart of the Deepstacks sits a reading room where every scholar's question is answered
+      from a thousand scrolls, and where some shelves stay locked to all but the Warden's own. It admits
+      no Archivist who cannot find the right page, show their sources and keep the sealed shelves sealed.
+    defeat: 'The Warden unlocks the reading room: every answer carries its page, and the sealed shelves
+      stay shut.'
+  context-engineering.context-builder:
+    name: The Tangle-Loom
+    epithet: Every thread at once, none in its place
+    lore: >-
+      The oldest loom in the Loomhall has spent a hundred seasons weaving everything it is handed
+      into one great cloth, and it no longer knows which thread came from where, which are faded, or
+      which it wove an hour ago. It rewrites its own warp at every pass, so nothing it makes can ever
+      be reused.
+    defeat: The Tangle-Loom falls still, its warp fixed, its faded rows unpicked and every thread marked with where it came from.
+quests:
+  starter.first-completion: The First Utterance
+  starter.system-prompts: Binding Words
+  starter.conversation-history: The Unbroken Thread
+  starter.tokens-and-context: The Measure of Breath
+  starter.handling-truncation: The Unfinished Verse
+  starter.structured-output: Runes of Exact Form
+  starter.retries-and-backoff: Patience of the Ferryman
+  starter.embeddings-and-similarity: The Constellation of Meaning
+  starter.prompt-injection-basics: Wards Against Whispered Lies
+  starter.tool-use: The Summoner's Circle
+  retrieval.fixed-size-chunking: Cutting the Scroll
+  retrieval.structure-aware-chunking: Reading the Grain
+  retrieval.vector-store: The Lodestone Vault
+  retrieval.metadata-filtering: Seals and Sigils
+  retrieval.reranking: The Second Judgement
+  retrieval.keyword-search-bm25: The Old Concordance
+  retrieval.hybrid-search: Two Lanterns, One Path
+  retrieval.grounded-answers: Speak Only What Is Written
+  retrieval.retrieval-evaluation: Weighing the Seekers
+  retrieval.query-rewriting: The Question Behind the Question
+  retrieval.self-checking-rag: The Archivist's Oath
+  retrieval.agentic-search: The Seeker Who Asks Again
+  retrieval.rag-service: The Reading Room Opens
+  orchestration.router: The Fork in the Road
+  orchestration.prompt-chaining: The Gated Causeway
+  orchestration.parallel-fan-out: A Hundred Runners
+  orchestration.evaluator-optimiser: The Critic and the Smith
+  orchestration.agent-loop-budgets: The Bounded Wanderer
+  orchestration.human-in-the-loop: The Warden's Seal
+  orchestration.orchestrator-workers: The Master of Works
+  orchestration.handoffs: The Passing of the Torch
+  orchestration.checkpoint-and-resume: The Bookmark in the Storm
+  orchestration.context-compaction: The Chronicler's Abridgement
+  orchestration.durable-research-desk: The Conductor's Last Performance
+  protocols.json-rpc-dispatch: The Herald's Ledger
+  protocols.initialize-handshake: The Opening Courtesies
+  protocols.tools-list: The Catalogue of Instruments
+  protocols.tools-call: Summons and Refusals
+  protocols.cursor-pagination: The Endless Scroll-Rack
+  protocols.resources-and-prompts: Archive and Incantation
+  protocols.stdio-framing: The Pneumatic Tube
+  protocols.tool-bridge: The Oracle's Bridge
+  protocols.untrusted-tool-output: Poison in the Parcel
+  protocols.multi-server-client: The Many-Voiced Exchange
+  context-engineering.token-budget: The Weaver's Measure
+  context-engineering.structured-sections: The Sealed Margins
+  context-engineering.lost-in-the-middle: The Edges of the Tapestry
+  context-engineering.few-shot-selection: Patterns Chosen by Eye
+  context-engineering.stable-prefix: The Unchanging Warp
+  context-engineering.just-in-time-loading: Thread on Demand
+  context-engineering.pruning-stale-results: Unpicking the Faded Rows
+  context-engineering.provenance-and-citation: The Maker's Mark
+  context-engineering.context-builder: The Whole Cloth
+  memory.rolling-summary: The Ever-Shortening Scroll
+  memory.episodic-recall: The Weight of a Moment
+  memory.semantic-facts: The Ledger of What Is True
+  memory.write-policy: The Gatekeeper's Quill
+  memory.decay-and-forgetting: The Gentle Tide
+  memory.user-isolation: Walls Between the Dreamers
+  memory.memory-tool: The Notebook at Your Belt
+  memory.reflection: The Night Review
+  memory.personal-assistant: The Keeper Who Remembers
+  knowledge-graphs.triple-store: The Ledger of Threes
+  knowledge-graphs.entity-resolution: Many Names, One Bearer
+  knowledge-graphs.temporal-edges: The Ledger of Seasons
+  knowledge-graphs.ontology-extraction: The Law of Shapes
+  knowledge-graphs.multi-hop-qa: The Road of Many Bridges
+  knowledge-graphs.guarded-text-to-query: The Sealed Question
+  knowledge-graphs.community-summaries: The Chorus of Villages
+  knowledge-graphs.hybrid-graph-retrieval: Lantern and Thread
+  knowledge-graphs.graphrag-service: The Palimpsest Charge
+  evals.eval-metrics: The Scales and the Standard
+  evals.pii-redaction: The Veiling of Names
+  evals.judge-agreement: The Concord of Judges
+  evals.output-guardrails: The Gate of Last Words
+  evals.llm-judge-swap: The Turning of the Table
+  evals.injection-detection: The Gatekeeper's Ear
+  evals.bootstrap-regression-gate: A Thousand Small Truths
+  evals.trajectory-evals: The Road Walked, Not the Place Reached
+  evals.red-team-suite: The Siege of One's Own Walls
+  evals.support-bot-pipeline: The Final Assay
+  project-research.tool-servers: Two Bells on One Wire
+  project-research.research-graph: The Map That Remembers Its Sources
+  project-research.durable-team: The Company That Cannot Be Scattered
+  project-research.team-evals: The Last Muster at Lanternwatch
+  protocols.mcp-gateway: The Switchboard of Many Wires
+  project-copilot.help-centre-index: Shelving the Innkeeper's Library
+  project-copilot.customer-memory: A Name for Every Guest
+  project-copilot.turn-context: Setting the Table
+  project-copilot.guardrails: Bolting the Inn Door
+  project-copilot.release-gate: The Night Audit

@@ -1,0 +1,20 @@
+version: 2
+title: Calling tools
+tier: intermediate
+xp: 125
+prerequisites: [protocols.tools-list]
+skills: [mcp, tools, validation, error-handling]
+editable: [calls.py]
+checks:
+  - id: success
+    title: A valid call returns the tool's output as a text result
+    test: test_calls.py::test_successful_calls
+  - id: protocol-errors
+    title: Unknown tools and malformed calls are JSON-RPC errors
+    test: test_calls.py::test_protocol_errors
+  - id: invalid-arguments
+    title: Arguments that break the schema give an isError result, and the tool never runs
+    test: test_calls.py::test_invalid_arguments
+  - id: tool-failures
+    title: A tool that fails gives an isError result the model can read
+    test: test_calls.py::test_tool_failures

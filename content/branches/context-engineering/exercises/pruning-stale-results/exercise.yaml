@@ -1,0 +1,26 @@
+version: 3
+title: Pruning stale tool results
+tier: advanced
+xp: 175
+prerequisites: [context-engineering.just-in-time-loading]
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [context-engineering, pruning, tool-use, long-running-agents]
+editable: [pruning.py]
+checks:
+  - id: rule
+    title: Results older than the newest rounds become the stated placeholder
+    test: test_pruning.py::test_stale_rounds_are_pruned
+  - id: short-results
+    title: Short results are kept, pruning twice changes nothing and the input is untouched
+    test: test_pruning.py::test_short_results_idempotence_and_input
+  - id: pairs
+    title: A pruned conversation is still a valid conversation, with every call answered
+    test: test_pruning.py::test_pruned_history_is_still_valid
+  - id: loop
+    title: The requests sent by the loop carry placeholders for stale rounds and full text for fresh ones
+    test: test_pruning.py::test_the_loop_prunes_what_it_sends
+    kind: behavioural
+  - id: loop-basics
+    title: Failing and unknown tools become error results, and the step cap holds
+    test: test_pruning.py::test_errors_and_step_cap
+    kind: behavioural

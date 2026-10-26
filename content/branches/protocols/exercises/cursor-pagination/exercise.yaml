@@ -1,0 +1,20 @@
+version: 2
+title: Cursor pagination
+tier: intermediate
+xp: 125
+prerequisites: [protocols.tools-list]
+skills: [mcp, pagination, robustness]
+editable: [paging.py]
+checks:
+  - id: walk
+    title: Walking the cursors returns every item once, with no empty trailing page
+    test: test_paging.py::test_walking_the_pages
+  - id: bad-cursors
+    title: Invalid cursors are rejected with InvalidCursor
+    test: test_paging.py::test_invalid_cursors
+  - id: fetch-all
+    title: The client collects every page and passes cursors back untouched
+    test: test_paging.py::test_fetch_all
+  - id: loop-guard
+    title: The client stops when a server loops or never ends
+    test: test_paging.py::test_loop_guard

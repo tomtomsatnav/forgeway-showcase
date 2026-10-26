@@ -1,0 +1,39 @@
+version: 3
+title: "Milestone 2: a knowledge graph of what the team finds"
+tier: advanced
+xp: 275
+isolation: process  # learner code runs in a child process (ADR 0009)
+prerequisites: [project-research.tool-servers]
+carry_from: project-research.tool-servers
+skills: [knowledge-graphs, extraction, entity-resolution, temporal-graphs, provenance]
+editable: [mcp_server.py, search_server.py, notes_server.py, knowledge.py]
+limits: { timeout_s: 30, memory_mb: 256 }
+checks:
+  - id: extraction
+    title: Each document is extracted once with the ontology, and bad input changes nothing
+    test: test_graph.py::test_extraction
+    kind: behavioural
+  - id: grounding
+    title: A triple is recorded only when its evidence is quoted from the document
+    test: test_graph.py::test_grounding
+    kind: behavioural
+  - id: resolution
+    title: Spellings of one entity join, and entities of different types stay apart
+    test: test_graph.py::test_resolution
+    kind: behavioural
+  - id: temporal
+    title: Facts have validity intervals that do not depend on arrival order
+    test: test_graph.py::test_temporal_validity
+    kind: behavioural
+  - id: provenance
+    title: Each interval keeps the documents and evidence that support it
+    test: test_graph.py::test_provenance
+    kind: behavioural
+  - id: persistence
+    title: The graph saves to JSON and carries on in a new process
+    test: test_graph.py::test_persistence
+    kind: behavioural
+  - id: servers
+    title: The graph is built from what your search server returns
+    test: test_graph.py::test_built_from_the_search_server
+    kind: behavioural

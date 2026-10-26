@@ -1,0 +1,21 @@
+version: 3
+title: Exact, fuzzy and set metrics
+tier: beginner
+xp: 75
+prerequisites: [starter.first-completion]
+skills: [evaluation, metrics, f1]
+editable: [metrics.py]
+checks:
+  - id: exact
+    title: Exact match compares normalised text
+    test: test_metrics.py::test_exact_match_normalises
+  - id: f1
+    title: Token F1 counts overlap as a multiset
+    test: test_metrics.py::test_token_f1
+  - id: sets
+    title: Set precision, recall and F1, including the empty cases
+    test: test_metrics.py::test_set_scores
+  - id: harness
+    title: The harness asks the model once per case and scores each answer
+    test: test_metrics.py::test_evaluate_runs_each_case_once
+    kind: behavioural

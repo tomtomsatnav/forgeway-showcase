@@ -1,0 +1,20 @@
+version: 2
+title: The initialise handshake
+tier: beginner
+xp: 100
+prerequisites: [protocols.json-rpc-dispatch]
+skills: [mcp, capability-negotiation, lifecycle]
+editable: [handshake.py]
+checks:
+  - id: negotiation
+    title: Agrees a protocol revision, or offers its own preferred one
+    test: test_handshake.py::test_version_negotiation
+  - id: result
+    title: The initialize result carries the version, capabilities and server info
+    test: test_handshake.py::test_initialize_result
+  - id: lifecycle
+    title: Refuses work until initialised; only the notification marks it ready
+    test: test_handshake.py::test_lifecycle
+  - id: bad-params
+    title: Rejects a malformed initialize without changing state
+    test: test_handshake.py::test_bad_initialize_params

@@ -1,0 +1,11 @@
+version: 1
+title: Second milestone
+tier: beginner
+xp: 50
+prerequisites: [e2e-project.first-milestone]
+carry_from: e2e-project.first-milestone
+editable: [greet.py]
+checks:
+  - id: says-goodbye
+    title: Says goodbye by name
+    test: test_greet.py::test_says_goodbye_by_name

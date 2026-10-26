@@ -1,0 +1,4 @@
+title: Protocols & tools
+summary: The Model Context Protocol at the wire level (JSON-RPC, the handshake, tools, resources, prompts and pagination), through to clients that bridge tools into a model safely.
+order: 2
+requires: [starter]

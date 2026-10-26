@@ -1,0 +1,25 @@
+version: 3
+title: Does the judge agree with people? Cohen's kappa
+tier: intermediate
+xp: 125
+prerequisites: [evals.eval-metrics]
+skills: [llm-as-judge, agreement, cohens-kappa, calibration]
+editable: [agreement.py]
+checks:
+  - id: kappa
+    title: Kappa is computed from observed and expected agreement
+    test: test_agreement.py::test_kappa_values
+  - id: degenerate
+    title: One-label raters give 1.0, and bad input is rejected
+    test: test_agreement.py::test_degenerate_cases
+  - id: verdicts
+    title: A judge's reply is read as PASS or FAIL, or rejected
+    test: test_agreement.py::test_parse_verdict
+  - id: judge-labels
+    title: The judge is asked about each item separately, with the rubric
+    test: test_agreement.py::test_judge_labels_follow_the_judge
+    kind: behavioural
+  - id: trust
+    title: The report trusts the judge when kappa reaches the threshold
+    test: test_agreement.py::test_report_trust_threshold
+    kind: behavioural

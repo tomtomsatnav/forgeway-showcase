@@ -1,0 +1,24 @@
+version: 3
+title: Parallel fan-out and aggregation
+tier: intermediate
+xp: 125
+prerequisites: [orchestration.prompt-chaining]
+skills: [parallelism, aggregation, concurrency, error-handling]
+editable: [fanout.py]
+checks:
+  - id: requests
+    title: Sends exactly one summary request per document
+    test: test_fanout.py::test_one_request_per_document
+    kind: behavioural
+  - id: concurrent
+    title: Runs the requests concurrently, within max_workers
+    test: test_fanout.py::test_requests_run_concurrently
+    kind: behavioural
+  - id: aggregation
+    title: Aggregates every summary in document order, whoever finishes first
+    test: test_fanout.py::test_aggregation_is_deterministic
+    kind: behavioural
+  - id: partial-failure
+    title: A failed document is reported and the rest are still aggregated
+    test: test_fanout.py::test_partial_failure
+    kind: behavioural

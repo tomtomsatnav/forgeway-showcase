@@ -1,0 +1,2 @@
+fails: instructions-in-system
+message_contains: must not be placed in the system prompt

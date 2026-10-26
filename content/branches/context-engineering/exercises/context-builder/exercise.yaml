@@ -1,0 +1,55 @@
+version: 5
+title: A context builder for a support agent
+tier: capstone
+xp: 350
+isolation: process  # learner code runs in a child process (ADR 0009)
+prerequisites:
+  - context-engineering.stable-prefix
+  - context-engineering.pruning-stale-results
+  - context-engineering.provenance-and-citation
+  - context-engineering.few-shot-selection
+skills: [context-engineering, prompt-caching, few-shot, just-in-time-loading, pruning, provenance]
+editable: [notes.py, pruning.py, fewshot.py, session.py]
+limits: { timeout_s: 30, memory_mb: 256 }
+checks:
+  - id: notes
+    title: Per-turn notes are chosen by priority within their budget
+    test: test_session.py::test_notes_are_chosen_by_priority
+  - id: pruning
+    title: Stale tool results are replaced by the stated placeholder, a round at a time
+    test: test_session.py::test_stale_results_are_pruned
+  - id: example-choice
+    title: Worked examples are the most similar to the question that fit their budget
+    test: test_session.py::test_examples_are_chosen_by_similarity_within_budget
+  - id: prefix
+    title: The tools and system prompt never change, and requests within a turn extend each other
+    test: test_session.py::test_the_prefix_is_stable
+    kind: behavioural
+  - id: turn-message
+    title: Everything about a turn is in its one user message, in the stated layout
+    test: test_session.py::test_each_turn_message_is_laid_out_and_budgeted
+    kind: behavioural
+  - id: examples
+    title: Each turn shows the examples nearest its question in its own message, the closest last
+    test: test_session.py::test_each_turn_shows_its_nearest_examples
+    kind: behavioural
+  - id: boundaries
+    title: A new turn starts from the finished conversation, pruned once, plus the new message
+    test: test_session.py::test_pruning_happens_between_turns
+    kind: behavioural
+  - id: loads
+    title: Loads are budgeted per turn, repeat loads are refused only while in view, and pruned documents can be loaded again
+    test: test_session.py::test_loads_are_budgeted_per_turn
+    kind: behavioural
+  - id: citations
+    title: Sources are the cited documents whose full text the model could see
+    test: test_session.py::test_citations_are_limited_to_what_is_in_view
+    kind: behavioural
+  - id: defaults
+    title: Omitted options use the stated defaults
+    test: test_session.py::test_omitted_options_use_the_stated_defaults
+    kind: behavioural
+  - id: long-session
+    title: A long session keeps answering correctly inside a small context window
+    test: test_session.py::test_a_long_session_stays_inside_the_window
+    kind: behavioural

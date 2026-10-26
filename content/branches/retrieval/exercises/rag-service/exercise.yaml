@@ -1,0 +1,54 @@
+version: 4
+title: A production RAG service
+tier: capstone
+xp: 350
+isolation: process  # learner code runs in a child process (ADR 0009)
+prerequisites:
+  - retrieval.agentic-search
+  - retrieval.hybrid-search
+  - retrieval.query-rewriting
+  - retrieval.self-checking-rag
+  - retrieval.metadata-filtering
+  - retrieval.structure-aware-chunking
+skills: [rag, hybrid-search, reranking, citations, evaluation, system-design]
+editable: [ingest.py, retrieval.py, service.py]
+limits: { timeout_s: 30, memory_mb: 256 }
+checks:
+  - id: ingest
+    title: Chunks follow the document structure and carry ids, heading paths and metadata
+    test: test_service.py::test_ingest_chunks_carry_ids_and_metadata
+  - id: filters
+    title: A metadata filter holds in both rankings and applies before the cut
+    test: test_service.py::test_filters_apply_to_both_rankings_before_the_cut
+    kind: behavioural
+  - id: fusion
+    title: Vector and keyword rankings are fused by reciprocal rank
+    test: test_service.py::test_fusion_matches_reciprocal_rank_fusion
+  - id: quality
+    title: Hybrid retrieval meets recall and MRR targets on labelled queries
+    test: test_service.py::test_retrieval_quality_on_labelled_queries
+    kind: behavioural
+  - id: rerank
+    title: The reranker scores the whole fused pool, with context, once each
+    test: test_service.py::test_rerank_scores_the_fused_pool_once_each
+    kind: behavioural
+  - id: prompt
+    title: The model sees numbered sources with their context, within the budget
+    test: test_service.py::test_prompt_shows_numbered_sources_with_context_within_budget
+    kind: behavioural
+  - id: citations
+    title: Citations carry the chunk's metadata and ignore invalid markers
+    test: test_service.py::test_citations_carry_metadata_and_ignore_bad_markers
+    kind: behavioural
+  - id: rewrite
+    title: Follow-ups are rewritten from the history, and the rewrite is what gets searched
+    test: test_service.py::test_follow_ups_are_rewritten_with_the_history
+    kind: behavioural
+  - id: self-check
+    title: The verifier decides; an unsupported answer retries once, with the same query, filter and budget
+    test: test_service.py::test_unsupported_answers_retry_once_within_the_budget
+    kind: behavioural
+  - id: end-to-end
+    title: A follow-up question is answered from the right chunk, end to end
+    test: test_service.py::test_whole_service_answers_a_follow_up_from_the_right_chunk
+    kind: behavioural

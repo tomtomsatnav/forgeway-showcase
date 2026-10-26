@@ -1,0 +1,2 @@
+fails: system-separate
+message_contains: should be passed as system=

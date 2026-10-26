@@ -1,0 +1,21 @@
+version: 2
+title: Structured output
+tier: intermediate
+xp: 125
+prerequisites: [starter.handling-truncation]
+skills: [structured-output, validation, retries]
+editable: [extract.py]
+hints:
+  - "Ask for JSON explicitly in the prompt and name the fields you expect. Parse the reply with `json.loads`."
+  - "Parsing is not validating. Valid JSON can still be missing `age`, or have it as a string. Check the keys and types before returning."
+  - "On a failure, send the conversation again with the bad reply as an assistant message, then a user message containing the error text. Only try again once; after that, raise `ValueError`."
+checks:
+  - id: parses
+    title: Returns a validated dict from a JSON reply
+    test: test_extract.py::test_returns_parsed_fields
+  - id: reasks-with-error
+    title: Re-asks once with the parse error when the JSON is invalid
+    test: test_extract.py::test_reasks_with_the_parse_error
+  - id: validates
+    title: Rejects replies with missing or mistyped fields
+    test: test_extract.py::test_validates_required_fields

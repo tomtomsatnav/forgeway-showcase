@@ -1,0 +1,2 @@
+fails: tool-errors
+message_contains: ValueError

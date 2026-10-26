@@ -1,0 +1,2 @@
+fails: gives-up
+message_contains: Do not sleep after the final failure

@@ -1,0 +1,22 @@
+version: 4
+title: Assembling a prompt under a budget
+tier: beginner
+xp: 100
+prerequisites: [starter.tokens-and-context]
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [context-engineering, token-budgets, prompt-assembly]
+editable: [assembly.py]
+checks:
+  - id: within-budget
+    title: The prompt fits the budget and keeps the sections in their original order
+    test: test_assembly.py::test_prompt_fits_and_keeps_order
+  - id: priority
+    title: Higher priorities win, ties go to the earlier section, and a section that does not fit is skipped
+    test: test_assembly.py::test_priority_rules
+  - id: truncation
+    title: Only a truncatable section is cut, to exactly the tokens that are left
+    test: test_assembly.py::test_truncation_rules
+  - id: ask
+    title: The question counts towards the budget, and the prompt that is sent matches
+    test: test_assembly.py::test_ask_sends_the_assembled_prompt
+    kind: behavioural

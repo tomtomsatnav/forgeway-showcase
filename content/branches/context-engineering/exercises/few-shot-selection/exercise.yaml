@@ -1,0 +1,23 @@
+version: 4
+title: Choosing few-shot examples by similarity
+tier: intermediate
+xp: 125
+prerequisites: [starter.embeddings-and-similarity, context-engineering.token-budget]
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [context-engineering, few-shot, embeddings, example-selection]
+editable: [fewshot.py]
+checks:
+  - id: selection
+    title: The examples chosen are the k most similar, best first, ties in pool order
+    test: test_fewshot.py::test_the_most_similar_examples_are_chosen
+  - id: edges
+    title: Bad and oversized values of k are handled
+    test: test_fewshot.py::test_k_edge_cases
+  - id: prompt
+    title: Chosen examples reach the prompt as user and assistant turns, the closest last
+    test: test_fewshot.py::test_chosen_examples_reach_the_prompt
+    kind: behavioural
+  - id: imitation
+    title: A model that copies the nearest example answers with that example's label
+    test: test_fewshot.py::test_a_copying_model_follows_the_nearest_example
+    kind: behavioural

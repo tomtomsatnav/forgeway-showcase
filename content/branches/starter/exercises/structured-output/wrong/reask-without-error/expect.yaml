@@ -1,0 +1,2 @@
+fails: reasks-with-error
+message_contains: send the original request, the bad reply

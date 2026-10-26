@@ -1,0 +1,24 @@
+version: 3
+title: Human-in-the-loop interrupts
+tier: intermediate
+xp: 150
+prerequisites: [orchestration.agent-loop-budgets]
+skills: [human-in-the-loop, approval, state, safety]
+editable: [approval.py]
+checks:
+  - id: pauses
+    title: Pauses before any call that needs approval runs, and only for those
+    test: test_approval.py::test_pauses_before_acting
+    kind: behavioural
+  - id: decisions
+    title: Approved calls run, rejected ones tell the model why, and the loop carries on
+    test: test_approval.py::test_decisions_shape_what_happens_next
+    kind: behavioural
+  - id: validation
+    title: Refuses incomplete or mistimed decisions without acting
+    test: test_approval.py::test_resume_validation
+    kind: behavioural
+  - id: tool-errors
+    title: Failing and unknown tools become error results the model sees
+    test: test_approval.py::test_failing_and_unknown_tools
+    kind: behavioural

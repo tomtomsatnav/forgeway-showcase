@@ -1,0 +1,17 @@
+version: 3
+title: An in-memory triple store
+tier: beginner
+xp: 75
+prerequisites: []
+skills: [knowledge-graphs, triples, indexing]
+editable: [triples.py]
+checks:
+  - id: patterns
+    title: A pattern returns exactly the triples that fit every given part
+    test: test_triples.py::test_pattern_matching
+  - id: set-semantics
+    title: Duplicates are ignored and results keep insertion order
+    test: test_triples.py::test_duplicates_and_order
+  - id: removal
+    title: Removed triples never come back, and results are copies
+    test: test_triples.py::test_removal_and_copies

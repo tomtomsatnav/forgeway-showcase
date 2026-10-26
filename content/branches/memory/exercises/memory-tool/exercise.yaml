@@ -1,0 +1,32 @@
+version: 3
+title: Memory as a tool
+tier: advanced
+xp: 175
+prerequisites: [memory.write-policy, starter.tool-use]
+skills: [memory, tool-use, agentic-memory, persistence]
+editable: [agent.py]
+checks:
+  - id: tools
+    title: Both tools are offered with the right schemas
+    test: test_agent.py::test_tools_are_offered
+    kind: behavioural
+  - id: writes
+    title: Memory holds exactly what the model chose to remember, normalised
+    test: test_agent.py::test_memory_holds_what_the_model_chose
+    kind: behavioural
+  - id: reads
+    title: Recall results reach the model in a later session, in the stated format
+    test: test_agent.py::test_a_later_session_recalls_through_the_tool
+    kind: behavioural
+  - id: no-shortcuts
+    title: Nothing is preloaded into the prompt or saved automatically
+    test: test_agent.py::test_nothing_is_preloaded_or_autosaved
+    kind: behavioural
+  - id: bad-calls
+    title: Bad or unknown calls become error results
+    test: test_agent.py::test_bad_calls_become_error_results
+    kind: behavioural
+  - id: step-cap
+    title: Stops at max_steps with a clear error
+    test: test_agent.py::test_step_cap
+    kind: behavioural

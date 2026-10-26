@@ -1,0 +1,31 @@
+version: 5
+title: Confidence intervals and a regression gate
+tier: advanced
+xp: 200
+prerequisites: [evals.eval-metrics]
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [statistics, bootstrap, confidence-intervals, regression-testing, ci]
+editable: [gate.py]
+limits: { timeout_s: 40, memory_mb: 256 }
+checks:
+  - id: interval
+    title: The interval contains the point estimate and is built from resample means
+    test: test_gate.py::test_interval_contains_the_estimate
+  - id: procedure
+    title: The bounds are exactly the ones the stated procedure gives
+    test: test_gate.py::test_bounds_follow_the_stated_procedure
+  - id: seeded
+    title: The interval is the same for the same seed, whatever else is going on
+    test: test_gate.py::test_deterministic_per_seed
+  - id: narrows
+    title: More data gives a narrower interval
+    test: test_gate.py::test_interval_narrows_with_n
+  - id: confidence
+    title: A higher confidence level gives a wider interval
+    test: test_gate.py::test_confidence_level_matters
+  - id: gate-flips
+    title: The gate flips exactly where the interval crosses the threshold
+    test: test_gate.py::test_gate_flips_at_the_threshold
+  - id: gate-inputs
+    title: The gate reports its interval, passes on no change and rejects bad input
+    test: test_gate.py::test_gate_reports_and_validates

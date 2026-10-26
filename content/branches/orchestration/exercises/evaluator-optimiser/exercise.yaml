@@ -1,0 +1,20 @@
+version: 3
+title: Evaluator–optimiser
+tier: intermediate
+xp: 125
+prerequisites: [orchestration.prompt-chaining]
+skills: [evaluator-optimiser, feedback-loops, termination]
+editable: [refine.py]
+checks:
+  - id: feedback-loop
+    title: The generator is shown its previous draft and the evaluator's feedback
+    test: test_refine.py::test_feedback_reaches_the_generator
+    kind: behavioural
+  - id: accepts
+    title: Stops on a verdict that starts with PASS, and only then
+    test: test_refine.py::test_stops_when_accepted
+    kind: behavioural
+  - id: round-limit
+    title: Gives up after max_rounds and returns the last draft unaccepted
+    test: test_refine.py::test_round_limit
+    kind: behavioural

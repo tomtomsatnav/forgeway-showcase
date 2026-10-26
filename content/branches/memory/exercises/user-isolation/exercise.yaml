@@ -1,0 +1,24 @@
+version: 4
+title: Per-user isolation and deletion
+tier: intermediate
+xp: 150
+prerequisites: [memory.episodic-recall]
+skills: [memory, privacy, multi-tenancy, deletion, indexes]
+editable: [memory_service.py]
+checks:
+  - id: search-own
+    title: Search returns only the user's own memories, with k applied after filtering
+    test: test_isolation.py::test_search_is_per_user
+    kind: behavioural
+  - id: prompts
+    title: No prompt ever contains another user's memories
+    test: test_isolation.py::test_prompts_never_leak
+    kind: behavioural
+  - id: forget
+    title: Forgetting removes the memory from every index
+    test: test_isolation.py::test_forget_leaves_no_trace
+    kind: behavioural
+  - id: ownership
+    title: Nobody can delete another user's memory, and forget_user removes all of one user's
+    test: test_isolation.py::test_ownership_and_forget_user
+    kind: behavioural

@@ -1,0 +1,24 @@
+version: 3
+title: Context compaction in a long loop
+tier: advanced
+xp: 200
+prerequisites: [orchestration.agent-loop-budgets, starter.tokens-and-context]
+skills: [context-management, summarisation, long-running-agents]
+editable: [compaction.py]
+checks:
+  - id: fits
+    title: A long run stays inside the context window and keeps early facts
+    test: test_compaction.py::test_long_run_fits_and_remembers
+    kind: behavioural
+  - id: shape
+    title: A compacted conversation is the task, one summary, and the recent messages intact
+    test: test_compaction.py::test_compacted_conversation_shape
+    kind: behavioural
+  - id: restraint
+    title: Compacts when the conversation is large, not before
+    test: test_compaction.py::test_only_compacts_when_needed
+    kind: behavioural
+  - id: tool-errors
+    title: Failing and unknown tools become error results the model sees
+    test: test_compaction.py::test_failing_and_unknown_tools
+    kind: behavioural

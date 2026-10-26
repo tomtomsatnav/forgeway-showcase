@@ -1,0 +1,2 @@
+fails: keeps-essentials
+message_contains: system prompt's 8 tokens count

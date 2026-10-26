@@ -1,0 +1,25 @@
+version: 3
+title: Ontology-guided extraction
+tier: intermediate
+xp: 150
+prerequisites: [knowledge-graphs.triple-store, starter.structured-output]
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [extraction, ontology, validation, structured-output]
+editable: [extract.py]
+checks:
+  - id: prompt
+    title: The ontology and the text reach the model in the stated format
+    test: test_extract.py::test_ontology_and_text_reach_the_prompt
+    kind: behavioural
+  - id: validation
+    title: Only triples that fit the ontology are kept, with names trimmed and repeats dropped
+    test: test_extract.py::test_only_valid_triples_are_kept
+    kind: behavioural
+  - id: rejected
+    title: Every refused item is reported, untouched and in order
+    test: test_extract.py::test_rejected_items_are_reported
+    kind: behavioural
+  - id: replies
+    title: Fenced replies are read, and unusable replies raise ValueError
+    test: test_extract.py::test_reply_formats
+    kind: behavioural

@@ -1,0 +1,2 @@
+fails: capped
+message_contains: Count continuations and stop at the cap

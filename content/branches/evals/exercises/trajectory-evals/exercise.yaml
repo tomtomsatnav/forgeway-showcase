@@ -1,0 +1,31 @@
+version: 3
+title: Checking an agent's trajectory
+tier: advanced
+xp: 175
+prerequisites: [starter.tool-use, evals.eval-metrics]
+skills: [agent-evaluation, trajectories, tool-use, constraints]
+editable: [trajectory.py]
+checks:
+  - id: recording
+    title: Every requested call is recorded, in order, whatever happens to it
+    test: test_trajectory.py::test_recording_follows_the_model
+    kind: behavioural
+  - id: presence
+    title: Required and forbidden tools are reported
+    test: test_trajectory.py::test_required_and_forbidden
+  - id: ordering
+    title: Order constraints compare first occurrences
+    test: test_trajectory.py::test_order_constraints
+  - id: limits
+    title: The call budget and repeated identical calls are limited
+    test: test_trajectory.py::test_budget_and_repeats
+  - id: arguments
+    title: Arguments are checked on every call to a tool
+    test: test_trajectory.py::test_argument_constraints
+  - id: agreement
+    title: Random trajectories and specs give exactly the expected violations
+    test: test_trajectory.py::test_random_trajectories
+  - id: evaluate
+    title: A suite of tasks reports each violation list and the pass rate
+    test: test_trajectory.py::test_evaluate_trajectories
+    kind: behavioural

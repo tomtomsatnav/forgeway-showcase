@@ -1,0 +1,23 @@
+version: 3
+title: Community summaries
+tier: advanced
+xp: 175
+prerequisites: [knowledge-graphs.multi-hop-qa]
+skills: [graphrag, community-detection, summarisation, caching]
+editable: [communities.py]
+checks:
+  - id: components
+    title: Communities are the connected components, whichever way the edges point
+    test: test_communities.py::test_communities_are_connected_components
+  - id: prompt
+    title: Each summariser call carries exactly that community's sorted, distinct facts
+    test: test_communities.py::test_summariser_prompts
+    kind: behavioural
+  - id: order
+    title: Communities are ordered by size then name, and small ones are skipped
+    test: test_communities.py::test_ordering_and_min_size
+    kind: behavioural
+  - id: cache
+    title: Unchanged communities are served from the cache, changed ones are summarised again
+    test: test_communities.py::test_cache
+    kind: behavioural

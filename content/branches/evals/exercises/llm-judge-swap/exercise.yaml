@@ -1,0 +1,29 @@
+version: 3
+title: A judge that cannot be fooled by order
+tier: advanced
+xp: 200
+prerequisites: [evals.eval-metrics]
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [llm-as-judge, position-bias, pairwise-comparison, aggregation]
+editable: [judge.py]
+checks:
+  - id: both-orders
+    title: Each pair is judged twice, once in each order, with the rubric and question
+    test: test_judge.py::test_each_pair_is_asked_in_both_orders
+    kind: behavioural
+  - id: verdicts
+    title: Verdicts follow the judge only when both orderings agree
+    test: test_judge.py::test_verdicts_survive_the_swap
+    kind: behavioural
+  - id: symmetry
+    title: Listing the responses the other way round gives the mirrored verdict
+    test: test_judge.py::test_verdicts_do_not_depend_on_argument_order
+    kind: behavioural
+  - id: replies
+    title: Judge replies are read strictly
+    test: test_judge.py::test_replies_are_read_strictly
+    kind: behavioural
+  - id: win-rate
+    title: Systems are compared by wins, losses and ties over all items
+    test: test_judge.py::test_compare_systems
+    kind: behavioural

@@ -1,0 +1,4 @@
+title: Context engineering
+summary: Deciding exactly what goes into the prompt and in what order, from token budgets and delimiters to cache-friendly prefixes, just-in-time loading and cited provenance.
+order: 6
+requires: [starter]

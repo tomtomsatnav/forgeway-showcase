@@ -1,0 +1,25 @@
+version: 4
+title: Checkpoint and resume
+tier: advanced
+xp: 200
+prerequisites: [orchestration.human-in-the-loop]
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [durability, checkpointing, idempotency, serialisation]
+editable: [durable.py]
+checks:
+  - id: no-reexecution
+    title: After a crash between tool calls, finished calls are not run again
+    test: test_durable.py::test_resume_after_a_crash_mid_batch
+    kind: behavioural
+  - id: model-failure
+    title: After a model failure, nothing already done is repeated
+    test: test_durable.py::test_resume_after_a_model_failure
+    kind: behavioural
+  - id: completed
+    title: A finished run replays its answer, and runs stay separate in a shared store
+    test: test_durable.py::test_finished_runs_and_separate_runs
+    kind: behavioural
+  - id: tool-errors
+    title: A failing or unknown tool is an error result, saved and never re-run
+    test: test_durable.py::test_tool_errors_are_results_not_crashes
+    kind: behavioural

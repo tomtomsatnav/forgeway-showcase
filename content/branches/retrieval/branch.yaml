@@ -1,0 +1,4 @@
+title: Retrieval
+summary: Chunking, vector search, hybrid ranking, reranking and retrieval-augmented generation, through to agentic RAG.
+order: 1
+requires: [starter]

@@ -1,0 +1,17 @@
+version: 3
+title: Entity resolution
+tier: beginner
+xp: 100
+prerequisites: [knowledge-graphs.triple-store]
+skills: [entity-resolution, normalisation, unicode]
+editable: [entities.py]
+checks:
+  - id: normalise
+    title: Names are normalised exactly as the brief describes
+    test: test_entities.py::test_normalise_examples
+  - id: end-rules
+    title: Only a trailing legal suffix and a leading "the" are removed
+    test: test_entities.py::test_suffix_and_article_rules
+  - id: resolver
+    title: Variants resolve to one id, aliases apply once, surface forms are kept
+    test: test_entities.py::test_resolver

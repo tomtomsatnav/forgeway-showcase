@@ -1,0 +1,33 @@
+version: 2
+title: Bridging MCP tools into a model
+tier: advanced
+xp: 175
+prerequisites: [protocols.initialize-handshake, protocols.cursor-pagination, starter.tool-use]
+skills: [mcp, mcp-client, tool-use, agents]
+editable: [bridge.py]
+limits: { timeout_s: 60, memory_mb: 256 }
+checks:
+  - id: handshake
+    title: Opens with initialize, checks the revision, then sends initialized
+    test: test_bridge.py::test_handshake
+    kind: behavioural
+  - id: chatter
+    title: Matches responses by id, ignores notifications and answers server pings
+    test: test_bridge.py::test_server_chatter
+    kind: behavioural
+  - id: errors
+    title: Protocol errors raise McpError; tool errors come back as results
+    test: test_bridge.py::test_errors
+    kind: behavioural
+  - id: pagination
+    title: Lists every page of tools
+    test: test_bridge.py::test_pagination
+    kind: behavioural
+  - id: offers
+    title: Offers the server's tools to the model with their schemas
+    test: test_bridge.py::test_tools_are_offered
+    kind: behavioural
+  - id: results
+    title: Runs the model's tool calls through MCP and reports results and errors back
+    test: test_bridge.py::test_tool_results_reach_the_model
+    kind: behavioural

@@ -1,0 +1,24 @@
+version: 3
+title: Self-checking RAG
+tier: advanced
+xp: 200
+prerequisites: [retrieval.grounded-answers, retrieval.reranking]
+skills: [rag, verification, retries]
+editable: [selfcheck.py]
+checks:
+  - id: happy-path
+    title: A supported answer is returned after one retrieval
+    test: test_selfcheck.py::test_supported_first_time
+    kind: behavioural
+  - id: verdict
+    title: The verifier's verdict, not word overlap, decides `supported`
+    test: test_selfcheck.py::test_verdict_decides_supported
+    kind: behavioural
+  - id: retry
+    title: An unsupported answer triggers a wider retrieval
+    test: test_selfcheck.py::test_retries_with_larger_k
+    kind: behavioural
+  - id: gives-up
+    title: It retries once, then reports unsupported
+    test: test_selfcheck.py::test_gives_up_after_one_retry
+    kind: behavioural

@@ -1,0 +1,28 @@
+version: 3
+title: Output guardrails with retries and refusal
+tier: intermediate
+xp: 125
+prerequisites: [starter.structured-output]
+skills: [guardrails, validation, policy, retries]
+editable: [guard.py]
+checks:
+  - id: valid
+    title: A good reply is returned at once with one request
+    test: test_guard.py::test_valid_reply_first_time
+    kind: behavioural
+  - id: types
+    title: The schema rules are enforced exactly
+    test: test_guard.py::test_schema_rules
+    kind: behavioural
+  - id: retry
+    title: A rejected reply is retried with the problems named
+    test: test_guard.py::test_retry_names_the_problems
+    kind: behavioural
+  - id: policy
+    title: Banned phrases are caught case-insensitively in string values
+    test: test_guard.py::test_policy_phrases
+    kind: behavioural
+  - id: refusal
+    title: After the last attempt the result is a refusal that leaks nothing
+    test: test_guard.py::test_refusal_after_the_last_attempt
+    kind: behavioural

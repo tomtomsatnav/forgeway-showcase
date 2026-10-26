@@ -1,0 +1,20 @@
+version: 3
+title: Orchestrator–workers
+tier: advanced
+xp: 175
+prerequisites: [orchestration.parallel-fan-out]
+skills: [orchestrator-workers, planning, decomposition, synthesis]
+editable: [orchestrate.py]
+checks:
+  - id: plan
+    title: Parses the planner's reply defensively, tidies it and rejects bad plans
+    test: test_orchestrate.py::test_plan_is_parsed_and_tidied
+    kind: behavioural
+  - id: workers
+    title: Each distinct subtask goes to its own isolated worker
+    test: test_orchestrate.py::test_workers_are_isolated
+    kind: behavioural
+  - id: synthesis
+    title: The synthesis sees the goal and every subtask with its result
+    test: test_orchestrate.py::test_synthesis_sees_everything
+    kind: behavioural

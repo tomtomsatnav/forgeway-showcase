@@ -1,0 +1,2 @@
+fails: fits-budget
+message_contains: two oldest messages should be dropped

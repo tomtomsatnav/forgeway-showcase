@@ -1,0 +1,44 @@
+version: 4
+title: Assemble each turn's context
+tier: advanced
+xp: 275
+isolation: process  # learner code runs in a child process (ADR 0009)
+carry_from: project-copilot.customer-memory
+prerequisites:
+  - project-copilot.customer-memory
+  - context-engineering.token-budget
+  - context-engineering.stable-prefix
+  - context-engineering.just-in-time-loading
+  - context-engineering.provenance-and-citation
+skills: [context-engineering, prompt-caching, just-in-time-loading, citations, budgets]
+editable: [chunking.py, kb.py, memory.py, copilot.py]
+limits: { timeout_s: 30, memory_mb: 256 }
+checks:
+  - id: prefix
+    title: The system prompt and tools never change, and each turn's requests extend each other
+    test: test_copilot.py::test_the_prefix_never_changes
+    kind: behavioural
+  - id: layout
+    title: Each turn message holds the time, the customer's memory and the sources, as stated
+    test: test_copilot.py::test_each_turn_message_is_laid_out_exactly
+    kind: behavioural
+  - id: budgets
+    title: Memory and sources keep whole lines within their budgets, with the stated defaults
+    test: test_copilot.py::test_budgets_keep_whole_lines_and_stop_at_the_first_that_does_not_fit
+    kind: behavioural
+  - id: scope
+    title: A customer sees only public articles for their plan, and only their own memory
+    test: test_copilot.py::test_each_customer_sees_only_their_plan_and_their_memory
+    kind: behavioural
+  - id: loading
+    title: Articles load just in time, within a budget that resets every turn
+    test: test_copilot.py::test_articles_load_just_in_time_within_a_budget_per_turn
+    kind: behavioural
+  - id: citations
+    title: Citations follow the markers the model wrote, with each source's link
+    test: test_copilot.py::test_citations_follow_the_markers_the_model_wrote
+    kind: behavioural
+  - id: earlier
+    title: The knowledge base and customer memory from earlier milestones still work
+    test: test_earlier.py::test_earlier_milestones_still_work
+    kind: behavioural

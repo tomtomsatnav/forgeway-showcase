@@ -1,0 +1,290 @@
+{
+  "module": "forgeway_kit",
+  "symbols": [
+    {
+      "name": "Completion",
+      "kind": "class",
+      "signature": "class Completion(text: str, stop_reason: StopReason, usage: Usage, tool_calls: tuple[ToolCall, ...] = ())",
+      "doc": "",
+      "members": [
+        {
+          "name": "text",
+          "kind": "field",
+          "signature": "text: str",
+          "doc": ""
+        },
+        {
+          "name": "stop_reason",
+          "kind": "field",
+          "signature": "stop_reason: StopReason",
+          "doc": ""
+        },
+        {
+          "name": "usage",
+          "kind": "field",
+          "signature": "usage: Usage",
+          "doc": ""
+        },
+        {
+          "name": "tool_calls",
+          "kind": "field",
+          "signature": "tool_calls: tuple[ToolCall, ...]",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "Embedder",
+      "kind": "class",
+      "signature": "class Embedder(Protocol)",
+      "doc": "Turns texts into fixed-length vectors.",
+      "members": [
+        {
+          "name": "dimensions",
+          "kind": "property",
+          "signature": "dimensions: int",
+          "doc": ""
+        },
+        {
+          "name": "embed",
+          "kind": "method",
+          "signature": "embed(texts: Sequence[str]) -> list[Vector]",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "FakeModel",
+      "kind": "class",
+      "signature": "class FakeModel(responder: Responder = ..., context_window: int = 8000, requests: list[Request] = ...)",
+      "doc": "A deterministic stand-in for a real model.",
+      "members": [
+        {
+          "name": "responder",
+          "kind": "field",
+          "signature": "responder: Responder",
+          "doc": ""
+        },
+        {
+          "name": "context_window",
+          "kind": "field",
+          "signature": "context_window: int",
+          "doc": ""
+        },
+        {
+          "name": "requests",
+          "kind": "field",
+          "signature": "requests: list[Request]",
+          "doc": ""
+        },
+        {
+          "name": "complete",
+          "kind": "method",
+          "signature": "complete(messages: Sequence[Message], *, system: str | None = None, max_tokens: int = 512, temperature: float = 0.0, tools: Sequence[Tool] = ()) -> Completion",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "HashingEmbedder",
+      "kind": "class",
+      "signature": "class HashingEmbedder(dimensions: int = 256)",
+      "doc": "Feature-hashing embedder over lower-cased word unigrams and character trigrams.",
+      "members": [
+        {
+          "name": "dimensions",
+          "kind": "property",
+          "signature": "dimensions: int",
+          "doc": ""
+        },
+        {
+          "name": "embed",
+          "kind": "method",
+          "signature": "embed(texts: Sequence[str]) -> list[Vector]",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "InvalidRequestError",
+      "kind": "class",
+      "signature": "class InvalidRequestError(ModelError)",
+      "doc": "The request itself is wrong (for example, too many tokens). Retrying will not help.",
+      "members": []
+    },
+    {
+      "name": "Message",
+      "kind": "class",
+      "signature": "class Message(role: Role, content: str = '', tool_calls: tuple[ToolCall, ...] = (), tool_call_id: str | None = None)",
+      "doc": "One turn in a conversation. The system prompt is passed separately, as most APIs do.",
+      "members": [
+        {
+          "name": "role",
+          "kind": "field",
+          "signature": "role: Role",
+          "doc": ""
+        },
+        {
+          "name": "content",
+          "kind": "field",
+          "signature": "content: str",
+          "doc": ""
+        },
+        {
+          "name": "tool_calls",
+          "kind": "field",
+          "signature": "tool_calls: tuple[ToolCall, ...]",
+          "doc": ""
+        },
+        {
+          "name": "tool_call_id",
+          "kind": "field",
+          "signature": "tool_call_id: str | None",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "ModelClient",
+      "kind": "class",
+      "signature": "class ModelClient(Protocol)",
+      "doc": "Anything that can complete a conversation.",
+      "members": [
+        {
+          "name": "complete",
+          "kind": "method",
+          "signature": "complete(messages: Sequence[Message], *, system: str | None = None, max_tokens: int = 512, temperature: float = 0.0, tools: Sequence[Tool] = ()) -> Completion",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "ModelError",
+      "kind": "class",
+      "signature": "class ModelError(Exception)",
+      "doc": "Base class for model API errors.",
+      "members": []
+    },
+    {
+      "name": "RateLimitError",
+      "kind": "class",
+      "signature": "class RateLimitError(message: str = 'rate limited', retry_after_s: float = 1.0)",
+      "doc": "The provider asked us to slow down. Safe to retry after a delay.",
+      "members": []
+    },
+    {
+      "name": "ServerError",
+      "kind": "class",
+      "signature": "class ServerError(ModelError)",
+      "doc": "A transient provider-side failure. Usually safe to retry.",
+      "members": []
+    },
+    {
+      "name": "Tool",
+      "kind": "class",
+      "signature": "class Tool(name: str, description: str, input_schema: Mapping[str, Any])",
+      "doc": "A function the model may ask to call. `input_schema` is a JSON Schema object.",
+      "members": [
+        {
+          "name": "name",
+          "kind": "field",
+          "signature": "name: str",
+          "doc": ""
+        },
+        {
+          "name": "description",
+          "kind": "field",
+          "signature": "description: str",
+          "doc": ""
+        },
+        {
+          "name": "input_schema",
+          "kind": "field",
+          "signature": "input_schema: Mapping[str, Any]",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "ToolCall",
+      "kind": "class",
+      "signature": "class ToolCall(id: str, name: str, arguments: Mapping[str, Any])",
+      "doc": "The model asking for `name` to be called with `arguments`.",
+      "members": [
+        {
+          "name": "id",
+          "kind": "field",
+          "signature": "id: str",
+          "doc": ""
+        },
+        {
+          "name": "name",
+          "kind": "field",
+          "signature": "name: str",
+          "doc": ""
+        },
+        {
+          "name": "arguments",
+          "kind": "field",
+          "signature": "arguments: Mapping[str, Any]",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "Usage",
+      "kind": "class",
+      "signature": "class Usage(input_tokens: int, output_tokens: int)",
+      "doc": "",
+      "members": [
+        {
+          "name": "input_tokens",
+          "kind": "field",
+          "signature": "input_tokens: int",
+          "doc": ""
+        },
+        {
+          "name": "output_tokens",
+          "kind": "field",
+          "signature": "output_tokens: int",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "cosine_similarity",
+      "kind": "function",
+      "signature": "def cosine_similarity(a: Sequence[float], b: Sequence[float]) -> float",
+      "doc": "Cosine similarity of two equal-length vectors; 0.0 if either is all zeros.",
+      "members": []
+    },
+    {
+      "name": "count_tokens",
+      "kind": "function",
+      "signature": "def count_tokens(text: str) -> int",
+      "doc": "Number of tokens in `text`.",
+      "members": []
+    },
+    {
+      "name": "default_client",
+      "kind": "function",
+      "signature": "def default_client() -> ModelClient",
+      "doc": "The model client configured for this run (the fake in the sandbox).",
+      "members": []
+    },
+    {
+      "name": "tokenize",
+      "kind": "function",
+      "signature": "def tokenize(text: str) -> list[str]",
+      "doc": "Split `text` into tokens: runs of word characters, and single punctuation marks.",
+      "members": []
+    },
+    {
+      "name": "use_client",
+      "kind": "function",
+      "signature": "def use_client(client: ModelClient) -> Iterator[ModelClient]",
+      "doc": "Make `client` the default for the duration of the block.",
+      "members": []
+    }
+  ]
+}

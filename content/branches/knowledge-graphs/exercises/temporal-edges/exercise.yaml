@@ -1,0 +1,20 @@
+version: 3
+title: Temporal edges
+tier: intermediate
+xp: 125
+prerequisites: [knowledge-graphs.triple-store]
+skills: [temporal-graphs, validity-intervals, invalidation]
+editable: [temporal.py]
+checks:
+  - id: intervals
+    title: A fact is valid from its start date up to, but not including, its end date
+    test: test_temporal.py::test_half_open_intervals_and_dates
+  - id: supersede
+    title: A functional predicate closes the old value and keeps it in history
+    test: test_temporal.py::test_functional_predicates_supersede
+  - id: order
+    title: The graph does not depend on the order assertions arrive in
+    test: test_temporal.py::test_arrival_order_does_not_matter
+  - id: invalidate
+    title: Invalidating closes an interval, and re-asserting opens a new one
+    test: test_temporal.py::test_invalidation

@@ -1,0 +1,68 @@
+version: 6
+title: A GraphRAG question-answering service
+tier: capstone
+xp: 350
+isolation: process  # learner code runs in a child process (ADR 0009)
+prerequisites:
+  - knowledge-graphs.entity-resolution
+  - knowledge-graphs.temporal-edges
+  - knowledge-graphs.ontology-extraction
+  - knowledge-graphs.guarded-text-to-query
+  - knowledge-graphs.community-summaries
+  - knowledge-graphs.hybrid-graph-retrieval
+skills: [graphrag, knowledge-graphs, provenance, temporal-graphs, text-to-query, community-summaries, integration]
+editable: [extraction.py, entities.py, graph.py, query.py, communities.py, service.py]
+limits: { timeout_s: 30, memory_mb: 256 }
+checks:
+  - id: extraction
+    title: Each document is extracted with the ontology, refused items are counted, and bad input changes nothing
+    test: test_service.py::test_extraction_and_rejections
+    kind: behavioural
+  - id: resolution
+    title: Different spellings of an entity join into one node, and aliases apply
+    test: test_service.py::test_mentions_resolve_to_one_node
+    kind: behavioural
+  - id: current
+    title: Without as_of the model sees only facts that are still true, each with its start date
+    test: test_service.py::test_current_facts
+    kind: behavioural
+  - id: as-of
+    title: With as_of the model sees the graph as it was, with half-open intervals
+    test: test_service.py::test_questions_about_the_past
+    kind: behavioural
+  - id: order
+    title: The answer does not depend on the order documents were ingested in
+    test: test_service.py::test_ingestion_order_does_not_matter
+    kind: behavioural
+  - id: provenance
+    title: Cited facts come back with their validity and every document that supports them
+    test: test_service.py::test_citations_carry_provenance
+    kind: behavioural
+  - id: intervals
+    title: Each validity interval has its own sources, and same-date documents apply in doc id order
+    test: test_service.py::test_sources_follow_intervals
+    kind: behavioural
+  - id: traversal
+    title: Hops are bounded and run in both directions, and an empty neighbourhood skips the model
+    test: test_service.py::test_hops_and_empty_neighbourhoods
+    kind: behavioural
+  - id: query
+    title: Questions become queries over the resolved graph as it was at as_of
+    test: test_service.py::test_queries
+    kind: behavioural
+  - id: query-guard
+    title: A reply that is not exactly one allowed query is refused, never run
+    test: test_service.py::test_queries_are_guarded
+    kind: behavioural
+  - id: global
+    title: Global questions are answered from summaries of the communities valid at as_of, with their sources
+    test: test_service.py::test_global_questions
+    kind: behavioural
+  - id: summary-cache
+    title: Each community is summarised once per service, until its facts change
+    test: test_service.py::test_summaries_are_cached
+    kind: behavioural
+  - id: instances
+    title: Two services share nothing
+    test: test_service.py::test_services_are_independent
+    kind: behavioural

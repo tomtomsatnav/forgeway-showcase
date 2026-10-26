@@ -1,0 +1,22 @@
+# Docker housekeeping. Removes dangling images and build cache older than a week. Tagged
+# release images (forgeway-*:<commit>, :live) are not dangling: deploy.sh keeps the last few
+# for rollback and removes older ones itself. Never `image prune -a` here: that would delete
+# the rollback images.
+[Unit]
+Description=Forgeway Docker image and build-cache pruning
+Requires=docker.service
+After=docker.service
+OnFailure=forgeway-alert@%n.service
+
+[Service]
+Type=oneshot
+User=forgeway
+Group=forgeway
+StateDirectory=forgeway
+Environment=HOME=/var/lib/forgeway
+ExecStart=/usr/bin/docker image prune --force --filter until=168h
+ExecStart=/usr/bin/docker builder prune --force --filter until=168h
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectHome=yes
+ProtectSystem=strict

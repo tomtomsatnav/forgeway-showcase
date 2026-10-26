@@ -1,0 +1,123 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend lint, types, unit and database tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: lattice
+          POSTGRES_PASSWORD: lattice
+          POSTGRES_DB: lattice
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U lattice" --health-interval 2s --health-retries 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      - run: uv sync --frozen
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      - run: uv run lint-imports
+      - run: uv run mypy backend/src grader/src
+      - name: OpenAPI schema is up to date
+        run: uv run forgeway openapi --output frontend/openapi.json && git diff --exit-code frontend/openapi.json
+      - run: uv run pytest -m "not docker" --cov=lattice --cov=lattice_grader --cov=forgeway_kit --cov-report=term-missing
+
+  sandbox:
+    name: Sandbox and content validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      - run: uv sync --frozen
+      - run: docker build -t lattice-sandbox-python:dev -f grader/images/python/Dockerfile grader
+      - run: uv run pytest -m docker
+      - run: uv run forgeway content validate --require-capstones
+
+  # This showcase copy ships hidden tests, reference solutions and wrong answers for the
+  # foundations only (content/SHOWCASE.md), so only that branch can be graded here.
+  content:
+    name: Content (foundations)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      - run: uv sync --frozen
+      - run: docker build -t lattice-sandbox-python:dev -f grader/images/python/Dockerfile grader
+      - run: uv run forgeway content test --only starter.
+
+  stack:
+    name: docker compose smoke test
+    runs-on: ubuntu-latest
+    env:
+      # Adds the test-only e2e-project branch that e2e/carry.spec.ts needs; every compose command
+      # in this job, the failure logs included, sees the same stack.
+      COMPOSE_FILE: docker-compose.yml:docker-compose.e2e.yml
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+      - run: docker compose up -d --build --wait api worker web
+      - run: uv run --with httpx python scripts/smoke.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+        working-directory: frontend
+      - run: npx playwright install --with-deps chromium
+        working-directory: frontend
+      - run: npm run e2e
+        working-directory: frontend
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            frontend/playwright-report
+            frontend/test-results
+          if-no-files-found: ignore
+      - if: failure()
+        run: docker compose logs
+
+  frontend:
+    name: Frontend lint, types, tests and build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run gen:api
+      - name: Generated API types are up to date
+        run: git diff --exit-code -- src/api/schema.d.ts
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build

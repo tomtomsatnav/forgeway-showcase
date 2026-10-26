@@ -1,0 +1,24 @@
+version: 2
+title: Agentic search
+tier: advanced
+xp: 200
+prerequisites: [retrieval.grounded-answers, starter.tool-use]
+skills: [agentic-rag, tool-use, citations]
+editable: [agent.py]
+checks:
+  - id: refines
+    title: Searches again, with the model's refined query, when the first results lack the answer
+    test: test_agent.py::test_searches_again_when_first_results_fall_short
+    kind: behavioural
+  - id: results
+    title: Tool results carry each hit's id and text
+    test: test_agent.py::test_tool_results_show_ids_and_text
+    kind: behavioural
+  - id: citations
+    title: Citations are limited to ids that were actually retrieved
+    test: test_agent.py::test_citations_are_subset_of_retrieved
+    kind: behavioural
+  - id: step-cap
+    title: Stops at max_steps with a clear error
+    test: test_agent.py::test_step_cap
+    kind: behavioural
