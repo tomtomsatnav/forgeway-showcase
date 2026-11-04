@@ -1,0 +1,21 @@
+version: 2
+title: Tokens and the context window
+tier: beginner
+xp: 90
+prerequisites: [starter.conversation-history]
+skills: [tokens, context-window]
+editable: [budget.py]
+hints:
+  - "Use `count_tokens(text)` from `forgeway_kit` and add up the system prompt plus every message you keep."
+  - "Remove messages from the front of the list (the oldest) one at a time, re-checking the total after each removal."
+  - "After trimming, the first remaining message must be from the user. If the oldest left is an assistant reply, its question has gone, so drop it too."
+checks:
+  - id: fits-budget
+    title: Trims the oldest turns until the request fits
+    test: test_budget.py::test_trims_oldest_until_it_fits
+  - id: keeps-essentials
+    title: Counts the system prompt and keeps the latest user turn
+    test: test_budget.py::test_system_prompt_counts_and_latest_turn_is_kept
+  - id: starts-with-user
+    title: The trimmed history still starts with a user message
+    test: test_budget.py::test_history_starts_with_a_user_message

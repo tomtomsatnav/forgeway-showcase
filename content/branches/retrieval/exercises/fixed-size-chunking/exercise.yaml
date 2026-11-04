@@ -1,0 +1,24 @@
+version: 3
+title: Fixed-size chunking
+tier: beginner
+xp: 75
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [chunking]
+editable: [chunker.py]
+hints:
+  - "Each chunk starts `size - overlap` characters after the previous one, not `size` characters after it."
+  - "Stop as soon as a chunk reaches the end of the text, otherwise you emit a final chunk that is already contained in the previous one."
+  - "Validate first: `size` must be positive, and `overlap` must be non-negative and strictly smaller than `size`, otherwise the loop never advances."
+checks:
+  - id: sizes-and-count
+    title: Chunks respect the size limit and cover the document
+    test: test_chunker.py::test_sizes_and_count
+  - id: overlap
+    title: Neighbouring chunks share exactly `overlap` characters
+    test: test_chunker.py::test_overlap_is_shared
+  - id: edge-cases
+    title: Empty and short documents give sensible results
+    test: test_chunker.py::test_short_and_empty_documents
+  - id: validation
+    title: Invalid settings raise ValueError
+    test: test_chunker.py::test_invalid_settings

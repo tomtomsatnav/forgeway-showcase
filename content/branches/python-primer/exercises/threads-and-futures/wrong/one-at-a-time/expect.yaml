@@ -1,0 +1,2 @@
+fails: concurrent
+message_contains: never overlapped

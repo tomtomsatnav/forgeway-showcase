@@ -1,0 +1,21 @@
+version: 2
+title: Embeddings and similarity search
+tier: intermediate
+xp: 120
+prerequisites: [starter.tokens-and-context]
+skills: [embeddings, cosine-similarity, semantic-search]
+editable: [search.py]
+hints:
+  - "`embedder.embed(texts)` takes a list of strings and returns one vector per string, in the same order. You can embed the query and the documents in one call."
+  - "`cosine_similarity(a, b)` from `forgeway_kit` scores two vectors: higher means more alike. Pair each document with its score."
+  - "Sort by score from highest to lowest and return the first `k` document texts (not the scores or indices)."
+checks:
+  - id: best-match
+    title: The most similar document comes first
+    test: test_search.py::test_best_match_is_first
+  - id: ranking
+    title: Returns k documents, ranked from most to least similar
+    test: test_search.py::test_ranking_and_k
+  - id: edge-cases
+    title: Handles k larger than the collection and no documents
+    test: test_search.py::test_edge_cases

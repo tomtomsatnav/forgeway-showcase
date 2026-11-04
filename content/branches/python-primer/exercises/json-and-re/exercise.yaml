@@ -1,0 +1,27 @@
+version: 1
+title: JSON and regular expressions
+tier: beginner
+xp: 80
+skills: [python, json, regular-expressions]
+editable: [parsing.py]
+hints:
+  - "`json.loads` raises `json.JSONDecodeError`, a kind of `ValueError`, on bad input. It parses `[1]` and `3` as happily as an object, so check the result with `isinstance(value, dict)`."
+  - "`json.dumps(value, sort_keys=True, separators=(\",\", \":\"))` gives the same text however the keys were ordered."
+  - "`re.findall` with `\\b` at both ends of the pattern finds the ids and skips those inside longer words."
+  - "`re.fullmatch` matches the whole string. `re.match` with `$` also lets a trailing newline through."
+checks:
+  - id: parse-object
+    title: Returns a JSON object, and None for anything else
+    test: test_parsing.py::test_parse_object
+  - id: canonical
+    title: Gives the same text whatever the key order
+    test: test_parsing.py::test_canonical
+  - id: document-ids
+    title: Finds every document id in the text
+    test: test_parsing.py::test_document_ids
+  - id: tool-names
+    title: Accepts a valid tool name and nothing else
+    test: test_parsing.py::test_is_tool_name
+  - id: redact
+    title: Masks every number in a key that follows the pattern
+    test: test_parsing.py::test_redact_keys

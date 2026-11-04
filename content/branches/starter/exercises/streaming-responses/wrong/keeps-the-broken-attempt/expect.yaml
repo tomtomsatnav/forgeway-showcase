@@ -1,0 +1,2 @@
+fails: restart-before-text
+message_contains: start each attempt with fresh state

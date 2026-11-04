@@ -1,0 +1,28 @@
+version: 1
+title: Schema-constrained output
+tier: intermediate
+xp: 130
+prerequisites: [starter.structured-output]
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [structured-output, validation, tool-use]
+editable: [schema_output.py]
+hints:
+  - "Pick the route first, from `supports`: `\"response_format\" in supports` wins, then `\"tool_choice\" in supports`, and only then the prompt. Each route is one `client.complete(...)` call with different arguments."
+  - "Check `completion.stop_reason == \"refusal\"` before you touch the reply, on every route, and raise `Refused(completion.text)`. A refusal is prose, so parsing it would turn a policy decision into a confusing JSON error."
+  - "Run `check(data, schema)` on every route. On the native routes a failure raises `ValueError` straight away; only the prompt route re-asks, once, with the bad reply as an assistant message and the error in a user message, as in \"Structured output\"."
+checks:
+  - id: native-schema
+    title: Sends the schema as response_format when the provider supports it
+    test: test_schema_output.py::test_native_schema_first
+  - id: forced-tool
+    title: Falls back to a forced call of a tool whose input schema is the schema
+    test: test_schema_output.py::test_forced_tool_without_native_schema
+  - id: refusal
+    title: Treats a refusal as its own outcome, on every route
+    test: test_schema_output.py::test_refusal_is_its_own_outcome
+  - id: validates-native
+    title: Validates native output anyway, and raises when it breaks the schema
+    test: test_schema_output.py::test_validates_native_replies
+  - id: repair-fallback
+    title: Falls back to the prompt with parse-and-repair when neither is available
+    test: test_schema_output.py::test_parse_and_repair_fallback

@@ -1,0 +1,28 @@
+version: 2
+title: A tool-calling loop
+tier: intermediate
+xp: 125
+prerequisites: [starter.conversation-history]
+skills: [tool-use, agents, error-handling]
+editable: [tool_loop.py]
+hints:
+  - "A reply with `stop_reason == \"tool_use\"` carries `tool_calls` and no final answer. Append it to the conversation as an assistant `Message(tool_calls=...)`, then answer every call before asking the model again."
+  - "Each result goes back as `Message(role=\"tool\", content=..., tool_call_id=call.id)`, in the order the calls were made. The content must be a string: use `str(result)`."
+  - "Wrap each tool call in `try/except Exception` and send `error: <message>` as the result, so the model can recover. A tool missing from the registry is an error result too. Loop at most `max_steps` times, then raise `RuntimeError` mentioning `max_steps`."
+checks:
+  - id: one-round
+    title: Runs a tool and sends its result back to get the answer
+    test: test_tool_loop.py::test_answers_after_one_tool_round
+    kind: behavioural
+  - id: several-calls
+    title: Handles several calls in one turn, in order, and chains rounds
+    test: test_tool_loop.py::test_several_calls_in_order_and_chained_rounds
+    kind: behavioural
+  - id: tool-errors
+    title: A failing or unknown tool becomes an error result the model sees
+    test: test_tool_loop.py::test_tool_errors_become_results
+    kind: behavioural
+  - id: step-cap
+    title: Stops at max_steps with a clear error
+    test: test_tool_loop.py::test_step_cap
+    kind: behavioural

@@ -1,0 +1,21 @@
+version: 2
+title: Listing tools with input schemas
+tier: beginner
+xp: 100
+prerequisites: [protocols.initialize-handshake]
+skills: [mcp, tools, json-schema]
+editable: [tools.py]
+hints:
+  - "`typing.get_type_hints(fn)` gives the annotations as real types; `typing.get_origin` and `typing.get_args` take `list[int]` and `Literal['a', 'b']` apart. Check `bool` before `int` if you compare with `issubclass`."
+  - "`inspect.signature(fn).parameters` gives each parameter in order; one with `.default is inspect.Parameter.empty` is required. Leave `required` out entirely when nothing is required."
+  - "`inspect.getdoc(fn)` cleans up indentation but can leave trailing spaces on a line. The description is its first line, stripped. Reject a second tool with a name already used, and any name outside letters, digits, `_`, `-` and `.`."
+checks:
+  - id: types
+    title: Python annotations become JSON Schema types
+    test: test_tools.py::test_annotations_become_schema_types
+  - id: required
+    title: Only parameters without defaults are required, and defaults are recorded
+    test: test_tools.py::test_required_and_defaults
+  - id: listing
+    title: The listing keeps order, takes descriptions from docstrings and rejects bad names
+    test: test_tools.py::test_listing

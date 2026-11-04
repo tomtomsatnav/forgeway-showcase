@@ -1,0 +1,2 @@
+fails: other-errors
+message_contains: Catch only TimeoutError

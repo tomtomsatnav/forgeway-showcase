@@ -1,0 +1,4 @@
+title: Python for this course
+summary: An optional, free refresher on the Python the course leans on, for engineers who know another language. Data structures, dataclasses, exceptions, JSON, regular expressions and threads. Nothing depends on it, so take only what you need.
+order: 11
+kind: primer

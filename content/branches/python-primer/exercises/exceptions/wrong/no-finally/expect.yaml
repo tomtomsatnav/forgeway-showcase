@@ -1,0 +1,2 @@
+fails: cleanup
+message_contains: Use try/finally

@@ -1,0 +1,25 @@
+version: 3
+title: Evaluator–optimiser
+tier: intermediate
+xp: 125
+prerequisites: [orchestration.prompt-chaining]
+skills: [evaluator-optimiser, feedback-loops, termination]
+editable: [refine.py]
+hints:
+  - "Each round is two calls: the generator writes a draft, then the evaluator reviews it. The generator and the evaluator are separate calls with separate system prompts. Only the evaluator's prompt mentions `PASS`."
+  - "A reply passes only if it *starts* with `PASS` once trimmed, ignoring case. A failing reply may well contain the word 'pass' somewhere in its feedback, so searching for the word anywhere is not enough."
+  - "A regenerate call is a single user message holding the task, the previous draft and the evaluator's feedback. Without the previous draft and the feedback the generator would simply repeat itself."
+  - "Stop at the first `PASS`. After `max_rounds` drafts, stop anyway and return the last draft with `accepted=False`."
+checks:
+  - id: feedback-loop
+    title: The generator is shown its previous draft and the evaluator's feedback
+    test: test_refine.py::test_feedback_reaches_the_generator
+    kind: behavioural
+  - id: accepts
+    title: Stops on a verdict that starts with PASS, and only then
+    test: test_refine.py::test_stops_when_accepted
+    kind: behavioural
+  - id: round-limit
+    title: Gives up after max_rounds and returns the last draft unaccepted
+    test: test_refine.py::test_round_limit
+    kind: behavioural

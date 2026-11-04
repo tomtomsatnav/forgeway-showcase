@@ -1,0 +1,24 @@
+version: 3
+title: Keeping conversation history
+tier: beginner
+xp: 75
+prerequisites: [starter.system-prompts]
+skills: [conversation-state]
+editable: [chat.py]
+hints:
+  - "The model is stateless: it only knows what is in the `messages` list of this call. Memory is your code resending the earlier turns."
+  - "After each call, store the user message and then the assistant's reply, so roles always alternate."
+  - "Create the history list inside `__init__`. A list created at class level or as a default argument is shared by every instance."
+checks:
+  - id: grows-alternating
+    title: History grows as alternating user and assistant turns
+    test: test_chat.py::test_history_alternates
+  - id: model-sees-history
+    title: Each request carries the whole earlier conversation
+    test: test_chat.py::test_model_sees_earlier_turns
+  - id: separate-chats
+    title: Separate chats do not share history
+    test: test_chat.py::test_chats_are_independent
+  - id: failed-send
+    title: A failed call leaves the history untouched
+    test: test_chat.py::test_failed_send_leaves_history_clean

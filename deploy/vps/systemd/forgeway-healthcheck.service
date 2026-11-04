@@ -1,0 +1,16 @@
+# Site, worker, queue and disk checks; alerts on change. Install: see deploy/vps/README.md.
+[Unit]
+Description=Forgeway health check
+After=docker.service
+
+[Service]
+Type=oneshot
+User=forgeway
+Group=forgeway
+StateDirectory=forgeway
+Environment=HOME=/var/lib/forgeway
+ExecStart=/srv/forgeway/deploy/vps/healthcheck.sh
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectHome=yes
+ProtectSystem=strict

@@ -1,0 +1,23 @@
+version: 1
+title: Data structures and comprehensions
+tier: beginner
+xp: 50
+skills: [python, dicts, sets, comprehensions, sorting]
+editable: [transcript.py]
+hints:
+  - "`dict.setdefault(key, [])` returns the list for `key`, creating it the first time, so you can append straight to what it gives back."
+  - "A set comprehension drops repeats, and `sorted()` turns it back into a list in order."
+  - "Sort with a tuple key: `key=lambda pair: (-pair[1], pair[0])` puts the highest count first and breaks ties alphabetically."
+checks:
+  - id: grouping
+    title: Groups each role's messages in the order they arrived
+    test: test_transcript.py::test_contents_by_role
+  - id: unique-roles
+    title: Lists each role once, sorted
+    test: test_transcript.py::test_unique_roles
+  - id: long-messages
+    title: Keeps only the messages with enough words
+    test: test_transcript.py::test_long_messages
+  - id: top-words
+    title: Ranks words by count, then alphabetically
+    test: test_transcript.py::test_top_words

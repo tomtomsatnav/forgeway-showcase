@@ -1,0 +1,2 @@
+fails: returns-reply
+message_contains: completion's text unchanged

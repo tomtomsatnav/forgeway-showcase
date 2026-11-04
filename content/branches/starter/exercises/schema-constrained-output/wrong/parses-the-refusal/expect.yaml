@@ -1,0 +1,2 @@
+fails: refusal
+message_contains: check stop_reason first

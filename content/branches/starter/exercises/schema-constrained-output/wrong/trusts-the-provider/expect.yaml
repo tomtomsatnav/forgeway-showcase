@@ -1,0 +1,2 @@
+fails: validates-native
+message_contains: Validate even native

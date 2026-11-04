@@ -1,0 +1,17 @@
+version: 2
+title: Your first completion
+tier: beginner
+xp: 50
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [model-apis]
+editable: [ask.py]
+hints:
+  - "A conversation is a list of `Message` objects. A single question is one user message."
+  - "`client.complete([...])` returns a `Completion`; the reply text is on its `.text` attribute."
+checks:
+  - id: returns-reply
+    title: Returns the model's reply
+    test: test_ask.py::test_returns_the_model_reply
+  - id: sends-question
+    title: Sends the question as a user message
+    test: test_ask.py::test_sends_the_question_as_a_user_message

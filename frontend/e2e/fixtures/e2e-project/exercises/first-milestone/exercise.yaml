@@ -1,0 +1,9 @@
+version: 1
+title: First milestone
+tier: beginner
+xp: 50
+editable: [greet.py]
+checks:
+  - id: greets
+    title: Greets by name
+    test: test_greet.py::test_greets_by_name

@@ -1,0 +1,27 @@
+version: 1
+title: Exceptions
+tier: beginner
+xp: 70
+skills: [python, exceptions]
+editable: [calls.py]
+hints:
+  - "Catch only what you can handle: `except TimeoutError:` lets every other error carry on up to the caller."
+  - "Your own exception is a class that inherits from `Exception`. Set `self.attempts` in `__init__` and pass a message to `super().__init__(...)`."
+  - "Keep the last `TimeoutError` in a variable, because the name in `except ... as err` is gone once that block ends. Then `raise GaveUpError(attempts) from last_error`."
+  - "`try: ... finally: cleanup.close()` runs the cleanup whether or not the work raised, and the error carries on afterwards."
+checks:
+  - id: parse
+    title: Turns bad input into None and leaves good input alone
+    test: test_calls.py::test_parse_count
+  - id: retries
+    title: Retries a timeout and returns the first reply
+    test: test_calls.py::test_retries_timeouts
+  - id: gives-up
+    title: Raises its own error, with its cause, when every attempt times out
+    test: test_calls.py::test_gives_up_with_its_own_error
+  - id: other-errors
+    title: Lets any other error through at once
+    test: test_calls.py::test_other_errors_are_not_retried
+  - id: cleanup
+    title: Always runs the cleanup
+    test: test_calls.py::test_cleanup_always_runs

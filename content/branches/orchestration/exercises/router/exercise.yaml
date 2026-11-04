@@ -1,0 +1,24 @@
+version: 3
+title: A router
+tier: beginner
+xp: 75
+prerequisites: [starter.system-prompts]
+skills: [routing, classification, prompting]
+editable: [router.py]
+hints:
+  - "The classifier call is its own model call. Its system prompt must list every route as `name: description`, and the user message is the customer's message, unchanged."
+  - "Models do not always reply with a bare label: `Route: Billing.` is common. Look for a route name as a whole word, ignoring case, and take the one mentioned first. `order` must not match inside `reorder`."
+  - "The specialist is a second call: the chosen route's own `system` prompt and the original message only. Never send the classifier's reply on to the specialist."
+checks:
+  - id: classifier-prompt
+    title: The classifier is shown every route and the customer's message
+    test: test_router.py::test_classifier_prompt
+    kind: behavioural
+  - id: parse-label
+    title: Messy labels are matched as whole words, and unknown ones fall back to the default
+    test: test_router.py::test_parse_label
+    kind: behavioural
+  - id: specialist
+    title: The chosen specialist answers with its own prompt and the original message
+    test: test_router.py::test_specialist_call
+    kind: behavioural

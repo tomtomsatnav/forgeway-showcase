@@ -1,0 +1,25 @@
+version: 3
+title: Temporal edges
+tier: intermediate
+xp: 125
+prerequisites: [knowledge-graphs.triple-store]
+skills: [temporal-graphs, validity-intervals, invalidation]
+editable: [temporal.py]
+hints:
+  - "Do not edit facts in place. Keep a list of assertion and invalidation events, and compute the facts by replaying them in date order. Then arrival order cannot matter."
+  - "Sort the events of one (subject, predicate) pair by `(date, kind, seq)`, with assertions before invalidations on the same date. Keep a dict of the objects that are currently open, with the date each started."
+  - "For a functional predicate, asserting a new object closes every other open object at that date. An interval that would start and end on the same date is dropped."
+  - "Validate dates with `re.fullmatch(r\"[0-9]{4}-[0-9]{2}-[0-9]{2}\", date)`. `\\d` accepts non-ASCII digits and `$` accepts a trailing newline."
+checks:
+  - id: intervals
+    title: A fact is valid from its start date up to, but not including, its end date
+    test: test_temporal.py::test_half_open_intervals_and_dates
+  - id: supersede
+    title: A functional predicate closes the old value and keeps it in history
+    test: test_temporal.py::test_functional_predicates_supersede
+  - id: order
+    title: The graph does not depend on the order assertions arrive in
+    test: test_temporal.py::test_arrival_order_does_not_matter
+  - id: invalidate
+    title: Invalidating closes an interval, and re-asserting opens a new one
+    test: test_temporal.py::test_invalidation

@@ -1,0 +1,24 @@
+version: 2
+title: JSON-RPC dispatch
+tier: beginner
+xp: 75
+prerequisites: [starter.first-completion]
+skills: [mcp, json-rpc]
+editable: [rpc.py]
+hints:
+  - "A message is a notification exactly when it has no `\"id\"` key. Test `\"id\" in message`, never the id's value: `0` and `\"\"` are perfectly good ids."
+  - "Look the method up in `methods`. Wrap the call in `try/except`: `InvalidParams` becomes code -32602 with its message; any other exception becomes -32603 with a fixed message that does not repeat the exception."
+  - "Validate the shape before you dispatch anything: a dict, `jsonrpc` equal to `\"2.0\"`, a string `method`, an `id` that is a string or an integer (not a bool), and `params`, if present, an object. Echo the id in the error only when it was itself valid."
+checks:
+  - id: results
+    title: A request gets a result that echoes its id, whatever type it is
+    test: test_rpc.py::test_requests_get_results
+  - id: notifications
+    title: A notification is never answered
+    test: test_rpc.py::test_notifications_get_no_reply
+  - id: errors
+    title: Unknown methods, bad params and crashes become the right error codes
+    test: test_rpc.py::test_error_codes
+  - id: invalid
+    title: A malformed message gets an invalid-request error without reaching a handler
+    test: test_rpc.py::test_invalid_messages

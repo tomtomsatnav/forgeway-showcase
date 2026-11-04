@@ -1,0 +1,28 @@
+version: 1
+title: Cost and latency
+tier: intermediate
+xp: 125
+prerequisites: [starter.tokens-and-context]
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [cost, latency, caching, observability]
+editable: [costs.py]
+hints:
+  - "Prices are USD per million tokens. `input_tokens` already includes the cache reads, so the fresh input is `input_tokens - cache_read_input_tokens`; price that at the input rate and the cache reads at the cache-read rate. `output_tokens` already includes `reasoning_tokens`."
+  - "Look up each completion's card by `completion.model`. The saving on one call is its cache-read tokens times `(input price - cache-read price)`, per million."
+  - "Nearest rank: sort the values and take the one at index `math.ceil(p * n / 100) - 1`. For effort, call `client.complete(messages, model=card.name, effort=level)` once per level and price each call's own usage."
+checks:
+  - id: prices-a-call
+    title: Prices one call from its usage and model card
+    test: test_costs.py::test_prices_one_call
+  - id: run-and-cache
+    title: Totals a run across models and reports what the prompt cache saved
+    test: test_costs.py::test_totals_a_run_and_its_cache_savings
+  - id: percentiles
+    title: Computes percentiles by the nearest-rank method
+    test: test_costs.py::test_percentiles_by_nearest_rank
+  - id: latency
+    title: Reports p50 and p95 latency over a batch
+    test: test_costs.py::test_reports_p50_and_p95_latency
+  - id: effort
+    title: Compares what the same question costs at each effort level
+    test: test_costs.py::test_compares_effort_levels

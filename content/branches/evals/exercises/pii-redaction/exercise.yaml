@@ -1,0 +1,30 @@
+version: 2
+title: Redacting personal data before the model
+tier: beginner
+xp: 100
+prerequisites: [starter.system-prompts]
+skills: [guardrails, pii, regex]
+editable: [redact.py]
+hints:
+  - "Compile the four patterns once and apply them in the order given: email, card, National Insurance number, phone. The order matters because a card number is also a long run of digits."
+  - "Write the patterns with `re` exactly as printed in the brief. Anchors such as `\\b` and the lookarounds are what stop `ab@c` and a nine-digit order number being treated as personal data."
+  - "`ask` must build the list of messages it sends from the redacted pieces, and send only that. A redacted copy used just for logging protects nobody."
+  - "Redact the content of every message in `history`, user and assistant alike, and keep each message's role. Leave `system` alone: it is your own text."
+checks:
+  - id: patterns
+    title: Emails, cards, NI numbers and phone numbers are replaced by their placeholders
+    test: test_redact.py::test_each_pattern
+  - id: lookalikes
+    title: Text that only looks like personal data is left alone
+    test: test_redact.py::test_lookalikes_survive
+  - id: overlaps
+    title: Overlapping shapes go to the right placeholder
+    test: test_redact.py::test_overlapping_shapes
+  - id: reaches-model
+    title: The redacted text is what reaches the model
+    test: test_redact.py::test_redacted_text_is_what_is_sent
+    kind: behavioural
+  - id: history
+    title: Earlier turns are redacted too, and the system prompt is left alone
+    test: test_redact.py::test_history_is_redacted
+    kind: behavioural

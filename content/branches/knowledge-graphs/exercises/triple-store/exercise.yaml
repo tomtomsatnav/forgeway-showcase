@@ -1,0 +1,21 @@
+version: 3
+title: An in-memory triple store
+tier: beginner
+xp: 75
+prerequisites: []
+skills: [knowledge-graphs, triples, indexing]
+editable: [triples.py]
+hints:
+  - "A triple is a fact in three parts. Keep them in a `dict` used as an ordered set (`self._triples[triple] = None`), so duplicates collapse and insertion order survives."
+  - "In `match`, a `None` argument is a wildcard and every other argument must be equal. Test `is None`, not truthiness."
+  - "If you add an index (for example subject to triples), `remove` has to update it too, or `match` will return facts that are gone."
+checks:
+  - id: patterns
+    title: A pattern returns exactly the triples that fit every given part
+    test: test_triples.py::test_pattern_matching
+  - id: set-semantics
+    title: Duplicates are ignored and results keep insertion order
+    test: test_triples.py::test_duplicates_and_order
+  - id: removal
+    title: Removed triples never come back, and results are copies
+    test: test_triples.py::test_removal_and_copies

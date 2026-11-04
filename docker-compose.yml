@@ -1,0 +1,74 @@
+name: lattice
+
+x-backend: &backend
+  build:
+    context: .
+    dockerfile: backend/Dockerfile
+  image: lattice-backend:dev
+  env_file: [.env.example]
+  environment:
+    LATTICE_DATABASE_URL: postgresql+psycopg://lattice:lattice@db:5432/lattice
+    LATTICE_CONTENT_DIR: /app/content
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: lattice
+      POSTGRES_PASSWORD: lattice
+      POSTGRES_DB: lattice
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lattice"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  # Builds the grading sandbox image so `docker compose up --build` is all you need.
+  sandbox-image:
+    build:
+      context: grader
+      dockerfile: images/python/Dockerfile
+    image: lattice-sandbox-python:dev
+    entrypoint: ["python", "-c", "print('sandbox image ready')"]
+    network_mode: none
+
+  migrate:
+    <<: *backend
+    command: ["sh", "-c", "alembic -c backend/alembic.ini upgrade head && forgeway content sync && forgeway seed-demo"]
+    depends_on:
+      db: { condition: service_healthy }
+
+  api:
+    <<: *backend
+    ports: ["8000:8000"]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/readyz')"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  worker:
+    <<: *backend
+    command: ["python", "-m", "lattice.worker.main"]
+    # The Docker socket is root-equivalent on the host: acceptable for local development only.
+    # In production the worker runs unprivileged behind a Docker socket-proxy and sandboxes run
+    # under gVisor; see deploy/vps/docker-compose.prod.yml and docs/adr/0010.
+    user: root
+    volumes: ["/var/run/docker.sock:/var/run/docker.sock"]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      sandbox-image: { condition: service_completed_successfully }
+
+  web:
+    build:
+      context: frontend
+    ports: ["8080:80"]
+    depends_on:
+      api: { condition: service_healthy }
+
+volumes:
+  pgdata:

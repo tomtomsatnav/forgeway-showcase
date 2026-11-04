@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily Forgeway billing reconciliation
+
+[Timer]
+OnCalendar=*-*-* 05:00:00 UTC
+RandomizedDelaySec=10min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

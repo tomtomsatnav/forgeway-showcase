@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily Forgeway account purge
+
+[Timer]
+OnCalendar=*-*-* 03:45:00 UTC
+RandomizedDelaySec=10min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,13 @@
+[project]
+name = "lattice-grader"
+version = "0.1.0"
+description = "In-sandbox grading harness (lattice_grader) and the learner toolkit (forgeway_kit)."
+requires-python = ">=3.12"
+dependencies = ["pytest>=8.3"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/lattice_grader", "src/forgeway_kit"]

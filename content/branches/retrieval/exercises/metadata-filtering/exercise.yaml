@@ -1,0 +1,22 @@
+version: 2
+title: Metadata filtering
+tier: beginner
+xp: 100
+prerequisites: [retrieval.vector-store]
+skills: [vector-search, metadata]
+editable: [store.py]
+hints:
+  - "Write a small `matches(metadata, where)` helper first: every condition in `where` must hold (they are ANDed)."
+  - "A plain value means equality; a dict like `{\"in\": [...]}` means membership. A missing field never matches."
+  - "Filter the entries *before* you score and take the top `k`. Filtering the top `k` afterwards can leave you with fewer than `k` results, or none."
+checks:
+  - id: filters
+    title: Equality and "in" filters restrict results
+    test: test_store.py::test_equality_and_in_filters
+  - id: before-top-k
+    title: Filters apply before the top-k cut
+    test: test_store.py::test_filter_applies_before_top_k
+    kind: behavioural
+  - id: edge-cases
+    title: Combined filters, missing fields and no filter
+    test: test_store.py::test_combined_missing_and_unfiltered

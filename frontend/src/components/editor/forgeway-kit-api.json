@@ -1,0 +1,636 @@
+{
+  "module": "forgeway_kit",
+  "symbols": [
+    {
+      "name": "Completion",
+      "kind": "class",
+      "signature": "class Completion(text: str, stop_reason: StopReason, usage: Usage, tool_calls: tuple[ToolCall, ...] = (), model: str = '', latency_ms: float = 0.0)",
+      "doc": "",
+      "members": [
+        {
+          "name": "text",
+          "kind": "field",
+          "signature": "text: str",
+          "doc": ""
+        },
+        {
+          "name": "stop_reason",
+          "kind": "field",
+          "signature": "stop_reason: StopReason",
+          "doc": ""
+        },
+        {
+          "name": "usage",
+          "kind": "field",
+          "signature": "usage: Usage",
+          "doc": ""
+        },
+        {
+          "name": "tool_calls",
+          "kind": "field",
+          "signature": "tool_calls: tuple[ToolCall, ...]",
+          "doc": ""
+        },
+        {
+          "name": "model",
+          "kind": "field",
+          "signature": "model: str",
+          "doc": ""
+        },
+        {
+          "name": "latency_ms",
+          "kind": "field",
+          "signature": "latency_ms: float",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "Embedder",
+      "kind": "class",
+      "signature": "class Embedder(Protocol)",
+      "doc": "Turns texts into fixed-length vectors.",
+      "members": [
+        {
+          "name": "dimensions",
+          "kind": "property",
+          "signature": "dimensions: int",
+          "doc": ""
+        },
+        {
+          "name": "embed",
+          "kind": "method",
+          "signature": "embed(texts: Sequence[str]) -> list[Vector]",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "FakeModel",
+      "kind": "class",
+      "signature": "class FakeModel(responder: Responder = ..., context_window: int = 8000, requests: list[Request] = ..., models: Sequence[ModelCard] = (), default_model: str | None = None, rate_limit: RateLimit | None = None, clock: Callable[[], float] = <built-in function monotonic>, stream_chunk_tokens: int = 3)",
+      "doc": "A deterministic stand-in for a real model.",
+      "members": [
+        {
+          "name": "responder",
+          "kind": "field",
+          "signature": "responder: Responder",
+          "doc": ""
+        },
+        {
+          "name": "context_window",
+          "kind": "field",
+          "signature": "context_window: int",
+          "doc": ""
+        },
+        {
+          "name": "requests",
+          "kind": "field",
+          "signature": "requests: list[Request]",
+          "doc": ""
+        },
+        {
+          "name": "models",
+          "kind": "field",
+          "signature": "models: Sequence[ModelCard]",
+          "doc": ""
+        },
+        {
+          "name": "default_model",
+          "kind": "field",
+          "signature": "default_model: str | None",
+          "doc": ""
+        },
+        {
+          "name": "rate_limit",
+          "kind": "field",
+          "signature": "rate_limit: RateLimit | None",
+          "doc": ""
+        },
+        {
+          "name": "clock",
+          "kind": "field",
+          "signature": "clock: Callable[[], float]",
+          "doc": ""
+        },
+        {
+          "name": "stream_chunk_tokens",
+          "kind": "field",
+          "signature": "stream_chunk_tokens: int",
+          "doc": ""
+        },
+        {
+          "name": "complete",
+          "kind": "method",
+          "signature": "complete(messages: Sequence[Message], *, system: str | None = None, max_tokens: int = 512, temperature: float = 0.0, tools: Sequence[Tool] = (), model: str | None = None, response_format: Mapping[str, Any] | None = None, tool_choice: ToolChoice = 'auto', effort: Effort | None = None) -> Completion",
+          "doc": ""
+        },
+        {
+          "name": "stream",
+          "kind": "method",
+          "signature": "stream(messages: Sequence[Message], *, system: str | None = None, max_tokens: int = 512, temperature: float = 0.0, tools: Sequence[Tool] = (), model: str | None = None, response_format: Mapping[str, Any] | None = None, tool_choice: ToolChoice = 'auto', effort: Effort | None = None) -> Iterator[StreamEvent]",
+          "doc": "Like `complete`, but the reply arrives as events: `TextDelta`s of about `stream_chunk_tokens` tokens, `ToolCallStart` / `ToolCallDelta` / `ToolCallEnd` per call, then `MessageEnd`. The request is sent (and recorded) when this is called."
+        }
+      ]
+    },
+    {
+      "name": "HashingEmbedder",
+      "kind": "class",
+      "signature": "class HashingEmbedder(dimensions: int = 256)",
+      "doc": "Feature-hashing embedder over lower-cased word unigrams and character trigrams.",
+      "members": [
+        {
+          "name": "dimensions",
+          "kind": "property",
+          "signature": "dimensions: int",
+          "doc": ""
+        },
+        {
+          "name": "embed",
+          "kind": "method",
+          "signature": "embed(texts: Sequence[str]) -> list[Vector]",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "InvalidRequestError",
+      "kind": "class",
+      "signature": "class InvalidRequestError(ModelError)",
+      "doc": "The request itself is wrong (for example, too many tokens). Retrying will not help.",
+      "members": []
+    },
+    {
+      "name": "Message",
+      "kind": "class",
+      "signature": "class Message(role: Role, content: str = '', tool_calls: tuple[ToolCall, ...] = (), tool_call_id: str | None = None)",
+      "doc": "One turn in a conversation. The system prompt is passed separately, as most APIs do.",
+      "members": [
+        {
+          "name": "role",
+          "kind": "field",
+          "signature": "role: Role",
+          "doc": ""
+        },
+        {
+          "name": "content",
+          "kind": "field",
+          "signature": "content: str",
+          "doc": ""
+        },
+        {
+          "name": "tool_calls",
+          "kind": "field",
+          "signature": "tool_calls: tuple[ToolCall, ...]",
+          "doc": ""
+        },
+        {
+          "name": "tool_call_id",
+          "kind": "field",
+          "signature": "tool_call_id: str | None",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "MessageEnd",
+      "kind": "class",
+      "signature": "class MessageEnd(stop_reason: StopReason, usage: Usage)",
+      "doc": "The last event of a stream.",
+      "members": [
+        {
+          "name": "stop_reason",
+          "kind": "field",
+          "signature": "stop_reason: StopReason",
+          "doc": ""
+        },
+        {
+          "name": "usage",
+          "kind": "field",
+          "signature": "usage: Usage",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "ModelCard",
+      "kind": "class",
+      "signature": "class ModelCard(name: str, input_usd_per_mtok: float, output_usd_per_mtok: float, cache_read_usd_per_mtok: float, base_latency_ms: float, ms_per_output_token: float, context_window: int)",
+      "doc": "A model a `FakeModel` can serve, with its prices and speed. Data only.",
+      "members": [
+        {
+          "name": "name",
+          "kind": "field",
+          "signature": "name: str",
+          "doc": ""
+        },
+        {
+          "name": "input_usd_per_mtok",
+          "kind": "field",
+          "signature": "input_usd_per_mtok: float",
+          "doc": ""
+        },
+        {
+          "name": "output_usd_per_mtok",
+          "kind": "field",
+          "signature": "output_usd_per_mtok: float",
+          "doc": ""
+        },
+        {
+          "name": "cache_read_usd_per_mtok",
+          "kind": "field",
+          "signature": "cache_read_usd_per_mtok: float",
+          "doc": ""
+        },
+        {
+          "name": "base_latency_ms",
+          "kind": "field",
+          "signature": "base_latency_ms: float",
+          "doc": ""
+        },
+        {
+          "name": "ms_per_output_token",
+          "kind": "field",
+          "signature": "ms_per_output_token: float",
+          "doc": ""
+        },
+        {
+          "name": "context_window",
+          "kind": "field",
+          "signature": "context_window: int",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "ModelClient",
+      "kind": "class",
+      "signature": "class ModelClient(Protocol)",
+      "doc": "Anything that can complete a conversation.",
+      "members": [
+        {
+          "name": "complete",
+          "kind": "method",
+          "signature": "complete(messages: Sequence[Message], *, system: str | None = None, max_tokens: int = 512, temperature: float = 0.0, tools: Sequence[Tool] = ()) -> Completion",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "ModelError",
+      "kind": "class",
+      "signature": "class ModelError(Exception)",
+      "doc": "Base class for model API errors.",
+      "members": []
+    },
+    {
+      "name": "RateLimit",
+      "kind": "class",
+      "signature": "class RateLimit(max_requests: int, per_seconds: float)",
+      "doc": "At most `max_requests` requests in any `per_seconds` window.",
+      "members": [
+        {
+          "name": "max_requests",
+          "kind": "field",
+          "signature": "max_requests: int",
+          "doc": ""
+        },
+        {
+          "name": "per_seconds",
+          "kind": "field",
+          "signature": "per_seconds: float",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "RateLimitError",
+      "kind": "class",
+      "signature": "class RateLimitError(message: str = 'rate limited', retry_after_s: float = 1.0)",
+      "doc": "The provider asked us to slow down. Safe to retry after a delay.",
+      "members": []
+    },
+    {
+      "name": "Refusal",
+      "kind": "class",
+      "signature": "class Refusal(text: str = '')",
+      "doc": "A responder's reply when the model declines: the completion stops with \"refusal\".",
+      "members": [
+        {
+          "name": "text",
+          "kind": "field",
+          "signature": "text: str",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "Request",
+      "kind": "class",
+      "signature": "class Request(messages: tuple[Message, ...], system: str | None, max_tokens: int, temperature: float, tools: tuple[Tool, ...] = (), model: str = '', response_format: Mapping[str, Any] | None = None, tool_choice: ToolChoice = 'auto', effort: Effort | None = None, sample: int = 0)",
+      "doc": "A recorded call, so graders can assert on what reached the model.",
+      "members": [
+        {
+          "name": "messages",
+          "kind": "field",
+          "signature": "messages: tuple[Message, ...]",
+          "doc": ""
+        },
+        {
+          "name": "system",
+          "kind": "field",
+          "signature": "system: str | None",
+          "doc": ""
+        },
+        {
+          "name": "max_tokens",
+          "kind": "field",
+          "signature": "max_tokens: int",
+          "doc": ""
+        },
+        {
+          "name": "temperature",
+          "kind": "field",
+          "signature": "temperature: float",
+          "doc": ""
+        },
+        {
+          "name": "tools",
+          "kind": "field",
+          "signature": "tools: tuple[Tool, ...]",
+          "doc": ""
+        },
+        {
+          "name": "model",
+          "kind": "field",
+          "signature": "model: str",
+          "doc": ""
+        },
+        {
+          "name": "response_format",
+          "kind": "field",
+          "signature": "response_format: Mapping[str, Any] | None",
+          "doc": ""
+        },
+        {
+          "name": "tool_choice",
+          "kind": "field",
+          "signature": "tool_choice: ToolChoice",
+          "doc": ""
+        },
+        {
+          "name": "effort",
+          "kind": "field",
+          "signature": "effort: Effort | None",
+          "doc": ""
+        },
+        {
+          "name": "sample",
+          "kind": "field",
+          "signature": "sample: int",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "ServerError",
+      "kind": "class",
+      "signature": "class ServerError(ModelError)",
+      "doc": "A transient provider-side failure. Usually safe to retry.",
+      "members": []
+    },
+    {
+      "name": "StreamFailure",
+      "kind": "class",
+      "signature": "class StreamFailure(after_events: int, error: Exception, reply: str | Sequence[ToolCall] | Refusal = '')",
+      "doc": "A responder's reply that makes `FakeModel.stream` raise `error` after `after_events` events of `reply` (never the final `MessageEnd`). `complete` raises `error` at once.",
+      "members": [
+        {
+          "name": "after_events",
+          "kind": "field",
+          "signature": "after_events: int",
+          "doc": ""
+        },
+        {
+          "name": "error",
+          "kind": "field",
+          "signature": "error: Exception",
+          "doc": ""
+        },
+        {
+          "name": "reply",
+          "kind": "field",
+          "signature": "reply: str | Sequence[ToolCall] | Refusal",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "StreamingModelClient",
+      "kind": "class",
+      "signature": "class StreamingModelClient(Protocol)",
+      "doc": "A client with every toolkit argument and `stream`: `FakeModel` and the live clients.",
+      "members": [
+        {
+          "name": "complete",
+          "kind": "method",
+          "signature": "complete(messages: Sequence[Message], *, system: str | None = None, max_tokens: int = 512, temperature: float = 0.0, tools: Sequence[Tool] = (), model: str | None = None, response_format: Mapping[str, Any] | None = None, tool_choice: ToolChoice = 'auto', effort: Effort | None = None) -> Completion",
+          "doc": ""
+        },
+        {
+          "name": "stream",
+          "kind": "method",
+          "signature": "stream(messages: Sequence[Message], *, system: str | None = None, max_tokens: int = 512, temperature: float = 0.0, tools: Sequence[Tool] = (), model: str | None = None, response_format: Mapping[str, Any] | None = None, tool_choice: ToolChoice = 'auto', effort: Effort | None = None) -> Iterator[StreamEvent]",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "TextDelta",
+      "kind": "class",
+      "signature": "class TextDelta(text: str)",
+      "doc": "The next piece of reply text.",
+      "members": [
+        {
+          "name": "text",
+          "kind": "field",
+          "signature": "text: str",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "Tool",
+      "kind": "class",
+      "signature": "class Tool(name: str, description: str, input_schema: Mapping[str, Any])",
+      "doc": "A function the model may ask to call. `input_schema` is a JSON Schema object.",
+      "members": [
+        {
+          "name": "name",
+          "kind": "field",
+          "signature": "name: str",
+          "doc": ""
+        },
+        {
+          "name": "description",
+          "kind": "field",
+          "signature": "description: str",
+          "doc": ""
+        },
+        {
+          "name": "input_schema",
+          "kind": "field",
+          "signature": "input_schema: Mapping[str, Any]",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "ToolCall",
+      "kind": "class",
+      "signature": "class ToolCall(id: str, name: str, arguments: Mapping[str, Any])",
+      "doc": "The model asking for `name` to be called with `arguments`.",
+      "members": [
+        {
+          "name": "id",
+          "kind": "field",
+          "signature": "id: str",
+          "doc": ""
+        },
+        {
+          "name": "name",
+          "kind": "field",
+          "signature": "name: str",
+          "doc": ""
+        },
+        {
+          "name": "arguments",
+          "kind": "field",
+          "signature": "arguments: Mapping[str, Any]",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "ToolCallDelta",
+      "kind": "class",
+      "signature": "class ToolCallDelta(id: str, partial_json: str)",
+      "doc": "The next piece of a tool call's arguments, as JSON text (not valid JSON on its own).",
+      "members": [
+        {
+          "name": "id",
+          "kind": "field",
+          "signature": "id: str",
+          "doc": ""
+        },
+        {
+          "name": "partial_json",
+          "kind": "field",
+          "signature": "partial_json: str",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "ToolCallEnd",
+      "kind": "class",
+      "signature": "class ToolCallEnd(id: str)",
+      "doc": "A tool call's arguments are complete.",
+      "members": [
+        {
+          "name": "id",
+          "kind": "field",
+          "signature": "id: str",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "ToolCallStart",
+      "kind": "class",
+      "signature": "class ToolCallStart(id: str, name: str)",
+      "doc": "The model began a tool call.",
+      "members": [
+        {
+          "name": "id",
+          "kind": "field",
+          "signature": "id: str",
+          "doc": ""
+        },
+        {
+          "name": "name",
+          "kind": "field",
+          "signature": "name: str",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "Usage",
+      "kind": "class",
+      "signature": "class Usage(input_tokens: int, output_tokens: int, cache_read_input_tokens: int = 0, reasoning_tokens: int = 0)",
+      "doc": "Tokens a call used. `input_tokens` counts the whole prompt, cache reads included; `cache_read_input_tokens` is the part of it read from the prompt cache. `output_tokens` includes `reasoning_tokens`, which are billed as output.",
+      "members": [
+        {
+          "name": "input_tokens",
+          "kind": "field",
+          "signature": "input_tokens: int",
+          "doc": ""
+        },
+        {
+          "name": "output_tokens",
+          "kind": "field",
+          "signature": "output_tokens: int",
+          "doc": ""
+        },
+        {
+          "name": "cache_read_input_tokens",
+          "kind": "field",
+          "signature": "cache_read_input_tokens: int",
+          "doc": ""
+        },
+        {
+          "name": "reasoning_tokens",
+          "kind": "field",
+          "signature": "reasoning_tokens: int",
+          "doc": ""
+        }
+      ]
+    },
+    {
+      "name": "cosine_similarity",
+      "kind": "function",
+      "signature": "def cosine_similarity(a: Sequence[float], b: Sequence[float]) -> float",
+      "doc": "Cosine similarity of two equal-length vectors; 0.0 if either is all zeros.",
+      "members": []
+    },
+    {
+      "name": "count_tokens",
+      "kind": "function",
+      "signature": "def count_tokens(text: str) -> int",
+      "doc": "Number of tokens in `text`.",
+      "members": []
+    },
+    {
+      "name": "default_client",
+      "kind": "function",
+      "signature": "def default_client() -> ModelClient",
+      "doc": "The model client configured for this run (the fake in the sandbox).",
+      "members": []
+    },
+    {
+      "name": "tokenize",
+      "kind": "function",
+      "signature": "def tokenize(text: str) -> list[str]",
+      "doc": "Split `text` into tokens: runs of word characters, and single punctuation marks.",
+      "members": []
+    },
+    {
+      "name": "use_client",
+      "kind": "function",
+      "signature": "def use_client(client: ModelClient) -> Iterator[ModelClient]",
+      "doc": "Make `client` the default for the duration of the block.",
+      "members": []
+    }
+  ]
+}

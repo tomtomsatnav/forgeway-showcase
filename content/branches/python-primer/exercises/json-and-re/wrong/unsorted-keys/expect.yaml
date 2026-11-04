@@ -1,0 +1,2 @@
+fails: canonical
+message_contains: Keys should be sorted

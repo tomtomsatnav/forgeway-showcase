@@ -1,0 +1,111 @@
+# RPG flavour of the free showcase, keyed by domain ids.
+branches:
+  starter:
+    name: The Foundry Vale
+    epithet: Where every journey is forged
+    lore: 'Before any guild will take you, you learn the old crafts here: how the oracles think, how to
+      speak to them, and how to listen when they fall silent.'
+  retrieval:
+    name: The Deepstacks
+    epithet: An archive older than memory
+    lore: Beneath the city lie a million scrolls and no index. Those who can find the one page that matters,
+      and prove it, are welcomed as Archivists.
+  orchestration:
+    name: The Conductor's Spire
+    epithet: Many hands, one purpose
+    lore: A tower of workshops where no craftsperson works alone. Those who can route the work, split
+      it, pass it on and bring it home again, even when a bell falls silent mid-task, are called Conductors.
+  protocols:
+    name: The Wireworks
+    epithet: Where every tool speaks one tongue
+    lore: Between the Vale and the distant guilds runs a web of copper wire and signal bells. Those who
+      learn its grammar and its etiquette are welcomed as Artificers, able to join any instrument to any
+      oracle without being fooled by what comes back down the line.
+  context-engineering:
+    name: The Loomhall
+    epithet: Every thread placed on purpose
+    lore: A hall of great looms where nothing is woven twice and nothing is woven by chance. Those who
+      can choose what enters the cloth, set it where it will be seen and keep the warp unchanged from
+      one pass to the next are called Weavers.
+  memory:
+    name: The Hall of Hours
+    epithet: Where nothing is kept that should be forgotten
+    lore: 'A long gallery of lamps, one lit for every day an oracle has lived. Chroniclers tend them:
+      they decide which moments deserve a flame, which burn down to ash, and which belong to one visitor
+      alone.'
+  knowledge-graphs:
+    name: The Mapwright Marches
+    epithet: Every fact a landmark, every link a road
+    lore: Beyond the Deepstacks lies country no scroll describes, only the places in it and the roads
+      between them. Those who can set down who is who, when it was true and who said so, and then walk
+      a question across the map, are named Surveyors.
+  evals:
+    name: The Assay Court
+    epithet: Where every claim is weighed
+    lore: 'Beyond the Wireworks stands a hall of brass scales and sealed gates. Nothing leaves it on reputation:
+      each boast is measured, each judge is checked against the people it serves, and every gate is tested
+      by those who try to break it. Those who can prove it holds are named Arbiters.'
+  python-primer:
+    name: The Apprentice's Yard
+    epithet: Learn your tools before you need them
+    lore: Behind the Foundry Vale lies a yard of practice benches, open to all and owed to none. Newcomers
+      to the serpent tongue come here to learn its grips and its habits. Nothing beyond the wall asks
+      for proof you were here, so stay as long as you need.
+paths:
+  generalist:
+    name: Wayfarer
+    epithet: Walks every road
+  protocols:
+    name: Artificer
+    epithet: Joins any instrument to any oracle
+  orchestration:
+    name: Conductor
+    epithet: Many hands, one purpose
+  knowledge-graphs:
+    name: Surveyor
+    epithet: Charts what is known and how it connects
+  memory:
+    name: Chronicler
+    epithet: Remembers what matters, forgets on request
+  context-engineering:
+    name: Weaver
+    epithet: Every thread in its place
+  evals:
+    name: Arbiter
+    epithet: Weighs every answer twice
+bosses: {}
+quests:
+  starter.first-completion: The First Utterance
+  starter.system-prompts: Binding Words
+  starter.conversation-history: The Unbroken Thread
+  starter.tokens-and-context: The Measure of Breath
+  starter.handling-truncation: The Unfinished Verse
+  starter.structured-output: Runes of Exact Form
+  starter.retries-and-backoff: Patience of the Ferryman
+  starter.embeddings-and-similarity: The Constellation of Meaning
+  starter.prompt-injection-basics: Wards Against Whispered Lies
+  starter.tool-use: The Summoner's Circle
+  starter.streaming-responses: Words as They Fall
+  starter.schema-constrained-output: The Mould Before the Pour
+  starter.cost-and-latency: The Toll and the Hourglass
+  retrieval.fixed-size-chunking: Cutting the Scroll
+  retrieval.vector-store: The Lodestone Vault
+  retrieval.metadata-filtering: Seals and Sigils
+  orchestration.router: The Fork in the Road
+  orchestration.prompt-chaining: The Gated Causeway
+  orchestration.evaluator-optimiser: The Critic and the Smith
+  protocols.json-rpc-dispatch: The Herald's Ledger
+  protocols.initialize-handshake: The Opening Courtesies
+  protocols.tools-list: The Catalogue of Instruments
+  context-engineering.token-budget: The Weaver's Measure
+  context-engineering.structured-sections: The Sealed Margins
+  context-engineering.few-shot-selection: Patterns Chosen by Eye
+  memory.rolling-summary: The Ever-Shortening Scroll
+  memory.episodic-recall: The Weight of a Moment
+  memory.semantic-facts: The Ledger of What Is True
+  knowledge-graphs.triple-store: The Ledger of Threes
+  knowledge-graphs.entity-resolution: Many Names, One Bearer
+  knowledge-graphs.temporal-edges: The Ledger of Seasons
+  evals.eval-metrics: The Scales and the Standard
+  evals.pii-redaction: The Veiling of Names
+  evals.judge-agreement: The Concord of Judges

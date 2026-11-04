@@ -1,0 +1,4 @@
+title: Context engineering
+summary: "The free part of this track: Structured sections that cannot be broken out of, Assembling a prompt under a budget and Choosing few-shot examples by similarity. The full track is at forgeway.dev."
+order: 3
+requires: [starter]

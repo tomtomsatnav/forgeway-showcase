@@ -1,0 +1,2 @@
+fails: instructions-in-system
+message_contains: Provide a system prompt

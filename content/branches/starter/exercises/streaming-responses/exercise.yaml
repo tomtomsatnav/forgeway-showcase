@@ -1,0 +1,28 @@
+version: 1
+title: Streaming responses
+tier: intermediate
+xp: 130
+prerequisites: [starter.tool-use]
+isolation: process  # learner code runs in a child process (ADR 0009)
+skills: [streaming, tool-use, error-handling]
+editable: [streaming.py]
+hints:
+  - "Loop over `client.stream(messages, tools=tools)` and branch on the event's type with `isinstance`. Call `on_text(event.text)` inside the loop, the moment a `TextDelta` arrives, and keep the piece."
+  - "Tool-call fragments are not JSON on their own, and fragments of different calls interleave. Keep a list of fragments per call id, and only at `MessageEnd` join each list and `json.loads` it (an empty join means `{}`). A dict keyed by id remembers the order the calls started in."
+  - "Wrap one whole attempt in `try/except ModelError`. If any text was shown, raise `StreamInterrupted(shown_text, error)`. If not, and the error is a `ServerError` or `RateLimitError`, go round once more with fresh state; otherwise re-raise."
+checks:
+  - id: progressive
+    title: Shows each piece of text the moment it arrives
+    test: test_streaming.py::test_shows_text_as_it_arrives
+  - id: assembles-text
+    title: Returns the whole reply, text joined exactly, with the stream's stop reason and usage
+    test: test_streaming.py::test_assembles_the_reply
+  - id: tool-calls
+    title: Assembles interleaved tool calls from fragments split anywhere
+    test: test_streaming.py::test_assembles_interleaved_tool_calls
+  - id: broken-after-text
+    title: A stream that breaks after text was shown keeps the partial text and is not restarted
+    test: test_streaming.py::test_breaks_after_text_was_shown
+  - id: restart-before-text
+    title: A stream that breaks before any text is restarted once, from a clean slate
+    test: test_streaming.py::test_restarts_once_before_any_text

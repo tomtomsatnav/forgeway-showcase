@@ -1,0 +1,26 @@
+version: 1
+title: Dataclasses and typing
+tier: beginner
+xp: 60
+skills: [python, dataclasses, type-hints]
+editable: [records.py]
+hints:
+  - "`@dataclass(frozen=True)` above a class with annotated fields gives you the constructor, the comparison and the refusal to change."
+  - "A list default needs `field(default_factory=list)`. A bare `= []` is refused by `dataclass`, because one list would be shared by every instance."
+  - "`dataclasses.replace(usage, output_tokens=...)` gives a new record with one field changed and leaves the original alone."
+checks:
+  - id: frozen-record
+    title: Usage is an immutable record with a default
+    test: test_records.py::test_usage_is_frozen
+  - id: derived-property
+    title: Usage reports its total as a property
+    test: test_records.py::test_total_is_a_property
+  - id: replace
+    title: Adding output gives a new record and keeps the old one
+    test: test_records.py::test_add_output_returns_a_new_record
+  - id: own-list
+    title: Each Conversation has its own list of messages
+    test: test_records.py::test_conversations_do_not_share_a_list
+  - id: optional-return
+    title: A failed lookup returns None
+    test: test_records.py::test_find_returns_none_when_absent

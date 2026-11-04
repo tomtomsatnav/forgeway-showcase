@@ -1,0 +1,9 @@
+# Sends one alert when a Forgeway unit fails (OnFailure=forgeway-alert@%n.service).
+[Unit]
+Description=Forgeway alert for %i
+
+[Service]
+Type=oneshot
+User=forgeway
+Group=forgeway
+ExecStart=/srv/forgeway/deploy/vps/alert.sh "%i failed; see: journalctl -u %i"

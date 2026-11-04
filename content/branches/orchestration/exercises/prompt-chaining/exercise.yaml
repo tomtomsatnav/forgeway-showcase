@@ -1,0 +1,24 @@
+version: 3
+title: Prompt chaining with gates
+tier: beginner
+xp: 100
+prerequisites: [orchestration.router]
+skills: [prompt-chaining, validation, pipelines]
+editable: [chain.py]
+hints:
+  - "Each step is one model call: the step's `system` prompt, and the previous step's output as the user message. The first step gets the original text."
+  - "Run the step's gate on that step's output straight away, before starting the next step. A gate returns `None` when the output is fine, otherwise the reason it is not."
+  - "When a gate fails, raise `GateFailed` at once. Every step after it would only be working from bad input, so do not call the model for them."
+checks:
+  - id: feeds-forward
+    title: Each step receives the previous step's output
+    test: test_chain.py::test_feeds_forward
+    kind: behavioural
+  - id: gate-timing
+    title: A gate checks each output before the next step starts
+    test: test_chain.py::test_gates_run_between_steps
+    kind: behavioural
+  - id: halts
+    title: A failed gate stops the chain and reports the step and reason
+    test: test_chain.py::test_failed_gate_halts_the_chain
+    kind: behavioural

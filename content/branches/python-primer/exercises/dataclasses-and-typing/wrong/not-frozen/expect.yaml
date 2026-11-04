@@ -1,0 +1,2 @@
+fails: frozen-record
+message_contains: should be frozen

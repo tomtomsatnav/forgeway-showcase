@@ -1,0 +1,24 @@
+version: 1
+title: Threads and futures
+tier: beginner
+xp: 100
+skills: [python, threads, concurrent-futures]
+editable: [fan_out.py]
+hints:
+  - "`with ThreadPoolExecutor(max_workers=...) as pool:` gives you a pool and waits for its work when the block ends."
+  - "`pool.map(function, items)` hands back results in the order of `items`, however the calls finish."
+  - "`pool.submit(function, item)` returns a future straight away. Build all the futures first, then call `future.result()` on each."
+  - "`future.result()` raises whatever the call raised, so that is where the `try`/`except` goes."
+checks:
+  - id: concurrent
+    title: Runs the calls at the same time
+    test: test_fan_out.py::test_runs_at_the_same_time
+  - id: order
+    title: Returns results in the order of the queries
+    test: test_fan_out.py::test_keeps_query_order
+  - id: limit
+    title: Never runs more than max_workers at once
+    test: test_fan_out.py::test_respects_the_worker_limit
+  - id: failures
+    title: Records a failed call without losing the rest
+    test: test_fan_out.py::test_failures_are_kept_apart

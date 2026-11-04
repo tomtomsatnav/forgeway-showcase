@@ -1,0 +1,7 @@
+# A test-only guided project for carry.spec.ts. Never shipped: an isolated e2e stack mounts it at
+# content/branches/e2e-project.
+title: E2E project
+summary: Two milestones that build one file, so the workspace can carry it forward.
+order: 99
+requires: [starter]
+kind: project

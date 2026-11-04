@@ -1,0 +1,32 @@
+version: 2
+title: A rolling summary
+tier: beginner
+xp: 75
+prerequisites: [starter.conversation-history]
+skills: [memory, summarisation, chat-history]
+editable: [rolling.py]
+hints:
+  - "Keep two things: `summary` (text) and `recent` (the messages not yet folded in). Append each new message to `recent`, then check whether `len(recent)` is now more than `keep_recent`."
+  - "Fold everything except the last `keep_recent` messages in one summariser call. Its single user message holds the previous summary (or `(none)`) and then the folded messages, one `role: content` line each, oldest first."
+  - "Only change your state after the summariser call returns. If it raises, the new message must still be in `recent`, and nothing may have been dropped; the next `add` will fold everything that is pending in one call."
+checks:
+  - id: folds
+    title: Old messages are replaced by the summariser's reply, and recent ones are kept
+    test: test_rolling.py::test_old_messages_become_the_summary
+    kind: behavioural
+  - id: default
+    title: keep_recent defaults to four
+    test: test_rolling.py::test_keep_recent_defaults_to_four
+    kind: behavioural
+  - id: carries-forward
+    title: Each new summary is built from the previous one
+    test: test_rolling.py::test_the_previous_summary_is_carried_forward
+    kind: behavioural
+  - id: prompt
+    title: One summariser call per fold, holding the latest summary and only the folded messages
+    test: test_rolling.py::test_the_summariser_sees_the_right_messages
+    kind: behavioural
+  - id: failure
+    title: A failing summariser loses nothing
+    test: test_rolling.py::test_a_failed_summary_loses_nothing
+    kind: behavioural

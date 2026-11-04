@@ -1,0 +1,2 @@
+fails: tool-calls
+message_contains: collect each call's fragments by its id

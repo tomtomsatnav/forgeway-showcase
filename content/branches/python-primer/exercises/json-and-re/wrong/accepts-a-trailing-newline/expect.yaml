@@ -1,0 +1,2 @@
+fails: tool-names
+message_contains: The whole name must fit

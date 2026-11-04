@@ -1,0 +1,22 @@
+version: 3
+title: Entity resolution
+tier: intermediate
+xp: 110
+prerequisites: [knowledge-graphs.triple-store]
+skills: [entity-resolution, normalisation, unicode]
+editable: [entities.py]
+hints:
+  - "Do the steps in the brief's order. Decompose first (`unicodedata.normalize(\"NFKD\", ...)`), drop the combining marks, then casefold."
+  - "Turn every character that fails `str.isalnum()` into a space, then `split()`. That gives you tokens without any regex."
+  - "The legal suffixes and the leading `the` only come off the ends of the token list, and never leave it empty. Loop on the last token while more than one token remains."
+  - "An alias maps a normalised key to another normalised key once. Do not look the result up again."
+checks:
+  - id: normalise
+    title: Names are normalised exactly as the brief describes
+    test: test_entities.py::test_normalise_examples
+  - id: end-rules
+    title: Only a trailing legal suffix and a leading "the" are removed
+    test: test_entities.py::test_suffix_and_article_rules
+  - id: resolver
+    title: Variants resolve to one id, aliases apply once, surface forms are kept
+    test: test_entities.py::test_resolver

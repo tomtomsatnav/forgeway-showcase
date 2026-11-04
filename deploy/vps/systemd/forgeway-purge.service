@@ -1,0 +1,20 @@
+# Daily retention purge: unverified accounts after 7 days, expired links and sessions, old
+# rate-limit hits, old live runs, waitlist entries after 12 months, consents after six years. Install: see deploy/vps/README.md ("Timers").
+[Unit]
+Description=Forgeway retention purge (see deploy/vps/purge.sh)
+Requires=docker.service
+After=docker.service
+OnFailure=forgeway-alert@%n.service
+
+[Service]
+Type=oneshot
+User=forgeway
+Group=forgeway
+StateDirectory=forgeway
+Environment=HOME=/var/lib/forgeway
+ExecStart=/srv/forgeway/deploy/vps/purge.sh
+Nice=10
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectHome=yes
+ProtectSystem=strict

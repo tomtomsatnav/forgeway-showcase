@@ -1,0 +1,2 @@
+fails: system-separate
+message_contains: "the grader's files stayed out of reach"

@@ -1,0 +1,20 @@
+# The day-3 onboarding nudge for Pro trials (docs/plans/billing.md). Install: see
+# deploy/vps/README.md ("Timers").
+[Unit]
+Description=Forgeway day-3 onboarding nudge for Pro trials
+Requires=docker.service
+After=docker.service
+OnFailure=forgeway-alert@%n.service
+
+[Service]
+Type=oneshot
+User=forgeway
+Group=forgeway
+StateDirectory=forgeway
+Environment=HOME=/var/lib/forgeway
+ExecStart=/srv/forgeway/deploy/vps/onboarding.sh
+Nice=10
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectHome=yes
+ProtectSystem=strict

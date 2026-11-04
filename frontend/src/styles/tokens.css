@@ -1,0 +1,146 @@
+/*
+ * Semantic design tokens (DESIGN.md). Four palettes: mode (professional | rpg) x scheme (light | dark).
+ * Components reference these roles only; nothing outside this file names a raw colour.
+ */
+
+:root {
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-celebrate: 900ms;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --shadow-raised: 0 10px 28px rgb(0 0 0 / 0.22), 0 2px 6px rgb(0 0 0 / 0.12);
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+}
+
+/* Mode: typefaces and corner radii */
+:root,
+:root[data-mode='professional'] {
+  --font-display: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-ui: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-reading: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --radius-control: 6px;
+  --radius-panel: 10px;
+  --display-weight: 600;
+}
+
+:root[data-mode='rpg'] {
+  --font-display: 'Alegreya SC', Georgia, 'Times New Roman', serif;
+  --font-ui: 'Alegreya Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-reading: 'Alegreya', Georgia, 'Times New Roman', serif;
+  --radius-control: 3px;
+  --radius-panel: 4px;
+  --display-weight: 700;
+}
+
+/* Professional, light: warm paper, black ink, deep green */
+:root,
+:root[data-mode='professional'][data-scheme='light'] {
+  color-scheme: light;
+  --surface-base: #f6f4ef;
+  --surface-raised: #ffffff;
+  --surface-sunken: #edeae3;
+  --text-primary: #1b1c1a;
+  --text-secondary: #3d3f3b;
+  --text-muted: #5e605a;
+  --border-subtle: #d5d2c8;
+  --border-strong: #84867e;
+  --accent: #1d5c4b;
+  --accent-strong: #134436;
+  --accent-soft: #dce8e2;
+  --text-on-accent: #ffffff;
+  --success: #2f6b3a;
+  --success-soft: #e1ede3;
+  --danger: #a3352b;
+  --danger-soft: #f5e0dd;
+  --warning: #8a5a12;
+  --warning-soft: #f3e7cf;
+  --tier-beginner: #2f6b3a;
+  --tier-intermediate: #8a5a12;
+  --tier-advanced: #7a3a6e;
+  --tier-capstone: #1f4f86;
+  --focus-ring: #1d5c4b;
+}
+
+/* Professional, dark: graphite */
+:root[data-mode='professional'][data-scheme='dark'] {
+  color-scheme: dark;
+  --surface-base: #131513;
+  --surface-raised: #1c1f1c;
+  --surface-sunken: #0e100e;
+  --text-primary: #e9e6de;
+  --text-secondary: #c9c6bd;
+  --text-muted: #a3a59c;
+  --border-subtle: #2e312d;
+  --border-strong: #70736b;
+  --accent: #6fc2a6;
+  --accent-strong: #8dd6bc;
+  --accent-soft: #1b2b25;
+  --text-on-accent: #0e1b16;
+  --success: #8fd19b;
+  --success-soft: #1b2a1f;
+  --danger: #f08a7e;
+  --danger-soft: #331e1b;
+  --warning: #e7b566;
+  --warning-soft: #30260f;
+  --tier-beginner: #8fd19b;
+  --tier-intermediate: #e7b566;
+  --tier-advanced: #d9a0d0;
+  --tier-capstone: #8fbdf0;
+  --focus-ring: #6fc2a6;
+}
+
+/* RPG, light: parchment, sepia ink, vermilion seal */
+:root[data-mode='rpg'][data-scheme='light'] {
+  color-scheme: light;
+  --surface-base: #efe4cb;
+  --surface-raised: #f7efdc;
+  --surface-sunken: #e5d7b8;
+  --text-primary: #2a1f14;
+  --text-secondary: #43331f;
+  --text-muted: #6b5a44;
+  --border-subtle: #cdbb95;
+  --border-strong: #897453;
+  --accent: #8e2a21;
+  --accent-strong: #6e1d16;
+  --accent-soft: #e9d2b8;
+  --text-on-accent: #fbf3e2;
+  --success: #386429;
+  --success-soft: #dde3c4;
+  --danger: #8e2a21;
+  --danger-soft: #ebd0c0;
+  --warning: #7a5410;
+  --warning-soft: #efddb0;
+  --tier-beginner: #386429;
+  --tier-intermediate: #7a5410;
+  --tier-advanced: #6a3a5e;
+  --tier-capstone: #2f4a7c;
+  --focus-ring: #8e2a21;
+}
+
+/* RPG, dark: verdigris night, gold leaf */
+:root[data-mode='rpg'][data-scheme='dark'] {
+  color-scheme: dark;
+  --surface-base: #0e1615;
+  --surface-raised: #16211f;
+  --surface-sunken: #0a1110;
+  --text-primary: #ede3cc;
+  --text-secondary: #d3c8ae;
+  --text-muted: #b3a88f;
+  --border-subtle: #26332f;
+  --border-strong: #766c57;
+  --accent: #d9a546;
+  --accent-strong: #ebc06a;
+  --accent-soft: #2a2514;
+  --text-on-accent: #1a1206;
+  --success: #9ccb7e;
+  --success-soft: #1b2a1a;
+  --danger: #ee8366;
+  --danger-soft: #321c16;
+  --warning: #e8b85c;
+  --warning-soft: #2e2410;
+  --tier-beginner: #9ccb7e;
+  --tier-intermediate: #e8b85c;
+  --tier-advanced: #d49bc4;
+  --tier-capstone: #9db9ee;
+  --focus-ring: #d9a546;
+}

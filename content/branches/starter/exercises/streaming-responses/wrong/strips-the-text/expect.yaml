@@ -1,0 +1,2 @@
+fails: assembles-text
+message_contains: joined exactly
