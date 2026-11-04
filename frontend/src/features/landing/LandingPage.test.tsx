@@ -100,7 +100,7 @@ describe('the home route', () => {
     expect(
       await screen.findByRole('heading', {
         level: 1,
-        name: 'Build AI systems that hold up in production.',
+        name: 'Become an AI engineer.',
       }),
     ).toBeVisible();
     expect(router.state.location.pathname).toBe('/');
@@ -128,7 +128,7 @@ describe('the home route', () => {
     await renderApp();
 
     expect(await screen.findByRole('heading', { level: 1, name: 'Syllabus' })).toBeVisible();
-    expect(screen.queryByText('Build AI systems that hold up in production.')).toBeNull();
+    expect(screen.queryByText('Become an AI engineer.')).toBeNull();
     expect(seen.some((request) => new URL(request.url).pathname === '/api/catalogue')).toBe(false);
   });
 
@@ -137,7 +137,7 @@ describe('the home route', () => {
     const router = await renderApp();
 
     const hero = await screen.findByRole('region', {
-      name: 'Build AI systems that hold up in production.',
+      name: 'Become an AI engineer.',
     });
     await userEvent.setup().click(within(hero).getByRole('link', { name: 'Start free' }));
     expect(router.state.location.pathname).toBe('/register');

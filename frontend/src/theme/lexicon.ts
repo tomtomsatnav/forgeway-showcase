@@ -456,9 +456,13 @@ const PRO_NO_BILLING =
 
 // The landing page: what both modes say the same way.
 const LANDING_META =
-  'Learn to build LLM applications in Python. Write real code in the browser; hidden tests grade what your system does: what reached the prompt, how it handled a truncated reply or a prompt injection.';
+  'Learn to build what AI engineers build: agents, evals, memory, MCP and security. Write real Python in your browser, and hidden tests grade what your code actually does.';
 const LANDING_LEAD =
-  'Write real Python in your browser. Hidden tests grade the behaviour of what you build: what reached the prompt, how your code handled a truncated reply or a prompt injection, whether a stale tool result was pruned.';
+  'Learn by building what AI engineers build: agents, evals, memory, MCP and security. Write real Python in your browser. Hidden tests grade what your code actually does, so you know when it works, not just when it looks right.';
+const LANDING_FAQ_JOB: Point = {
+  title: 'Will this get me a job?',
+  body: 'No course can promise that, and we don’t. You finish with working projects and the skills they prove. Certificates show what you completed; they are not accredited qualifications.',
+};
 const LANDING_GRADING_LEAD =
   'Every exercise comes with hidden tests that drive your code with scripted models and tools, then check what it did: the requests it sent, what it kept, what it threw away and what it refused. Output that merely looks right does not pass.';
 const LANDING_DIFFERENT: readonly Point[] = [
@@ -813,10 +817,10 @@ const professional: Lexicon = (() => {
       link: 'Follow the AI security path',
     },
     landing: {
-      documentTitle: 'Forgeway: build AI systems that hold up in production',
+      documentTitle: 'Forgeway: become an AI engineer',
       metaDescription: LANDING_META,
       heroEyebrow: 'Python · LLM applications · graded on behaviour',
-      heroTitle: 'Build AI systems that hold up in production.',
+      heroTitle: 'Become an AI engineer.',
       heroLead: LANDING_LEAD,
       start: 'Start free',
       heroNote: (n) =>
@@ -868,6 +872,7 @@ const professional: Lexicon = (() => {
       faqHeading: 'Before you start',
       faq: [
         LANDING_FAQ_PYTHON,
+        LANDING_FAQ_JOB,
         {
           title: 'How long does it take?',
           body: 'As long as you need. Exercises are small steps that each teach one idea; a capstone project is larger and draws on its whole track. Your code and progress are saved as you go, so short sessions work.',
@@ -1193,10 +1198,10 @@ const rpg: Lexicon = (() => {
       link: 'Walk the Warden’s Road',
     },
     landing: {
-      documentTitle: 'Forgeway: build AI systems that hold up in production',
+      documentTitle: 'Forgeway: become an AI engineer',
       metaDescription: LANDING_META,
       heroEyebrow: 'Python · LLM applications · judged on behaviour',
-      heroTitle: 'Build AI systems that hold up in production.',
+      heroTitle: 'Become an AI engineer.',
       heroLead: LANDING_LEAD,
       start: 'Begin the journey',
       heroNote: (n) =>
@@ -1248,6 +1253,7 @@ const rpg: Lexicon = (() => {
       faqHeading: 'Before you set out',
       faq: [
         LANDING_FAQ_PYTHON,
+        LANDING_FAQ_JOB,
         {
           title: 'How long does it take?',
           body: 'As long as you need. Quests are small steps that each teach one idea; a boss challenge is larger and draws on its whole zone. Your code and progress are saved as you go, so short sessions work.',
