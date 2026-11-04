@@ -287,6 +287,16 @@ export interface Lexicon {
   };
   /** The public landing page signed-out visitors see at `/`. */
   landing: LandingCopy;
+  securityPath: {
+    documentTitle: string;
+    metaDescription: string;
+    title: string;
+    summary: (exercises: number) => string;
+    intro: string;
+    lockedNote: string;
+    /** The link to this page from the landing page and the syllabus. */
+    link: string;
+  };
 }
 
 /** A heading and its paragraph, for the landing page's ruled lists. */
@@ -790,6 +800,18 @@ const professional: Lexicon = (() => {
       deleteKeep: 'Keep my account',
       deleteStart: 'Delete account…',
     },
+    securityPath: {
+      documentTitle: 'AI security path | Forgeway',
+      metaDescription:
+        'Learn to secure AI agents by building the defences: prompt injection, tool poisoning, computer-use guards, red teaming and more, all graded by automated checks.',
+      title: 'AI security',
+      summary: (n) => `A path through ${exerciseCount(n)} from across the course.`,
+      intro:
+        'Agents read untrusted text and act on it, so a model that behaves is not enough. These exercises have you build the defences: resisting prompt injection, distrusting tool output, limiting what an agent can do, keeping a person in charge of what matters, and attacking your own system before someone else does.',
+      lockedNote:
+        'Each exercise stays in its own track, and your progress counts in both places. Some need earlier exercises from that track first.',
+      link: 'Follow the AI security path',
+    },
     landing: {
       documentTitle: 'Forgeway: build AI systems that hold up in production',
       metaDescription: LANDING_META,
@@ -1157,6 +1179,18 @@ const rpg: Lexicon = (() => {
       deleteConfirm: 'Leave the guild for good',
       deleteKeep: 'Stay in the guild',
       deleteStart: 'Leave the guild…',
+    },
+    securityPath: {
+      documentTitle: 'AI security path | Forgeway',
+      metaDescription:
+        'Learn to secure AI agents by building the defences: prompt injection, tool poisoning, computer-use guards, red teaming and more, all graded by automated checks.',
+      title: 'The Warden’s Road',
+      summary: (n) => `A road through ${exerciseCount(n)} from across the realm.`,
+      intro:
+        'Agents read untrusted words and act on them, so an obedient oracle is not enough. These quests have you raise the defences: resisting prompt injection, distrusting what tools report, limiting what an agent may do, keeping a person in charge of what matters, and attacking your own keep before someone else does.',
+      lockedNote:
+        'Each quest stays in its own zone, and your progress counts in both places. Some need earlier quests from that zone first.',
+      link: 'Walk the Warden’s Road',
     },
     landing: {
       documentTitle: 'Forgeway: build AI systems that hold up in production',

@@ -24,6 +24,7 @@ import { MapPage } from './features/map/MapPage';
 import { CheckoutCancelledPage, CheckoutSuccessPage } from './features/pro/CheckoutReturn';
 import { ProPage } from './features/pro/ProPage';
 import { ProfilePage } from './features/profile/ProfilePage';
+import { SecurityPathPage } from './features/security/SecurityPathPage';
 import { WhatsNewPage } from './features/releases/WhatsNewPage';
 import { PageHeader } from './theme/slots';
 import { useLexicon } from './theme/useTheme';
@@ -206,6 +207,13 @@ const toolkitRoute = createRoute({
   component: ToolkitReferencePage,
 });
 
+// Public: linked from the landing page and the syllabus.
+const securityRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/security',
+  component: SecurityPathPage,
+});
+
 // Addresses people guess or remember from other sites.
 const REDIRECTS = {
   '/home': '/',
@@ -287,6 +295,7 @@ const routeTree = rootRoute.addChildren([
   unsubscribeRoute,
   liveModeRoute,
   toolkitRoute,
+  securityRoute,
   welcomeRoute,
   pricingRoute,
   ...redirectRoutes,

@@ -3,7 +3,7 @@ title: Redacting personal data before the model
 tier: beginner
 xp: 100
 prerequisites: [starter.system-prompts]
-skills: [guardrails, pii, regex]
+skills: [guardrails, pii, regex, security]
 editable: [redact.py]
 hints:
   - "Compile the four patterns once and apply them in the order given: email, card, National Insurance number, phone. The order matters because a card number is also a long run of digits."

@@ -1,3 +1,5 @@
+import { Link } from '@tanstack/react-router';
+
 import { useLearnerMap } from '../../api/hooks';
 import { errorMessage } from '../../api/errors';
 import { BranchOverview, PageHeader } from '../../theme/slots';
@@ -31,6 +33,9 @@ export function MapPage() {
         summary={lexicon.mapSummary(branches.length, exerciseTotal)}
       />
       <BranchOverview branches={branches} />
+      <p className="m-0">
+        <Link to="/security">{lexicon.securityPath.link}</Link>
+      </p>
     </div>
   );
 }

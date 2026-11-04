@@ -57,7 +57,7 @@ const EXAMPLE_CHECKS: CheckResultData[] = [
 ];
 
 /** Sets the document title and meta description while the page is shown. */
-function useDocumentHead(title: string, description: string) {
+export function useDocumentHead(title: string, description: string) {
   useEffect(() => {
     const previousTitle = document.title;
     let meta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
@@ -181,6 +181,10 @@ function Grading() {
   );
 }
 
+function SecurityPathLink() {
+  return <Link to="/security">{useLexicon().securityPath.link}</Link>;
+}
+
 function Tracks() {
   const copy = useLexicon().landing;
   const catalogue = useCatalogue();
@@ -207,6 +211,9 @@ function Tracks() {
           )}
         </p>
         <BranchOverview branches={catalogue.data.branches} startFolded />
+        <p className="m-0">
+          <SecurityPathLink />
+        </p>
       </div>
     );
   }
