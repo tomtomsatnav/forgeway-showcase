@@ -458,7 +458,15 @@ const PRO_NO_BILLING =
 const LANDING_META =
   'Learn to build what AI engineers build: agents, evals, memory, MCP and security. Write real Python in your browser, and hidden tests grade what your code actually does.';
 const LANDING_LEAD =
-  'Learn by building what AI engineers build: agents, evals, memory, MCP and security. Write real Python in your browser. Hidden tests grade what your code actually does, so you know when it works, not just when it looks right.';
+  'Tutorials stop at the demo. Build agents, evals, memory and security that survive bad input, and let hidden tests tell you when they work.';
+const LANDING_FAQ_ROUTE: Point = {
+  title: 'How do I become an AI engineer?',
+  body: 'There is no single required route or qualification. A sensible order is everyday Python, then calling a model and giving it tools, then the harder parts: measuring it, keeping it secure and running it reliably. Build real things at each step. The tracks here follow that order, starting with the foundations.',
+};
+const LANDING_FAQ_REPLACED: Point = {
+  title: 'Won’t AI replace this job?',
+  body: 'Nobody can say for certain how the job will change. As models write more of the code, it matters more that someone can test them, limit what they can do and keep them running safely. Those are the skills you practise here.',
+};
 const LANDING_FAQ_JOB: Point = {
   title: 'Will this get me a job?',
   body: 'No course can promise that, and we don’t. You finish with working projects and the skills they prove. Certificates show what you completed; they are not accredited qualifications.',
@@ -820,9 +828,9 @@ const professional: Lexicon = (() => {
       documentTitle: 'Forgeway: become an AI engineer',
       metaDescription: LANDING_META,
       heroEyebrow: 'Python · LLM applications · graded on behaviour',
-      heroTitle: 'Become an AI engineer.',
+      heroTitle: 'Become an AI engineer. For real.',
       heroLead: LANDING_LEAD,
-      start: 'Start free',
+      start: 'Write your first agent',
       heroNote: (n) =>
         `No card needed. The foundations track and the first ${n} exercises of every track are free.`,
       gradingEyebrow: 'How grading works',
@@ -872,7 +880,9 @@ const professional: Lexicon = (() => {
       faqHeading: 'Before you start',
       faq: [
         LANDING_FAQ_PYTHON,
+        LANDING_FAQ_ROUTE,
         LANDING_FAQ_JOB,
+        LANDING_FAQ_REPLACED,
         {
           title: 'How long does it take?',
           body: 'As long as you need. Exercises are small steps that each teach one idea; a capstone project is larger and draws on its whole track. Your code and progress are saved as you go, so short sessions work.',
@@ -1201,7 +1211,7 @@ const rpg: Lexicon = (() => {
       documentTitle: 'Forgeway: become an AI engineer',
       metaDescription: LANDING_META,
       heroEyebrow: 'Python · LLM applications · judged on behaviour',
-      heroTitle: 'Become an AI engineer.',
+      heroTitle: 'Become an AI engineer. For real.',
       heroLead: LANDING_LEAD,
       start: 'Begin the journey',
       heroNote: (n) =>
@@ -1253,7 +1263,9 @@ const rpg: Lexicon = (() => {
       faqHeading: 'Before you set out',
       faq: [
         LANDING_FAQ_PYTHON,
+        LANDING_FAQ_ROUTE,
         LANDING_FAQ_JOB,
+        LANDING_FAQ_REPLACED,
         {
           title: 'How long does it take?',
           body: 'As long as you need. Quests are small steps that each teach one idea; a boss challenge is larger and draws on its whole zone. Your code and progress are saved as you go, so short sessions work.',
