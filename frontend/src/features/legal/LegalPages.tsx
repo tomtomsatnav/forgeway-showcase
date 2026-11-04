@@ -10,6 +10,8 @@ export const PRIVACY_CONTACT = 'privacy@forgeway.dev';
 export const HELLO_CONTACT = 'hello@forgeway.dev';
 /** The date the current wording took effect. Keep in step with the API's TERMS_VERSION. */
 export const LEGAL_UPDATED = '3 November 2026';
+/** The version a learner accepts in the banner: the API refuses any but its own TERMS_VERSION. */
+export const TERMS_VERSION = '2026-11-03';
 /** Who sells Forgeway Pro (a sole trader). The address comes from LATTICE_TRADER_ADDRESS through
  * /api/config; billing stays off until it is set, and these pages show the placeholder. The owner
  * fills in the ICO number before launch. */

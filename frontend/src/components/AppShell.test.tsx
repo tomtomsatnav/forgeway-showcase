@@ -67,6 +67,19 @@ describe('header menu', () => {
   });
 });
 
+describe('terms banner', () => {
+  it('shows under the header while the learner has not accepted the current terms', async () => {
+    stubApi({
+      'GET /api/auth/me': () =>
+        json({ plan: 'free', email_verified: true, csrf_token: 'x', terms_current: false }),
+      'GET /api/map': () => json(MAP),
+      'GET /api/releases': () => json({ last_seen: null, unread: false, releases: [] }),
+    });
+    await renderInRouter(withMode('professional', <AppShell />));
+    expect(await screen.findByRole('region', { name: 'Updated terms' })).toBeVisible();
+  });
+});
+
 describe('footer', () => {
   it.each(['professional', 'rpg'] as const)(
     'links the privacy policy and terms in %s mode, signed out too',

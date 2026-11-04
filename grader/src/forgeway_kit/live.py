@@ -52,7 +52,7 @@ TIMEOUT_S = 600.0
 DEFAULT_RATES: dict[str, tuple[float, float, float]] = {
     "claude-fable-5-1": (10.0, 50.0, 0.25),
     "claude-opus-5-5": (4.0, 20.0, 0.20),
-    "claude-sonnet-5-5": (2.0, 10.0, 0.20),
+    "claude-sonnet-5-5": (2.0, 10.0, 0.10),
 }
 
 _ANTHROPIC_STOPS: dict[str, StopReason] = {

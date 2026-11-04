@@ -137,6 +137,18 @@ export function useResendVerification() {
   });
 }
 
+/** Accept the terms at `version`; the answer is the learner with `terms_current` true. */
+export function useAcceptTerms() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (version: string) =>
+      unwrap(await api.POST('/api/auth/terms', { body: { version } })),
+    onSuccess: (me) => {
+      client.setQueryData(queryKeys.me, me);
+    },
+  });
+}
+
 /** Always answers the same, whether or not the address has an account. */
 export function useRequestPasswordReset() {
   return useMutation({

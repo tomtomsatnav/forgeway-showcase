@@ -178,11 +178,15 @@ predeploy_dump() {
     log "database not running; nothing to dump"
     return 0
   fi
-  local file
-  file="$STATE_DIR/dumps/predeploy-$(date -u +%Y%m%dT%H%M%SZ)-$(short "$PREVIOUS_SHA").dump"
-  (umask 077 && db_exec pg_dump -U "$PGUSER_FORGEWAY" -d "$PGDATABASE_FORGEWAY" -Fc >"$file")
+  need age
+  [[ -n ${AGE_RECIPIENTS:-} ]] || die "AGE_RECIPIENTS is not set (see deploy/vps/ops.env.example)"
+  local recipients=() key file
+  for key in $AGE_RECIPIENTS; do recipients+=(-r "$key"); done
+  file="$STATE_DIR/dumps/predeploy-$(date -u +%Y%m%dT%H%M%SZ)-$(short "$PREVIOUS_SHA").dump.age"
+  (umask 077 && db_exec pg_dump -U "$PGUSER_FORGEWAY" -d "$PGDATABASE_FORGEWAY" -Fc \
+    | age "${recipients[@]}" -o "$file")
   log "dumped the database to $file ($(du -h "$file" | cut -f1))"
-  local dumps=("$STATE_DIR"/dumps/predeploy-*.dump)
+  local dumps=("$STATE_DIR"/dumps/predeploy-*)
   local excess=$((${#dumps[@]} - KEEP_PREDEPLOY_DUMPS))
   ((excess > 0)) && rm -f -- "${dumps[@]:0:excess}"
   return 0

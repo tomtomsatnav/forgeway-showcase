@@ -101,6 +101,9 @@ export interface Lexicon {
   checkInboxContinue: string;
   /** Shown to signed-in learners whose email is not verified yet. */
   unverifiedBanner: string;
+  /** The banner asking a signed-in learner to accept changed terms. */
+  termsChanged: string;
+  termsLegal: typeof TERMS_LEGAL;
   resendVerification: string;
   verificationResent: (email: string) => string;
   verifyingEmail: string;
@@ -426,6 +429,16 @@ const unlockingTalents = (talents: readonly LockingTalent[]) => {
     .map((t) => (t.pathName === null ? t.title : `${t.title} as ${withArticle(t.pathName)}`))
     .join(paths.size > 1 && talents.length > 1 ? ', or ' : ' or ');
 };
+// A legal statement: the same words in every mode.
+const TERMS_LEGAL = {
+  before: 'By selecting “I accept”, you agree to the updated ',
+  terms: 'terms of use',
+  between: ' and confirm you have read the ',
+  privacy: 'privacy policy',
+  after: '.',
+  accept: 'I accept',
+};
+
 const PRO_FREE = (n: number) =>
   `The foundations and the first ${n} exercises of every track stay free, with every check, hint and badge.`;
 const PRO_NO_BILLING =
@@ -574,6 +587,8 @@ const professional: Lexicon = (() => {
     checkInboxContinue: 'Continue to the syllabus',
     unverifiedBanner:
       'Verify your email address to run checks and publish certificates. Follow the link we sent you.',
+    termsChanged: 'Our terms have changed.',
+    termsLegal: TERMS_LEGAL,
     resendVerification: 'Send a new link',
     verificationResent: (email) => `A new link is on its way to ${email}.`,
     verifyingEmail: 'Verifying your email address…',
@@ -934,6 +949,8 @@ const rpg: Lexicon = (() => {
     checkInboxContinue: 'Enter the world map',
     unverifiedBanner:
       'Prove your name to attempt quests and display your seals: follow the link in the letter we sent you.',
+    termsChanged: 'The terms of the realm have changed.',
+    termsLegal: TERMS_LEGAL,
     resendVerification: 'Send another letter',
     verificationResent: (email) => `Another letter rides to ${email}.`,
     verifyingEmail: 'Breaking the seal…',

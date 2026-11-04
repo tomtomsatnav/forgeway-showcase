@@ -109,6 +109,24 @@ email) or without secure cookies, so a missing email setting fails the deploy lo
 The names of the launch settings follow the launch-safety change. Check them against
 `.env.example` on the release you deploy.
 
+## Capacity (measured 2026-11-04)
+
+On the VPS (2 vCPU, 3.7 GB), with no other load. Reads were measured on the server against nginx, so
+they leave out Caddy and Cloudflare, and the load generator shared the machine.
+
+| Reads | 10 users | 50 users |
+| --- | --- | --- |
+| `/` (static app) | 1237 req/s, p95 14 ms | 1038 req/s, p95 89 ms |
+| `/api/config` | 282 req/s, p95 50 ms | 287 req/s, p95 221 ms |
+| `/api/catalogue` | 103 req/s, p95 166 ms | 102 req/s, p95 608 ms |
+
+Grading under gVisor, one reference solution per exercise: median 2.4 s, 90th percentile 9.6 s,
+slowest 56.7 s, mean 5.2 s. One worker therefore does about 690 gradings an hour if the mix matches
+the catalogue, with one job at a time. Grading is the limit well before reads are: watch the queue
+age. Add a second worker when learners regularly wait over about 30 s.
+
+Not measured: signed-in and write traffic, a real queue with many learners, or a second worker.
+
 ## Deploying
 
 ```bash
@@ -251,7 +269,8 @@ scratch database in place for inspection.
    `docker compose ... exec -T db pg_dump -U lattice -d lattice -Fc > /var/backups/forgeway/before-restore.dump`.
 3. Restore over the live database:
    `age -d -i key.txt X.dump.age | docker compose ... exec -T db pg_restore -U lattice -d lattice --clean --if-exists --no-owner --exit-on-error`.
-   A pre-deploy dump in `.deploy/dumps/` is not encrypted, so pipe it in directly.
+   A pre-deploy dump in `.deploy/dumps/` is encrypted the same way, so keep the private key
+   where you can reach it during a failed deploy.
 4. Deploy the release that matches the dump's schema. `restore.sh` prints the revision.
    Then `docker compose ... up -d`.
 

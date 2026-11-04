@@ -1,8 +1,7 @@
-# Forgeway's site block for the system Caddy (2.6.2) on the shared VPS.
+# Forgeway's site block for the system Caddy (2.11, from Caddy's official apt repository).
 #
 # Paste it into /etc/caddy/Caddyfile next to the other sites, following "Changing Caddy safely"
-# in deploy/vps/README.md (back up, validate, reload, check every site). Caddy 2.6 spells the
-# auth directive `basicauth`; `basic_auth` is the 2.8+ spelling and fails to parse here.
+# in deploy/vps/README.md (back up, validate, reload, check the site).
 #
 # Traffic: Cloudflare (proxied, SSL Full (strict)) -> Caddy :443 (UFW allows only Cloudflare's
 # ranges) -> nginx on 127.0.0.1:8090 -> the API. Cloudflare sets CF-Connecting-IP to the real
@@ -42,7 +41,7 @@ forgeway.dev, www.forgeway.dev {
 	# cannot send a password, and the API verifies its signature instead. security.txt is public
 	# so anyone can find where to report a vulnerability.
 	@gated not path /healthz /kit/* /api/billing/webhook /.well-known/security.txt
-	basicauth @gated {
+	basic_auth @gated {
 		admin REPLACE_WITH_BCRYPT_HASH
 	}
 

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from
 
 import { useLearnerMap, useLogout, useMe } from '../api/hooks';
 import { UnverifiedBanner } from '../features/auth/UnverifiedBanner';
+import { TermsBanner } from '../features/legal/TermsBanner';
 import { PastDueBanner } from '../features/pro/PastDueBanner';
 import { WhatsNewLink } from '../features/releases/WhatsNewLink';
 import type { ColourScheme, Mode } from '../api/types';
@@ -185,6 +186,7 @@ export function AppShell() {
       </header>
       <UnverifiedBanner />
       <PastDueBanner />
+      <TermsBanner />
       <main
         id="main"
         tabIndex={-1}

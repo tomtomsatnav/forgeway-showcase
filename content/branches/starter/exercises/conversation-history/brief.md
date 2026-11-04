@@ -14,10 +14,12 @@ Roles must alternate, and the final message must be from the user. If you forget
 assistant's reply, the next request has two user messages in a row and the model loses its
 own side of the conversation.
 
-Some providers now offer server-side conversation state (Anthropic's message threads, in beta;
-OpenAI's Conversations API): the provider keeps the turns and you continue by id. Treat that as a
-cache with an expiry, not a database. You still own the canonical transcript, and you need it
-when the thread expires, when you switch provider, or when you want to edit what is sent.
+Some providers now offer server-side conversation state
+([Anthropic's message threads](https://platform.claude.com/docs/en/build-with-claude/message-threads),
+in beta; OpenAI's Conversations API): the provider keeps the turns and you continue by id. Treat
+that as a cache, not a database. An Anthropic thread, for one, expires 5 minutes after its last
+request. You still own the canonical transcript, and you need it when the thread expires, when you
+switch provider, or when you want to edit what is sent.
 
 ## Your task
 
