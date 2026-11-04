@@ -1,12 +1,12 @@
 # Sandbox image for Python exercises. Learner code runs here with no network, a read-only
 # root filesystem and a non-root user; see backend/src/lattice/infrastructure/sandbox_docker.py.
-FROM python:3.12-slim-bookworm AS build
+FROM python:3.15-slim-bookworm AS build
 WORKDIR /src
 COPY pyproject.toml ./
 COPY src ./src
 RUN pip wheel --no-cache-dir --wheel-dir /wheels .
 
-FROM python:3.12-slim-bookworm
+FROM python:3.15-slim-bookworm
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONHASHSEED=0 \
