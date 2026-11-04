@@ -244,3 +244,59 @@ describe('ProgressionNews', () => {
     expect(screen.queryByText(/streak/)).not.toBeInTheDocument();
   });
 });
+
+describe('celebration size', () => {
+  it('keeps an ordinary pass to the strip, with no card over the page', async () => {
+    await mount('professional', progression());
+
+    await screen.findByRole('status');
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('gives a capstone a card that links nowhere it should not and can be closed', async () => {
+    await renderInRouter(
+      withMode(
+        'professional',
+        <CompletionMoment
+          progression={progression({ xp_awarded: 350 })}
+          unlocked={[]}
+          onDismiss={() => undefined}
+          levelFraction={0.4}
+          capstone={CAPSTONE}
+        />,
+      ),
+    );
+
+    const card = await screen.findByRole('dialog', { name: 'Capstone complete' });
+    expect(card).toHaveTextContent('Build a search service');
+    expect(within(card).queryByRole('link')).not.toBeInTheDocument();
+    within(card).getByRole('button', { name: 'Close' }).click();
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+    // The strip and its message stay behind the card.
+    expect(screen.getByRole('status')).toHaveTextContent('Capstone complete · +350 XP');
+  });
+
+  it('links a certificate from the card', async () => {
+    await mount(
+      'professional',
+      progression({
+        certificates_issued: [
+          {
+            id: 'cert_1',
+            branch_id: 'starter',
+            branch_title: 'Foundations',
+            includes_capstone: false,
+          },
+        ],
+      }),
+    );
+
+    const card = await screen.findByRole('dialog', { name: 'Track complete' });
+    expect(within(card).getByRole('link', { name: 'See your certificate' })).toHaveAttribute(
+      'href',
+      '/profile#certificates',
+    );
+  });
+});

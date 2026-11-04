@@ -1,4 +1,5 @@
 import { Link, Outlet, useMatches, useNavigate } from '@tanstack/react-router';
+import { motion, useReducedMotion } from 'motion/react';
 import { LogOut, Menu, Monitor, Moon, Sun, UserRound, X } from 'lucide-react';
 import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from 'react';
 
@@ -36,20 +37,47 @@ function LevelSummary() {
   const { lexicon } = useTheme();
   const map = useLearnerMap();
   const level = map.data?.level;
+  // On a level up the bar fills, holds, then rolls over to the new level.
+  const reduced = useReducedMotion();
+  const seen = useRef<number | null>(null);
+  const [rollingFrom, setRollingFrom] = useState<number | null>(null);
+  const [rolledOver, setRolledOver] = useState(false);
+  const current = level?.level ?? null;
+  useEffect(() => {
+    const previous = seen.current;
+    seen.current = current;
+    if (reduced || current === null || previous === null || current <= previous) return;
+    setRollingFrom(previous);
+    const timer = window.setTimeout(() => {
+      setRollingFrom(null);
+      setRolledOver(true);
+    }, 700);
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [current, reduced]);
   if (!level) return null;
   const span = level.next_level_at === null ? 0 : level.next_level_at - level.level_floor;
+  const rolling = rollingFrom !== null;
   return (
     <div
+      data-xp-target
       className="flex min-w-0 flex-1 items-center gap-2 sm:max-w-sm sm:basis-0 sm:gap-3"
       aria-label="Your level"
     >
-      <span className="tabular whitespace-nowrap font-semibold">
-        {lexicon.levelLabel(level.level)}
-      </span>
+      <motion.span
+        key={rollingFrom ?? level.level}
+        initial={rolledOver ? { scale: 1.6 } : false}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.35 }}
+        className="tabular whitespace-nowrap font-semibold"
+      >
+        {lexicon.levelLabel(rollingFrom ?? level.level)}
+      </motion.span>
       <div className="min-w-0 flex-1">
         <ProgressRule
-          value={span === 0 ? 1 : level.total_xp - level.level_floor}
-          max={span === 0 ? 1 : span}
+          value={rolling || span === 0 ? 1 : level.total_xp - level.level_floor}
+          max={rolling || span === 0 ? 1 : span}
           label={`Experience towards ${lexicon.level} ${level.level + 1}`}
         />
       </div>

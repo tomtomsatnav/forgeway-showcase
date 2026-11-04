@@ -39,6 +39,10 @@ export interface Lexicon {
   capstoneState: Record<ExerciseStatus, string>;
   capstoneStrip: (xp: number, level: number) => string;
   capstoneCompletionTitle: string;
+  /** The heading of the card for a certificate earned without a capstone. */
+  certificateCompletionTitle: string;
+  /** The main link from a celebration to the certificate. */
+  celebrationCertificate: string;
   /** A `kind: project` branch, as a label above its title: "Guided project" or "Expedition". */
   projectLabel: string;
   /** A `kind: primer` branch, as a label above its title. */
@@ -559,6 +563,8 @@ const professional: Lexicon = (() => {
     capstoneState: { locked: 'Locked', available: 'Available', passed: 'Completed' },
     capstoneStrip: (xp, level) => `Capstone complete · +${xp} XP · Level ${level}`,
     capstoneCompletionTitle: 'Capstone complete',
+    certificateCompletionTitle: 'Track complete',
+    celebrationCertificate: 'See your certificate',
     projectLabel: 'Guided project',
     primerLabel: 'Python primer',
     newToPythonLabel: "I'm new to Python",
@@ -935,6 +941,8 @@ const rpg: Lexicon = (() => {
     capstoneState: { locked: 'Sealed', available: 'Awaiting', passed: 'Defeated' },
     capstoneStrip: (xp, level) => `Boss defeated · +${xp} XP · Level ${level}`,
     capstoneCompletionTitle: 'Boss defeated',
+    certificateCompletionTitle: 'Zone conquered',
+    celebrationCertificate: 'See your seal',
     projectLabel: 'Expedition',
     primerLabel: "Apprentice's primer",
     newToPythonLabel: "I'm new to Python",

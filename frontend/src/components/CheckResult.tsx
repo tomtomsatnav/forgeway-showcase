@@ -1,4 +1,5 @@
 import { CircleCheck, CircleX } from 'lucide-react';
+import { motion } from 'motion/react';
 
 import type { CheckResult as CheckResultData } from '../api/types';
 
@@ -48,8 +49,11 @@ export function splitMessage(message: string): MessagePart[] {
     .filter((part) => part.text.trim() !== '');
 }
 
-/** One check: title, a pass/fail mark (icon and word), the message in a well, and the learner's output. */
-export function CheckResult({ check }: { check: CheckResultData }) {
+/**
+ * One check: title, a pass/fail mark (icon and word), the message in a well, and the learner's
+ * output. A pass's tick pops in after `popDelay` seconds; a failure stays calm.
+ */
+export function CheckResult({ check, popDelay }: { check: CheckResultData; popDelay?: number }) {
   const Icon = check.passed ? CircleCheck : CircleX;
   return (
     <div className="space-y-2">
@@ -58,7 +62,18 @@ export function CheckResult({ check }: { check: CheckResultData }) {
         <span
           className={`inline-flex shrink-0 items-center gap-1.5 ${check.passed ? 'text-success' : 'text-danger'}`}
         >
-          <Icon aria-hidden="true" className="h-4 w-4" />
+          {check.passed && popDelay !== undefined ? (
+            <motion.span
+              className="inline-flex"
+              initial={{ scale: 0 }}
+              animate={{ scale: [0, 1.5, 1] }}
+              transition={{ duration: 0.3, delay: popDelay }}
+            >
+              <Icon aria-hidden="true" className="h-4 w-4" />
+            </motion.span>
+          ) : (
+            <Icon aria-hidden="true" className="h-4 w-4" />
+          )}
           <span className="label-caps">{check.passed ? 'Passed' : 'Failed'}</span>
         </span>
       </div>

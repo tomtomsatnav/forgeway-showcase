@@ -1,6 +1,6 @@
 import { animate, motion, useReducedMotion } from 'motion/react';
 import { Check, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { Link } from '@tanstack/react-router';
@@ -9,6 +9,7 @@ import { Button } from '../../components/Button';
 import { BossSigilGlyph } from '../../components/TierMark';
 import { useFlavour } from '../flavour';
 import { useLexicon } from '../useTheme';
+import { FlyingXp, Particles, useLandingShake } from './Celebration';
 import { ProgressionNews } from './ProgressionNews';
 import type { CompletionMomentProps } from './types';
 
@@ -33,7 +34,83 @@ function NextLinks({ unlocked }: Pick<CompletionMomentProps, 'unlocked'>) {
   );
 }
 
-/** Professional: a quiet inline confirmation strip. */
+function CertificateLink({ progression }: Pick<CompletionMomentProps, 'progression'>) {
+  const lexicon = useLexicon();
+  if (progression.certificates_issued.length === 0) return null;
+  return (
+    <Link
+      to="/profile"
+      hash="certificates"
+      className="font-semibold text-accent-strong underline underline-offset-2"
+    >
+      {lexicon.celebrationCertificate}
+    </Link>
+  );
+}
+
+/** A capstone or certificate, professionally: a card over the page, with confetti. */
+function CompletionOverlay({
+  progression,
+  capstone,
+}: Pick<CompletionMomentProps, 'progression' | 'capstone'>) {
+  const lexicon = useLexicon();
+  const xp = useCountUp(progression.xp_awarded);
+  const [open, setOpen] = useState(true);
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, []);
+  if (!open) return null;
+  const certificate = progression.certificates_issued.at(0);
+  return createPortal(
+    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center p-4 sm:inset-0 sm:items-center">
+      <Particles kind="confetti" count={70} />
+      <motion.div
+        role="dialog"
+        aria-modal="false"
+        aria-labelledby="celebration-title"
+        initial={{ opacity: 0, scale: 0.92, y: 12 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.35, ease: EASE }}
+        onClick={() => {
+          setOpen(false);
+        }}
+        className="pointer-events-auto flex w-full max-w-md cursor-pointer flex-col items-center gap-3 rounded-control border border-success bg-raised p-8 text-center shadow-lg"
+      >
+        <Check aria-hidden="true" className="h-10 w-10 text-success" />
+        <h2 id="celebration-title" className="m-0 text-2xl">
+          {capstone ? lexicon.capstoneCompletionTitle : lexicon.certificateCompletionTitle}
+        </h2>
+        <p className="m-0 text-ink-secondary">{capstone?.title ?? certificate?.branch_title}</p>
+        <p className="tabular m-0 text-lg font-semibold">+{xp} XP</p>
+        <div
+          className="flex flex-wrap items-center justify-center gap-4"
+          onClick={(event) => {
+            event.stopPropagation();
+          }}
+        >
+          <CertificateLink progression={progression} />
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setOpen(false);
+            }}
+          >
+            Close
+          </Button>
+        </div>
+      </motion.div>
+    </div>,
+    document.body,
+  );
+}
+
+/** Professional: a confirmation strip that catches the eye, then gets out of the way. */
 export function ProfessionalCompletionMoment({
   progression,
   unlocked,
@@ -41,17 +118,34 @@ export function ProfessionalCompletionMoment({
   capstone,
 }: CompletionMomentProps) {
   const lexicon = useLexicon();
+  const strip = useRef<HTMLDivElement>(null);
+  const big = Boolean(capstone) || progression.certificates_issued.length > 0;
   return (
     <motion.div
+      ref={strip}
       role="status"
       initial={{ opacity: 0, y: -4 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2, ease: EASE }}
-      className="flex items-start justify-between gap-3 rounded-control border border-success bg-success-soft px-4 py-3"
+      className="relative flex items-start justify-between gap-3 overflow-hidden rounded-control border border-success bg-success-soft px-4 py-3"
     >
-      <div className="space-y-2">
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-success"
+        initial={{ x: '-100%', opacity: 0.3 }}
+        animate={{ x: '100%', opacity: 0 }}
+        transition={{ duration: 0.7, ease: 'easeOut' }}
+      />
+      <div className="relative space-y-2">
         <p className="tabular m-0 flex items-center gap-2 font-semibold text-success">
-          <Check aria-hidden="true" className="h-5 w-5" />
+          <motion.span
+            className="inline-flex"
+            initial={{ scale: 0 }}
+            animate={{ scale: [0, 1.35, 1] }}
+            transition={{ duration: 0.4, ease: EASE }}
+          >
+            <Check aria-hidden="true" className="h-5 w-5" />
+          </motion.span>
           {capstone
             ? lexicon.capstoneStrip(progression.xp_awarded, progression.level_after)
             : lexicon.passedStrip(progression.xp_awarded, progression.level_after)}
@@ -68,10 +162,12 @@ export function ProfessionalCompletionMoment({
         variant="quiet"
         onClick={onDismiss}
         aria-label="Dismiss"
-        className="-my-1 -mr-2 min-w-11 px-2"
+        className="relative -my-1 -mr-2 min-w-11 px-2"
       >
         <X aria-hidden="true" className="h-4 w-4" />
       </Button>
+      <FlyingXp xp={progression.xp_awarded} from={strip} />
+      {big && <CompletionOverlay progression={progression} capstone={capstone} />}
     </motion.div>
   );
 }
@@ -96,27 +192,58 @@ function useCountUp(target: number): number {
   return reduced ? target : value;
 }
 
+/** Hairlines from the seal's centre, drawn just before it breaks open. */
+const CRACKS = [
+  'M64 64 L44 34 L38 18',
+  'M64 64 L92 50 L108 44',
+  'M64 64 L72 96 L66 112',
+  'M64 64 L34 78 L20 88',
+];
+
 const RING_RADIUS = 58;
 const RING_LENGTH = 2 * Math.PI * RING_RADIUS;
 
 /** The wax seal: a ring that fills towards the next level, the level number pressed into the wax. */
 function Seal({
   level,
+  levelBefore,
   fraction,
   boss = false,
 }: {
   level: number;
+  /** Below `level` on a level up: the seal shows this, cracks, then shows `level`. */
+  levelBefore: number;
   fraction: number;
   /** Press the boss's tower into the wax instead of the level number. */
   boss?: boolean;
 }) {
+  const reduced = useReducedMotion();
+  const leveledUp = level > levelBefore && !boss;
+  const [broken, setBroken] = useState(false);
+  useEffect(() => {
+    if (reduced || (!leveledUp && !boss)) return;
+    const timer = window.setTimeout(() => {
+      setBroken(true);
+    }, 750);
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [reduced, leveledUp, boss]);
+  const shownLevel = leveledUp && !broken && !reduced ? levelBefore : level;
+  useLandingShake(0.16);
   return (
     <motion.div
-      initial={{ scale: 1.15, opacity: 0, filter: 'drop-shadow(0 14px 12px rgb(0 0 0 / 0.45))' }}
-      animate={{ scale: 1, opacity: 1, filter: 'drop-shadow(0 3px 3px rgb(0 0 0 / 0.35))' }}
-      transition={{ duration: 0.9, ease: EASE }}
+      initial={{ scale: 1.7, opacity: 0, filter: 'drop-shadow(0 18px 14px rgb(0 0 0 / 0.5))' }}
+      animate={
+        broken
+          ? { scale: [1, 1.18, 1], opacity: 1, filter: 'drop-shadow(0 3px 3px rgb(0 0 0 / 0.35))' }
+          : { scale: 1, opacity: 1, filter: 'drop-shadow(0 3px 3px rgb(0 0 0 / 0.35))' }
+      }
+      transition={{ duration: broken ? 0.35 : 0.22, ease: 'easeIn' }}
       className="relative h-32 w-32"
     >
+      <Particles kind="sparks" count={12} />
+      {broken && <Particles kind="embers" count={boss ? 34 : 26} />}
       <svg viewBox="0 0 128 128" className="h-full w-full" aria-hidden="true">
         <circle
           cx="64"
@@ -168,8 +295,21 @@ function Seal({
             fill="var(--text-on-accent)"
             style={{ font: '700 34px var(--font-display)' }}
           >
-            {level}
+            {shownLevel}
           </text>
+        )}
+        {(leveledUp || boss) && !reduced && !broken && (
+          <g stroke="var(--text-on-accent)" strokeWidth="2" fill="none" strokeLinecap="round">
+            {CRACKS.map((crack) => (
+              <motion.path
+                key={crack}
+                d={crack}
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 0.28, delay: 0.42, ease: 'easeIn' }}
+              />
+            ))}
+          </g>
         )}
       </svg>
       <span className="sr-only">{`Level ${level}`}</span>
@@ -213,7 +353,16 @@ export function RpgCompletionMoment({
         onClick={onDismiss}
         className="pointer-events-auto relative flex w-full max-w-sm cursor-pointer flex-col items-center gap-4 rounded-panel border border-line-strong bg-raised p-6 text-center shadow-raised outline outline-1 -outline-offset-4 outline-line-subtle"
       >
-        <Seal level={progression.level_after} fraction={levelFraction} boss={Boolean(capstone)} />
+        {(capstone !== null && capstone !== undefined) ||
+        progression.certificates_issued.length > 0 ? (
+          <Particles kind="gold" count={60} />
+        ) : null}
+        <Seal
+          level={progression.level_after}
+          levelBefore={progression.level_before}
+          fraction={levelFraction}
+          boss={Boolean(capstone)}
+        />
         <div className="space-y-1">
           <h2 id="completion-title" className="small-caps-heading m-0 text-xl">
             {capstone ? lexicon.capstoneCompletionTitle : lexicon.completionTitle}
@@ -237,6 +386,7 @@ export function RpgCompletionMoment({
           <p className="tabular m-0 text-lg font-semibold">+{xp} XP</p>
         </div>
         <ProgressionNews progression={progression} />
+        <CertificateLink progression={progression} />
         {unlocked.length > 0 && (
           <div
             className="space-y-1 text-sm"

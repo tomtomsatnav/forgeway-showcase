@@ -1,6 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { Link, getRouteApi } from '@tanstack/react-router';
 import { Check, CloudOff, Lock, Play } from 'lucide-react';
+import { useReducedMotion } from 'motion/react';
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 
 import { errorMessage } from '../../api/errors';
@@ -31,7 +32,7 @@ import { CarriedFiles } from './CarriedFiles';
 import { PythonNotes } from './PythonNotes';
 import { ResetCode } from './ResetCode';
 import { ReferenceSolution } from './ReferenceSolution';
-import { ResultsPanel } from './ResultsPanel';
+import { ResultsPanel, checksRevealSeconds } from './ResultsPanel';
 import { RunLocally, ToolkitReferenceLink } from './RunLocally';
 import { TryLive } from './TryLive';
 import { useAttemptPolling } from './useAttemptPolling';
@@ -227,27 +228,47 @@ function Workspace({ exercise }: { exercise: ExerciseDetail }) {
     });
   };
 
+  const reducedMotion = useReducedMotion();
   // React once to each finished attempt: mark the exercise passed and refresh the map.
   const finished = polling.phase === 'done' ? polling.attempt : null;
   useEffect(() => {
     if (finished === null || handled.current === finished.id) return;
     handled.current = finished.id;
+    const refreshMap = () => void client.invalidateQueries({ queryKey: queryKeys.map });
     if (finished.progression) {
       // Even a failed attempt can move the streak or earn a badge.
-      void client.invalidateQueries({ queryKey: queryKeys.map });
       void client.invalidateQueries({ queryKey: queryKeys.badges });
       void client.invalidateQueries({ queryKey: queryKeys.talents });
     }
-    if (finished.status !== 'passed') return;
+    if (finished.status !== 'passed') {
+      if (finished.progression) refreshMap();
+      return;
+    }
     client.setQueryData<ExerciseDetail>(
       queryKeys.exercise(exercise.id),
       (previous) => previous && { ...previous, status: 'passed' },
     );
-    void client.invalidateQueries({ queryKey: queryKeys.map });
-  }, [finished, client, exercise.id]);
+    // The level bar moves as the flying XP reaches it, not before the checks have even appeared.
+    if (reducedMotion) refreshMap();
+    else window.setTimeout(refreshMap, (checksRevealSeconds(finished.checks.length) + 1.05) * 1000);
+  }, [finished, client, exercise.id, reducedMotion]);
 
   const progression =
     finished?.status === 'passed' && finished.id !== dismissedId ? finished.progression : null;
+  // Let the checks land first, so the celebration is their payoff.
+  const [celebrated, setCelebrated] = useState<string | null>(null);
+  const celebrateId = progression ? (finished?.id ?? null) : null;
+  useEffect(() => {
+    if (celebrateId === null) return;
+    const seconds = reducedMotion ? 0 : checksRevealSeconds(finished?.checks.length ?? 0);
+    const timer = window.setTimeout(() => {
+      setCelebrated(celebrateId);
+    }, seconds * 1000);
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [celebrateId, reducedMotion, finished?.checks.length]);
+  const celebrate = celebrateId !== null && celebrated === celebrateId;
 
   const announcement = describe(polling, submit.isPending);
 
@@ -388,7 +409,7 @@ function Workspace({ exercise }: { exercise: ExerciseDetail }) {
         >
           <div className="space-y-4">
             <h2 className="m-0 text-lg">Results</h2>
-            {progression && (
+            {progression && celebrate && (
               <CompletionMoment
                 progression={progression}
                 unlocked={resolveUnlocked(map.data, progression.unlocked)}

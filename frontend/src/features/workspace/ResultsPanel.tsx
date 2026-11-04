@@ -7,14 +7,18 @@ import { ProgressionNews } from '../../theme/slots/ProgressionNews';
 import { useLexicon } from '../../theme/useTheme';
 import type { PollingState } from './useAttemptPolling';
 
-const list = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.04 } },
-};
-const item = {
-  hidden: { opacity: 0, y: 6 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.2, ease: [0.2, 0.7, 0.2, 1] as const } },
-};
+const EASE = [0.2, 0.7, 0.2, 1] as const;
+/** The last check of a full pass waits this long, so the result lands. */
+const LAST_CHECK_PAUSE = 0.2;
+
+const revealStep = (checks: number) => Math.min(0.08, 0.5 / Math.max(checks, 1));
+
+/** When the check at `index` appears. A failed attempt gets no pause and no build-up. */
+const revealDelay = (index: number, checks: number, passed: boolean) =>
+  index * revealStep(checks) + (passed && index === checks - 1 ? LAST_CHECK_PAUSE : 0);
+
+/** How long a passed attempt's checks take to appear, so the celebration can follow them. */
+export const checksRevealSeconds = (checks: number) => revealDelay(checks - 1, checks, true) + 0.15;
 
 interface ResultsPanelProps {
   checks: readonly CheckInfo[];
@@ -101,18 +105,22 @@ export function ResultsPanel({ checks, polling, submitting, news }: ResultsPanel
         </p>
       )}
       {news != null && <ProgressionNews progression={news} />}
-      <motion.ul
-        variants={list}
-        initial="hidden"
-        animate="show"
-        className="m-0 list-none space-y-4 p-0"
-      >
-        {results.map((check) => (
-          <motion.li key={check.id} variants={item} className="border-t border-line-subtle pt-4">
-            <CheckResult check={check} />
-          </motion.li>
-        ))}
-      </motion.ul>
+      <ul className="m-0 list-none space-y-4 p-0">
+        {results.map((check, index) => {
+          const delay = revealDelay(index, results.length, status === 'passed');
+          return (
+            <motion.li
+              key={check.id}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, ease: EASE, delay }}
+              className="border-t border-line-subtle pt-4"
+            >
+              <CheckResult check={check} popDelay={delay} />
+            </motion.li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
