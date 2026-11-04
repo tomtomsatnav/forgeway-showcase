@@ -17,7 +17,7 @@ lattice-grader = { workspace = true }
 [dependency-groups]
 dev = [
   "ruff>=0.7",
-  "mypy>=1.13",
+  "mypy>=2.4.1",
   "pytest>=8.3",
   "pytest-cov>=5.0",
   "hypothesis>=6.115",
