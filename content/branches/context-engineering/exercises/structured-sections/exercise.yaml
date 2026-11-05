@@ -3,7 +3,7 @@ title: Structured sections that cannot be broken out of
 tier: beginner
 xp: 100
 prerequisites: [starter.system-prompts]
-skills: [context-engineering, delimiters, escaping, prompt-structure]
+skills: [context-engineering, delimiters, escaping, prompt-structure, security]
 editable: [sections.py]
 hints:
   - "A closing tag is only a boundary if the text inside cannot contain one. Escape the characters that make tags: `&`, `<` and `>`."

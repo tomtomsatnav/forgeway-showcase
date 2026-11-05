@@ -25,6 +25,18 @@ export function securityPath(branches: readonly BranchSummary[]) {
   );
 }
 
+const SOURCES = [
+  {
+    title: 'OWASP Top 10 for Agentic Applications 2026',
+    href: 'https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/',
+  },
+  { title: 'OWASP Top 10 for LLM Applications', href: 'https://genai.owasp.org/llm-top-10/' },
+  {
+    title: 'MCP security best practices',
+    href: 'https://modelcontextprotocol.io/specification/2025-11-25/basic/security_best_practices',
+  },
+] as const;
+
 /** Public: signed-in learners see their progress, visitors the catalogue. */
 export function SecurityPathPage() {
   const lexicon = useLexicon();
@@ -87,6 +99,18 @@ export function SecurityPathPage() {
         ))}
       </ol>
       <p className="m-0 max-w-measure text-sm text-ink-secondary">{copy.lockedNote}</p>
+      <section aria-label={copy.sourcesLabel}>
+        <h2 className="m-0 text-lg">{copy.sourcesLabel}</h2>
+        <ul className="m-0 mt-2 list-disc space-y-1 pl-5">
+          {SOURCES.map((source) => (
+            <li key={source.href}>
+              <a href={source.href} target="_blank" rel="noreferrer">
+                {source.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
     </div>
   );
 }

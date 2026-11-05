@@ -298,6 +298,7 @@ export interface Lexicon {
     summary: (exercises: number) => string;
     intro: string;
     lockedNote: string;
+    sourcesLabel: string;
     /** The link to this page from the landing page and the syllabus. */
     link: string;
   };
@@ -484,7 +485,7 @@ const LANDING_DIFFERENT: readonly Point[] = [
   },
   {
     title: 'The topics senior engineers deal with',
-    body: 'Token budgets and cache-stable prefixes, prompt-injection defence at every trust boundary, eval gates that decide a release, and the Model Context Protocol at the wire level.',
+    body: 'Token budgets and cache-stable prefixes, prompt-injection defence at every trust boundary, agent security informed by OWASP’s agentic top 10, eval gates that decide a release, and the Model Context Protocol at the wire level.',
   },
   {
     title: 'Current material',
@@ -828,6 +829,7 @@ const professional: Lexicon = (() => {
         'Agents read untrusted text and act on it, so a model that behaves is not enough. These exercises have you build the defences: resisting prompt injection, distrusting tool output, limiting what an agent can do, keeping a person in charge of what matters, and attacking your own system before someone else does.',
       lockedNote:
         'Each exercise stays in its own track, and your progress counts in both places. Some need earlier exercises from that track first.',
+      sourcesLabel: 'Further reading',
       link: 'Follow the AI security path',
     },
     landing: {
@@ -1213,6 +1215,7 @@ const rpg: Lexicon = (() => {
         'Agents read untrusted words and act on them, so an obedient oracle is not enough. These quests have you raise the defences: resisting prompt injection, distrusting what tools report, limiting what an agent may do, keeping a person in charge of what matters, and attacking your own keep before someone else does.',
       lockedNote:
         'Each quest stays in its own zone, and your progress counts in both places. Some need earlier quests from that zone first.',
+      sourcesLabel: 'From the archives',
       link: 'Walk the Warden’s Road',
     },
     landing: {

@@ -60,9 +60,12 @@ describe('SecurityPathPage', () => {
     });
     await renderInRouter(withMode('professional', <SecurityPathPage />));
 
-    const [first, second, ...rest] = within(await screen.findByRole('list')).getAllByRole(
-      'listitem',
-    ) as [HTMLElement, HTMLElement];
+    const [path] = await screen.findAllByRole('list');
+    if (path === undefined) throw new Error('The page has no list.');
+    const [first, second, ...rest] = within(path).getAllByRole('listitem') as [
+      HTMLElement,
+      HTMLElement,
+    ];
     expect(rest).toHaveLength(0);
     expect(within(first).getByRole('link')).toHaveAttribute('href', '/exercises/starter.inject');
     expect(within(second).getByText('Track evals')).toBeVisible();
